@@ -3,94 +3,122 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D' LUSSO - Il Lusso</title>
+<title>D' LUSSO - Il Lusso di Bandung</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
-  body{background:#000;color:#fff;overflow-x:hidden}
-  .hero{
-    min-height:100vh;
-    background: radial-gradient(circle at 20% 20%, #FFD700 0%, transparent 30%),
-    radial-gradient(circle at 80% 40%, #B8860B 0%, transparent 35%),
-    radial-gradient(circle at 50% 80%, #FFC700 0%, transparent 30%),
-    linear-gradient(180deg,#000 0%, #1a1500 50%, #000 100%);
-    padding:20px; text-align:center;
-  }
-  .top{ display:flex; justify-content:space-between; align-items:center; padding:10px 0}
-  .logo{ font-size:24px; letter-spacing:3px; font-weight:bold}
-  .logo span{ color:#FFD700; font-size:11px; display:block; letter-spacing:5px}
-  .cart{ background:#FFD700; color:#000; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:13px}
-  .badge{ background:#FFD700; color:#000; display:inline-block; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:bold; margin:20px 0}
-  h1{ font-size:42px; line-height:1.1; margin:10px 0}
-  h1 em{ color:#FFD700; font-style:italic}
-  p{ color:#ddd; font-size:15px; line-height:1.6; max-width:320px; margin:0 auto}
-  .btns{ display:flex; gap:10px; justify-content:center; margin:20px 0}
-  .btn-gold{ background:#FFD700; color:#000; padding:14px 22px; border-radius:30px; font-weight:bold; border:none}
-  .btn-outline{ background:transparent; color:#fff; padding:14px 22px; border-radius:30px; border:1px solid #fff}
-  .stats{ display:flex; justify-content:center; gap:25px; margin:20px 0; font-size:13px}
-  .stats b{ display:block; font-size:20px; color:#FFD700}
-  .section{ padding:20px}
-  .section h2{ font-size:26px; margin-bottom:5px}
-  .section h2 i{ color:#FFD700}
-  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:15px}
-  .card{ background:#111; border-radius:20px; overflow:hidden; border:1px solid #333}
-  .card img{ width:100%; height:180px; object-fit:cover}
-  .card-body{ padding:12px; text-align:left}
-  .card-body small{ color:#FFD700; font-size:11px; letter-spacing:1px}
-  .card-body h3{ font-size:16px; margin:5px 0}
-  .price{ color:#FFD700; font-weight:bold}
-  .price s{ color:#888; font-size:12px; margin-left:5px}
-  .add{ width:100%; background:#FFD700; border:none; padding:10px; border-radius:12px; font-weight:bold; margin-top:8px}
-  .footer{ text-align:center; padding:30px; color:#888; font-size:13px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
+body{background:#0a0a0a;color:#fff}
+a{color:inherit;text-decoration:none}
+.top{position:sticky;top:0;z-index:10;background:#0a0a0a;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2a2110}
+.logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold}
+.top-icons{font-size:20px;display:flex;gap:16px}
+.hero{position:relative;height:520px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(0,0,0,.75) 85%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:20px;padding-bottom:30px}
+.hero-overlay h1{font-size:52px;letter-spacing:3px;color:#F5D98A;line-height:1}
+.hero-overlay h2{font-size:18px;letter-spacing:4px;margin:8px 0}
+.hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
+.btn-gold{margin-top:16px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.4);padding:12px 20px;letter-spacing:1px;font-size:13px}
+.boutique{padding:20px;text-align:center;border-bottom:1px solid #222}
+.boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
+.boutique p{font-size:13px;color:#ccc;margin-top:6px}
+.cats{display:flex;gap:12px;padding:16px;justify-content:space-between}
+.cat{flex:1;text-align:center}
+.cat img{width:100%;height:95px;object-fit:cover}
+.cat span{display:block;font-size:11px;letter-spacing:1px;margin-top:8px;color:#ddd}
+.section{padding:20px}
+.section h2{font-size:22px;text-align:center}
+.section h2 i{color:#E8C97A}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.card{background:#151515;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a}
+.card img{width:100%;height:170px;object-fit:cover}
+.card-body{padding:12px}
+.card-body small{color:#E8C97A;font-size:10px;letter-spacing:1px}
+.card-body h3{font-size:15px;margin:5px 0}
+.price{color:#E8C97A;font-weight:bold}
+.add{width:100%;background:#E8C97A;border:none;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px}
+/* VIP */
+.vip{background:#111;padding:24px 20px 30px;text-align:center}
+.vip .crown{font-size:36px}
+.vip h2{font-size:30px;color:#E8C97A;margin:8px 0 4px}
+.vip h3{font-size:18px;font-weight:normal;color:#E8C97A}
+.vip h4{font-size:24px;margin:20px 0 4px}
+.vip p{font-size:13px;color:#C9A86A}
+.form{background:#1a1a1a;border-radius:16px;padding:18px;margin-top:18px;text-align:left}
+.form label{display:block;font-size:15px;margin:14px 0 8px}
+.form input{width:100%;background:#0a0a0a;border:1px solid #C9A86A;color:#fff;padding:13px 14px;border-radius:12px;outline:none}
+.check{display:flex;gap:8px;font-size:12px;color:#ddd;margin-top:14px;line-height:1.4}
+.btn-vip{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:16px;border-radius:12px;font-weight:bold;font-size:19px;margin-top:16px}
+.small{font-size:12px;color:#C9A86A;margin-top:10px;text-align:center}
+.bottom{position:sticky;bottom:0;background:#111;display:flex;border-top:1px solid #333}
+.bottom div{flex:1;text-align:center;padding:13px 0;font-size:12px;letter-spacing:1px}
+.bottom .active{color:#E8C97A;border-bottom:2px solid #E8C97A}
+.bottom .gold{background:#C9A86A;color:#000;font-weight:bold}
+.footer{text-align:center;padding:24px;color:#888;font-size:12px;padding-bottom:80px}
 </style>
 </head>
 <body>
 
+<div class="top">
+  <div class="logo">D' LUSSO</div>
+  <div class="top-icons"><span>🔍</span><span>🛍️</span><span>☰</span></div>
+</div>
+
 <div class="hero">
-  <div class="top">
-    <div class="logo">D' LUSSO<span>IL LUSSO</span></div>
-    <div class="cart">🛒 Cart • 2</div>
+  <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800">
+  <div class="hero-overlay">
+    <h1>D' LUSSO</h1>
+    <h2>IL LUSSO DI BANDUNG</h2>
+    <p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p>
+    <button class="btn-gold">SCOPRI LA COLLEZIONE →</button>
   </div>
+</div>
 
-  <div class="badge">✦ NEW COLLECTION 2026</div>
-  <h1>Wear<br><em>Your Power.</em></h1>
-  <p>Exclusive premium fashion for those who refuse to be ordinary. Limited edition. Handcrafted.</p>
+<div class="boutique">
+  <h3>— BOUTIQUE BANDUNG —</h3>
+  <p>APERTO ORA • Jl. Braga No.88, Bandung</p>
+</div>
 
-  <div class="btns">
-    <button class="btn-gold">Shop Now →</button>
-    <button class="btn-outline">Explore</button>
-  </div>
-
-  <div class="stats">
-    <div><b>50K+</b>Happy Clients</div>
-    <div><b>4.9★</b>Rating</div>
-    <div><b>120+</b>Designs</div>
-  </div>
+<div class="cats">
+  <div class="cat"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><span>BORSE</span></div>
+  <div class="cat"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400"><span>OUTERWEAR</span></div>
+  <div class="cat"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400"><span>ACCESSORI</span></div>
 </div>
 
 <div class="section">
   <h2>Featured <i>Collection</i></h2>
-  <p style="text-align:left;margin:0;color:#aaa;font-size:13px">Handpicked for you</p>
   <div class="grid">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500">
-      <div class="card-body"><small>SUIT • PREMIUM</small><h3>Midnight Blazer</h3><div class="price">Rp 2.499.000 <s>Rp 3.200.000</s></div><button class="add">+ Add to Cart</button></div>
-    </div>
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500">
-      <div class="card-body"><small>DRESS • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div>
-    </div>
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500">
-      <div class="card-body"><small>SHIRT • SILK</small><h3>Silk White Shirt</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div>
-    </div>
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500">
-      <div class="card-body"><small>JACKET • LIMITED</small><h3>Noir Leather Jacket</h3><div class="price">Rp 1.999.000</div><button class="add">+ Add to Cart</button></div>
-    </div>
+    <div class="card"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500"><div class="card-body"><small>SUIT • PREMIUM</small><h3>Midnight Blazer</h3><div class="price">Rp 2.499.000</div><button class="add">+ Add to Cart</button></div></div>
+    <div class="card"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"><div class="card-body"><small>DRESS • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div></div>
   </div>
 </div>
 
-<div class="footer">© 2026 D' LUSSO • Il Lusso<br>Instagram: @d.lusso • WhatsApp Order</div>
+<div class="vip">
+  <div class="crown">👑</div>
+  <h2>Club D' Lusso VIP</h2>
+  <h3>Il Lusso di Bandung</h3>
+  <h4>Daftar VIP Membership</h4>
+  <p>Gabung sekarang dan nikmati layanan fashion eksklusif</p>
+  <div class="form">
+    <label>Nama Lengkap</label>
+    <input placeholder="👤  Masukkan nama lengkap">
+    <label>No WA</label>
+    <input placeholder="📞  +62 8xx xxxx xxxx">
+    <label>Password</label>
+    <input type="password" placeholder="🔒  Masukkan password">
+    <div class="check"><input type="checkbox" checked style="width:18px"> <span>Saya setuju dengan Syarat & Ketentuan & Kebijakan Privasi</span></div>
+    <button class="btn-vip">DAFTAR VIP GRATIS</button>
+    <div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div>
+  </div>
+</div>
+
+<div class="bottom">
+  <div class="active">🏠 HOME</div>
+  <div>COLLEZIONE</div>
+  <div class="gold">BOUTIQUE</div>
+  <div>CONTATTI</div>
+</div>
+
+<div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung<br>Jl. Braga No.88, Bandung • Instagram @d.lusso</div>
 
 </body>
 </html>
