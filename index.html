@@ -81,12 +81,18 @@ body{background:#0a0a0a;color:#fff}
 .page-head p{font-size:13px;color:#aaa;margin-top:6px}
 .chat-box{display:none;position:fixed;right:12px;left:12px;bottom:70px;z-index:70;background:#151515;border:1px solid #C9A86A;border-radius:18px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.7)}
 .chat-box.show{display:block}
-.chat-head{background:linear-gradient(90deg,#1a1a1a,#2a2110);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #C9A86A}
+.chat-head{background:linear-gradient(90deg,#1a1a1a,#2a2110);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #C9A86A}
+.chat-head-left{display:flex;align-items:center;gap:10px}
+.sofia-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #E8C97A;flex-shrink:0;background:#222}
 .chat-head b{color:#E8C97A;letter-spacing:1px}
 .chat-head span{font-size:11px;color:#aaa}
 .chat-close{font-size:22px;cursor:pointer;color:#fff}
-.chat-body{padding:14px;height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.4}
+.chat-body{padding:14px;height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.msg-row{display:flex;gap:8px;align-items:flex-start;max-width:92%}
+.msg-row.me{justify-content:flex-end;align-self:flex-end;max-width:92%}
+.msg-row .bot-avatar{width:44px;height:44px;min-width:44px;border-radius:50%;object-fit:cover;border:2px solid #E8C97A;background:#222}
+.msg-row .user-avatar{width:44px;height:44px;min-width:44px;border-radius:50%;object-fit:cover;border:2px solid #C9A86A;background:#222}
+.msg{max-width:100%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.4}
 .msg.bot{background:#222;color:#eee;align-self:flex-start;border:1px solid #333}
 .msg.me{background:#C9A86A;color:#000;align-self:flex-end;font-weight:bold}
 .chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid #333;background:#111}
@@ -301,7 +307,7 @@ body{background:#0a0a0a;color:#fff}
   </div>
 </div>
 <div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">CONTATTI</div></div>
-<div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
+<div id="chatBox" class="chat-box"><div class="chat-head"><div class="chat-head-left"><img src="sofia.png" class="sofia-avatar" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'"><div><b>Sofia • D' LUSSO</b><br><span>● Online • Balas dalam 1 menit</span></div></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg-row"><img src="sofia.png" class="bot-avatar" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 <div id="notifModal" class="notif-modal" onclick="if(event.target===this) toggleNotif(false)">
   <div class="notif-box">
     <div class="notif-head"><b>🔔 Notifikasi</b><span onclick="toggleNotif(false)">×</span></div>
@@ -534,7 +540,15 @@ function openChat(){ document.getElementById('chatBox').classList.add('show'); d
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
-// ===== PINTU RAHASIA @ # $ & - FIX: @phus cari phus, ILIKE biar gede/kecil sama =====
+function sofiaImg(){ return '<img src="sofia.png" class="bot-avatar" onerror="this.src=\'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100\'">'; }
+function userImg(){
+  var foto = '';
+  try{ var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}'); foto = m.foto_url || m.foto || ''; }catch(e){}
+  if(foto) return '<img src="'+foto+'" class="user-avatar" onerror="this.src=\'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100\'">';
+  var el = document.getElementById('mFoto');
+  if(el && el.src && !el.src.includes('placeholder')) return '<img src="'+el.src+'" class="user-avatar">';
+  return '<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="user-avatar">';
+}
 var rahasiaData = null;
 var rahasiaTujuan = '';
 async function cekKodeRahasia(text){
@@ -585,17 +599,17 @@ function cekPinRahasia(){
     updateDots('');
   }
 }
-// ===== BOT BARU - SKOR + PRIORITAS + BISA JAWAB 2 PERTANYAAN + SUPPORT | UNTUK FRASA PANJANG =====
 async function sendChatMsg(text){
   var isRahasia = await cekKodeRahasia(text);
   if(isRahasia){
     var body0=document.getElementById('chatBody');
-    var me0=document.createElement('div'); me0.className='msg me'; me0.textContent=text; body0.appendChild(me0); body0.scrollTop=body0.scrollHeight;
+    var me0=document.createElement('div'); me0.className='msg-row me'; me0.innerHTML='<div class="msg me"></div>'+userImg(); me0.querySelector('.msg').textContent=text; body0.appendChild(me0); body0.scrollTop=body0.scrollHeight;
     return;
   }
   var body=document.getElementById('chatBody');
-  var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight;
-  var bot=document.createElement('div'); bot.className='msg bot'; bot.textContent='...'; body.appendChild(bot); body.scrollTop=body.scrollHeight;
+  var rowMe=document.createElement('div'); rowMe.className='msg-row me'; rowMe.innerHTML='<div class="msg me"></div>'+userImg(); rowMe.querySelector('.msg').textContent=text; body.appendChild(rowMe); body.scrollTop=body.scrollHeight;
+  var rowBot=document.createElement('div'); rowBot.className='msg-row'; rowBot.innerHTML=sofiaImg()+'<div class="msg bot">...</div>'; body.appendChild(rowBot); body.scrollTop=body.scrollHeight;
+  var bot=rowBot.querySelector('.msg.bot');
   var low=text.toLowerCase(); var jawaban=null;
   try{
     const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,intent_name,prioritas,skor');
