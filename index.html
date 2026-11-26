@@ -7,12 +7,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
-.top{position:sticky;top:0;z-index:10;background:#0a0a0a;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2a2110}
-.logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold}
-.top-icons{font-size:24px}
-.hero{position:relative;height:500px;overflow:hidden}
-.hero img{width:100%;height:100%;object-fit:cover;object-position:center top;margin-top:-20px}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.15) 40%,rgba(0,0,0,.85) 88%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:20px;padding-bottom:48px}
+.top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
+.logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.top-icons{font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.hero{position:relative;height:620px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.85) 92%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:20px;padding-bottom:48px}
 .hero-overlay h1{font-size:52px;letter-spacing:3px;color:#F5D98A;line-height:1}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
 .hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
@@ -56,12 +56,11 @@ body{background:#0a0a0a;color:#fff}
 </head>
 <body>
 
-<div class="top">
-  <div class="logo">D' LUSSO</div>
-  <div class="top-icons">☰</div>
-</div>
-
 <div class="hero">
+  <div class="top">
+    <div class="logo">D' LUSSO</div>
+    <div class="top-icons">☰</div>
+  </div>
   <img src="hero.png">
   <div class="hero-overlay">
     <h1>D' LUSSO</h1>
