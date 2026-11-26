@@ -70,8 +70,8 @@ body{background:#0a0a0a;color:#fff}
 .small{font-size:12px;color:#C9A86A;margin-top:10px;text-align:center}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#111;display:flex;border-top:1px solid #333;z-index:30}
 .bottom div{flex:1;text-align:center;padding:14px 0;font-size:12px;letter-spacing:1px;cursor:pointer}
-.bottom .active{color:#E8C97A;border-bottom:2px solid #E8C97A}
-.bottom .gold{background:#C9A86A;color:#000;font-weight:bold}
+.bottom .active{background:#C9A86A;color:#000;font-weight:bold}
+.bottom .active{border-bottom:none}
 .footer{text-align:center;padding:16px 20px 75px;color:#888;font-size:12px;line-height:1.6}
 .footer b{color:#E8C97A}
 .page{display:none}
@@ -267,8 +267,7 @@ body{background:#0a0a0a;color:#fff}
     </div>
     <button class="btn-topup" onclick="topupSaldo()">+ TOP UP SALDO</button>
     <div class="btn-row">
-      <button onclick="beliSaldo()">🛍️ BELI PAKAI SALDO</button>
-      <button onclick="tarikSaldo()">💸 TARIK SALDO</button>
+      <button onclick="tarikSaldo()" style="flex:1">💸 TARIK SALDO</button>
     </div>
     <div class="member-sec"><h3>Keranjang Lu</h3><span onclick="checkoutCart()">Lihat Semua</span></div>
     <div class="keranjang" id="mKeranjang">
@@ -281,18 +280,22 @@ body{background:#0a0a0a;color:#fff}
     <div style="text-align:center;margin-top:18px;font-size:12px;color:#aaa">📧 <span id="mEmail">-</span> • 📱 <span id="mWa">-</span> • 🏷️ Discount <span id="mDiscount">5%</span> • 📍 <span id="mAlamat">-</span><br><span style="color:#C9A86A;text-decoration:underline;cursor:pointer" onclick="logoutMember()">Logout dari akun ini</span></div>
   </div>
 </div>
-<div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div><div onclick="openChat()">CONTATTI</div></div>
+<div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">CONTATTI</div></div>
 <div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 <script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(r){ r.forEach(function(x){ x.unregister(); }); }); }
+if(window.caches){ caches.keys().then(function(k){ k.forEach(function(x){ caches.delete(x); }); }); }
 var cart=[]; var deferredPrompt=null;
 function installApp(){ alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama\n\nDi iPhone: klik tombol Share di Safari > Tambah ke Layar Utama"); }
 function showPage(p){
-  // Kalo klik VIP tapi udah login, langsung ke Profil Member, gak perlu login lagi
+  var diminta = p;
   if(p==='vip' && localStorage.getItem('dlusso_member')){ p='member'; }
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
-  document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active');
-  if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
+  document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active'); document.getElementById('nav-contatti').classList.remove('active');
+  var navId = diminta;
+  if(p==='member') navId = 'vip';
+  if(document.getElementById('nav-'+navId)) document.getElementById('nav-'+navId).classList.add('active');
   document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0);
   if(p==='member') renderMember();
 }
@@ -349,7 +352,7 @@ async function catatTransaksi(member, tipe, amount, keterangan){
     await supabaseClient.from('riwayat_saldo').insert([{
       member_id: member.id, full_name: m.full_name, whatsapp: m.whatsapp, email: m.email, tier: m.tier,
       tipe: tipe, amount: amount, saldo_sebelum: sebelum, saldo_sesudah: sesudah, keterangan: keterangan || tipe,
-      diubah_oleh: 'DITULIS ADMIN', sumber: 'WEB'
+      diubah_oleh: 'ADMIN', sumber: 'WEB'
     }]);
     var local = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
     local.saldo = sesudah;
@@ -363,19 +366,8 @@ async function topupSaldo(){
   if(!nominal) return;
   var amt = Number(nominal.replace(/[^0-9]/g,''));
   if(!amt){ alert("Nominal tidak valid"); return; }
-  var hasil = await catatTransaksi(m, 'TOP UP', amt, 'Top Up via WA - Ditulis Admin');
+  var hasil = await catatTransaksi(m, 'TOP UP', amt, 'Top Up via WA - ADMIN');
   if(hasil !== null){ openWA("Ciao! Saya mau TOP UP SALDO sebesar Rp " + amt.toLocaleString('id-ID') + "\nNama: " + (m.full_name||'')); renderMember(); }
-}
-async function beliSaldo(){
-  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
-  var barang = prompt("Mau beli apa? Contoh: Milano Black Suit");
-  if(!barang) return;
-  var nominal = prompt("Harganya berapa? Contoh: 200000");
-  if(!nominal) return;
-  var amt = Number(nominal.replace(/[^0-9]/g,''));
-  if(!amt){ alert("Nominal tidak valid"); return; }
-  var hasil = await catatTransaksi(m, 'BELI', -amt, 'Beli: ' + barang + ' - Ditulis Admin');
-  if(hasil !== null){ alert("Berhasil beli " + barang + " pake saldo! Sisa saldo Rp " + hasil.toLocaleString('id-ID')); renderMember(); }
 }
 async function tarikSaldo(){
   var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
@@ -384,7 +376,7 @@ async function tarikSaldo(){
   var amt = Number(nominal.replace(/[^0-9]/g,''));
   if(!amt){ alert("Nominal tidak valid"); return; }
   if(!confirm("Yakin mau TARIK Rp " + amt.toLocaleString('id-ID') + "?\nNanti Admin yang tulis & proses transfernya.")) return;
-  var hasil = await catatTransaksi(m, 'TARIK', -amt, 'Tarik saldo ke rekening / cash - Ditulis Admin, menunggu transfer');
+  var hasil = await catatTransaksi(m, 'TARIK', -amt, 'Tarik saldo ke rekening / cash - ADMIN, menunggu transfer');
   if(hasil !== null){ openWA("Ciao! Saya mau TARIK SALDO sebesar Rp " + amt.toLocaleString('id-ID') + "\nNama: " + (m.full_name||'')); renderMember(); }
 }
 async function renderRiwayatSaldo(){
@@ -411,8 +403,8 @@ async function renderRiwayatSaldo(){
       var label = (x.tipe||'TOP UP') + ' - Rp ' + Math.abs(amt).toLocaleString('id-ID');
       var icon = isPlus ? '+' : '-';
       var cls = isPlus ? '' : ' minus';
-      var isAdmin = (x.diubah_oleh && (String(x.diubah_oleh).includes('DITULIS ADMIN') || String(x.diubah_oleh).includes('ADMIN'))) || (x.keterangan && String(x.keterangan).includes('Ditulis Admin'));
-      var adminBadge = isAdmin ? '<br><span style="background:#1a1a1a;border:1px solid #E8C97A;color:#E8C97A;font-size:10px;padding:3px 7px;border-radius:99px;font-weight:800;display:inline-block;margin-top:4px">✍️ DITULIS ADMIN</span>' : '';
+      var isAdmin = (x.diubah_oleh && String(x.diubah_oleh).includes('ADMIN')) || (x.keterangan && String(x.keterangan).includes('ADMIN'));
+      var adminBadge = isAdmin ? '<br><span style="background:#1a1a1a;border:1px solid #E8C97A;color:#E8C97A;font-size:10px;padding:3px 7px;border-radius:99px;font-weight:800;display:inline-block;margin-top:4px">✍️ ADMIN</span>' : '';
       var ket = x.keterangan ? ' • ' + x.keterangan : '';
       var saldoInfo = '<br><small style="color:#E8C97A">Saldo: Rp ' + Number(x.saldo_sebelum||0).toLocaleString('id-ID') + ' → Rp ' + Number(x.saldo_sesudah||0).toLocaleString('id-ID') + '</small>';
       return '<div class="riwayat-item"><div class="left"><span class="plus'+cls+'">'+icon+'</span><div><b>'+label+'</b><small>'+tgl+ket+'</small>'+saldoInfo+adminBadge+'</div></div><span class="time">'+jam+'</span></div>';
@@ -451,7 +443,7 @@ document.querySelectorAll('.card').forEach(function(card){
   if(addBtn){ addBtn.onclick = function(){ cart.push(name+" - "+price); var badge=document.getElementById('cartBadge'); badge.style.display='block'; badge.textContent="🛒 "+cart.length+" • Checkout"; addBtn.textContent="✓ Ditambahkan!"; setTimeout(function(){ addBtn.textContent="+ Add to Cart"; },1200); }; }
   var buy=document.createElement('button'); buy.className='buy'; buy.textContent='🛒 BELI SEKARANG'; buy.onclick=function(){ buyNow(name,price); }; card.querySelector('.card-body').appendChild(buy);
 });
-function openChat(){ document.getElementById('chatBox').classList.add('show'); }
+function openChat(){ document.getElementById('chatBox').classList.add('show'); document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active'); document.getElementById('nav-contatti').classList.add('active'); }
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
@@ -479,7 +471,6 @@ async function sendChatMsg(text){
   setTimeout(function(){ bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight; },600);
 }
 renderMember();
-// Refresh selalu ke HOME, login tetep keinget di localStorage
 showPage('home');
 </script>
 </body>
