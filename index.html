@@ -25,10 +25,11 @@ body{background:#0a0a0a;color:#fff}
 .boutique{position:relative;margin-top:-18px;padding:20px;padding-top:16px;text-align:center;background:#0a0a0a;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
-.map-box{padding:16px 16px 70px;background:#0a0a0a;text-align:center}
+.spacer{height:60px;background:#0a0a0a}
+.map-box{padding:20px 16px 75px;background:#0a0a0a;text-align:center}
 .map-box h3{color:#E8C97A;letter-spacing:2px;font-size:16px;margin-bottom:6px}
-.map-box p{font-size:12px;color:#aaa;margin-bottom:12px}
-.map-box iframe{width:100%;height:260px;border:1px solid #C9A86A;border-radius:16px;filter:grayscale(0.2)}
+.map-box p{font-size:12px;color:#aaa;margin-bottom:12px;line-height:1.6}
+.map-box iframe{width:100%;height:320px;border:1px solid #C9A86A;border-radius:16px}
 .btn-map{display:inline-block;margin-top:12px;background:#C9A86A;color:#000;padding:12px 20px;border-radius:12px;font-weight:bold;text-decoration:none;font-size:13px}
 .section{padding:20px}
 .cat-title{font-size:18px;color:#E8C97A;letter-spacing:1px;margin:22px 0 10px;text-align:left}
@@ -39,7 +40,9 @@ body{background:#0a0a0a;color:#fff}
 .card-body small{color:#E8C97A;font-size:10px;letter-spacing:1px}
 .card-body h3{font-size:15px;margin:5px 0}
 .price{color:#E8C97A;font-weight:bold}
-.add{width:100%;background:#E8C97A;border:none;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px}
+.add{width:100%;background:#222;border:1px solid #C9A86A;color:#E8C97A;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px;cursor:pointer}
+.buy{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;border:none;padding:11px;border-radius:10px;font-weight:bold;margin-top:8px;cursor:pointer;font-size:13px}
+.cart-badge{position:fixed;top:14px;right:52px;z-index:40;background:#C9A86A;color:#000;font-size:11px;font-weight:bold;padding:4px 8px;border-radius:20px;display:none}
 .vip{background:#111;padding:24px 20px 30px;text-align:center;min-height:80vh}
 .vip .crown{font-size:36px}
 .vip h2{font-size:30px;color:#E8C97A;margin:8px 0 4px}
@@ -81,6 +84,7 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
+<div id="cartBadge" class="cart-badge" onclick="checkoutCart()">🛒 0 • Checkout</div>
 
 <div id="page-home" class="page active">
   <div class="hero">
@@ -94,26 +98,19 @@ body{background:#0a0a0a;color:#fff}
         <div onclick="showPage('accessorio')">👜 ACCESSORIO</div>
         <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
         <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
-        <div onclick="showPage('home');setTimeout(()=>document.getElementById('mapBraga').scrollIntoView({behavior:'smooth'}),100)">📍 LOKASI BOUTIQUE</div>
+        <div onclick="showPage('lokasi')">📍 LOKASI BOUTIQUE</div>
       </div>
     </div>
     <img src="hero.png" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'">
-    <div class="hero-overlay">
-      <h1>D' LUSSO</h1>
-      <h2>IL LUSSO DI BANDUNG</h2>
-      <p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p>
-      <button class="btn-gold" onclick="showPage('collezione')">SCOPRI LA COLLEZIONE →</button>
-    </div>
+    <div class="hero-overlay"><h1>D' LUSSO</h1><h2>IL LUSSO DI BANDUNG</h2><p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p><button class="btn-gold" onclick="showPage('collezione')">SCOPRI LA COLLEZIONE →</button></div>
   </div>
   <div class="boutique"><h3>— BOUTIQUE BANDUNG —</h3><p>APERTO ORA • Jl. Braga No.88, Bandung</p></div>
-  <!-- PETA BRAGA -->
-  <div id="mapBraga" class="map-box">
-    <h3>📍 LOKASI BOUTIQUE</h3>
-    <p>Jl. Braga No.88, Braga, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40111</p>
-    <iframe src="https://www.google.com/maps?q=Jalan%20Braga%2C%20Bandung%2C%20Jawa%20Barat&output=embed" loading="lazy" allowfullscreen></iframe>
-    <br>
-    <a class="btn-map" href="https://www.google.com/maps/search/?api=1&query=Jalan+Braga+Bandung" target="_blank">🧭 BUKA DI GOOGLE MAPS →</a>
-  </div>
+  <div class="spacer"></div>
+</div>
+
+<div id="page-lokasi" class="page">
+  <div class="page-head"><h2>📍 Lokasi Boutique</h2><p>D' LUSSO • Il Lusso di Bandung</p></div>
+  <div class="map-box"><h3>D' LUSSO BOUTIQUE BANDUNG</h3><p>Jl. Braga No.88, Braga, Kec. Sumur Bandung<br>Kota Bandung, Jawa Barat 40111<br><br>🕙 Setiap Hari 10.00 - 21.00 WIB<br>📱 WA: +62 812-3456-7890 • IG: @d.lusso</p><iframe src="https://www.google.com/maps?q=Jalan%20Braga%2C%20Bandung%2C%20Jawa%20Barat&output=embed" loading="lazy" allowfullscreen></iframe><br><a class="btn-map" href="https://www.google.com/maps/search/?api=1&query=Jalan+Braga+Bandung" target="_blank">🧭 BUKA DI GOOGLE MAPS →</a></div>
 </div>
 
 <div id="page-collezione" class="page">
@@ -200,10 +197,7 @@ body{background:#0a0a0a;color:#fff}
 </div>
 
 <div id="page-vip" class="page">
-  <div class="vip">
-    <div class="crown">👑</div><h2>Club D' Lusso VIP</h2><h3>Il Lusso di Bandung</h3><h4>Daftar VIP Membership</h4><p>Gabung sekarang dan nikmati layanan fashion eksklusif</p>
-    <div class="form"><label>Nama Lengkap</label><input placeholder="👤  Masukkan nama lengkap"><label>No WA</label><input placeholder="📞  +62 8xx xxxx xxxx"><label>Password</label><input type="password" placeholder="🔒  Masukkan password"><div class="check"><input type="checkbox" checked style="width:18px"> <span>Saya setuju dengan Syarat & Ketentuan & Kebijakan Privasi</span></div><button class="btn-vip">DAFTAR VIP GRATIS</button><div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div></div>
-  </div>
+  <div class="vip"><div class="crown">👑</div><h2>Club D' Lusso VIP</h2><h3>Il Lusso di Bandung</h3><h4>Daftar VIP Membership</h4><p>Gabung sekarang dan nikmati layanan fashion eksklusif</p><div class="form"><label>Nama Lengkap</label><input placeholder="👤  Masukkan nama lengkap"><label>No WA</label><input placeholder="📞  +62 8xx xxxx xxxx"><label>Password</label><input type="password" placeholder="🔒  Masukkan password"><div class="check"><input type="checkbox" checked style="width:18px"> <span>Saya setuju dengan Syarat & Ketentuan & Kebijakan Privasi</span></div><button class="btn-vip">DAFTAR VIP GRATIS</button><div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div></div></div>
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
@@ -222,6 +216,7 @@ body{background:#0a0a0a;color:#fff}
 </div>
 
 <script>
+var cart=[];
 function showPage(p){
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
@@ -234,7 +229,39 @@ function showPage(p){
 }
 function toggleMenu(e){ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show'); }
 document.addEventListener('click',function(e){ if(!e.target.closest('.menu-drop')) document.getElementById('menuDrop').classList.remove('show') });
-function openWA(){ var msg = encodeURIComponent("Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung."); window.open("https://wa.me/6281234567890?text="+msg,"_blank"); }
+function openWA(msg){
+  var m = msg || "Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung.";
+  window.open("https://wa.me/6281234567890?text="+encodeURIComponent(m),"_blank");
+}
+function buyNow(name,price){
+  openWA("Ciao D' LUSSO! Saya mau BELI SEKARANG:\n\n• "+name+"\n• Harga: "+price+"\n\nApakah masih ready? Saya mau checkout sekarang. Grazie!");
+}
+function checkoutCart(){
+  if(cart.length==0){ alert("Keranjang masih kosong"); return; }
+  var txt="Ciao D' LUSSO! Saya mau CHECKOUT keranjang:\n\n"+cart.map((c,i)=>(i+1)+". "+c).join("\n")+"\n\nTotal "+cart.length+" produk. Mohon info pembayaran ya!";
+  openWA(txt);
+}
+// AUTO TAMBAH TOMBOL BELI DI SEMUA PRODUK + FUNGSI KERANJANG
+document.querySelectorAll('.card').forEach(function(card){
+  var name = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Produk D LUSSO';
+  var price = card.querySelector('.price') ? card.querySelector('.price').textContent : '';
+  var addBtn = card.querySelector('.add');
+  if(addBtn){
+    addBtn.onclick = function(){
+      cart.push(name+" - "+price);
+      var badge=document.getElementById('cartBadge');
+      badge.style.display='block';
+      badge.textContent="🛒 "+cart.length+" • Checkout";
+      addBtn.textContent="✓ Ditambahkan!";
+      setTimeout(function(){ addBtn.textContent="+ Add to Cart"; },1200);
+    };
+  }
+  var buy=document.createElement('button');
+  buy.className='buy';
+  buy.textContent='🛒 BELI SEKARANG';
+  buy.onclick=function(){ buyNow(name,price); };
+  card.querySelector('.card-body').appendChild(buy);
+});
 function openChat(){ document.getElementById('chatBox').classList.add('show'); }
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
@@ -255,4 +282,4 @@ function sendChatMsg(text){
 }
 </script>
 </body>
-    </html>
+</html>
