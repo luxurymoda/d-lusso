@@ -635,13 +635,13 @@ async function sendChatMsg(text){
   if(!jawaban && (low.includes('ongkir') || low.includes('ongkos') || low.includes('biaya') || low.includes('pengiriman') || low.includes('berapa ongkos') || low.includes('berapa biaya'))){
     var kotaOngkir = kotaBaru || lastKota;
     if(kotaOngkir){
-      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman ke ' + kotaOngkir + ' itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Kakak di ' + kotaOngkir + ' kecamatan mana? Biar Sofia bantu cekkan ke ekspedisi sekarang ya!';
+      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman ke ' + kotaOngkir + ' itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Boleh info kecamatan di ' + kotaOngkir + ' kak? Nanti Sofia teruskan ke Admin, biar Admin yang cekkan langsung ke ekspedisi ya!';
     } else {
-      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Kakak mau kirim ke kota mana? Biar Sofia bantu cekkan ya!';
+      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Kakak mau kirim ke kota mana? Biar Sofia teruskan ke Admin ya!';
     }
   }
   if(!jawaban && kotaBaru && isKirim){
-    jawaban = 'Bisa banget kak kirim ke ' + kotaBaru + '! ✨ Kita kirim ke seluruh Indonesia kok.<br><br>Kakak di ' + kotaBaru + ' kecamatan mana? Biar Sofia bantu cekkan ke ekspedisi ya!';
+    jawaban = 'Bisa banget kak kirim ke ' + kotaBaru + '! ✨ Kita kirim ke seluruh Indonesia kok.<br><br>Boleh info kecamatan di ' + kotaBaru + ' kak? Nanti Sofia teruskan ke Admin, biar Admin yang cekkan langsung ke ekspedisi ya!';
   }
   if(!jawaban && (low.includes('luar kota') || low.includes('keluar kota') || low.includes('bisa dikirim'))){
     jawaban = 'Bisa kirim ke seluruh Indonesia kak. Kakak di kota mana?';
