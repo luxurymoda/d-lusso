@@ -625,6 +625,16 @@ async function sendChatMsg(text){
   var rowBot=document.createElement('div'); rowBot.className='msg-row'; rowBot.innerHTML=sofiaImg()+'<div class="msg bot">...</div>'; body.appendChild(rowBot); body.scrollTop=body.scrollHeight;
   var bot=rowBot.querySelector('.msg.bot');
   var low=text.toLowerCase(); var jawaban=null;
+  // === SIAPA SOFIA? - JATI DIRI ===
+  if(!jawaban && low.includes('sofia') && (low.includes('cewek') || low.includes('cowok') || low.includes('cowo') || low.includes('cewe') || low.includes('laki') || low.includes('perempuan') || low.includes('pria') || low.includes('wanita') || low.includes('gender') || low.includes('jenis kelamin'))){
+    jawaban = 'Sofia cewek kak ✨👩<br><br>Sofia itu concierge wanita-nya D\' LUSSO, yang siap bantuin kakak cari Jas, Gaun, Tas, dan Accessories. Ciao!';
+  }
+  if(!jawaban && (low.includes('kamu cewek') || low.includes('kamu cowok') || low.includes('kamu cewe') || low.includes('kamu cowo') || low.includes('kamu laki') || low.includes('kamu perempuan'))){
+    jawaban = 'Aku cewek kak ✨ Aku Sofia, concierge wanita-nya D\' LUSSO 💁‍♀️';
+  }
+  if(!jawaban && (low.includes('kamu siapa') || low.includes('siapa kamu') || low.includes('nama kamu') || low.includes('kamu namanya') || low.includes('siapa namamu'))){
+    jawaban = 'Kenalin kak, aku Sofia ✨ Concierge wanita-nya D\' LUSSO di Braga, Bandung. Siap bantuin kakak cari fashion mewah ya!';
+  }
   var kotaBaru = ambilKota(text);
   var isKirim = low.includes('kirim') || low.includes('pengiriman') || low.includes('dikirim') || low.includes('ke ') || low.includes('tujuan');
   var isOngkir = low.includes('ongkir') || low.includes('ongkos') || low.includes('biaya') || low.includes('pengiriman');
