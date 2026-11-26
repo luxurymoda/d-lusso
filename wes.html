@@ -37,7 +37,7 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <div id="page-beranda"><h2>Ringkasan Statistik</h2><div class="stats"><div class="stat"><div>📈</div><p>Pendapatan</p><b id="tOmset">Rp. 0,-</b></div><div class="stat"><div>🛍️</div><p>Pesanan</p><b id="tOrders">0</b></div><div class="stat"><div>📦</div><p>Produk Aktif</p><b id="tProduk">0</b></div></div>
 <div id="notifTarikBox"></div>
 <h2>📋 MENU LENGKAP</h2><div class="menuGrid">
-<button onclick="nav('produk')"><div>📦</div>Produk</button><button onclick="nav('pesanan')"><div>🧾</div>Pesanan</button><button onclick="nav('pelanggan')"><div>👥</div>Member</button><button onclick="nav('riwayat')"><div>💰</div>Riwayat Saldo</button><button onclick="nav('admin')"><div>👑</div>Admin</button><button onclick="nav('pegawai')"><div>💼</div>Pegawai</button><button onclick="nav('bot')"><div>🤖</div>BOT</button><button onclick="nav('antrian')"><div>🔔</div>Antrian BOT</button><button onclick="nav('laporan')"><div>📊</div>Laporan</button><button onclick="nav('profil')"><div>👤</div>Profil</button>
+<button onclick="nav('produk')"><div>📦</div>Produk</button><button onclick="nav('pesanan')"><div>🧾</div>Pesanan</button><button onclick="nav('pelanggan')"><div>👥</div>Member</button><button onclick="nav('riwayat')"><div>💰</div>Riwayat Saldo</button><button onclick="nav('admin')"><div>👑</div>Admin</button><button onclick="nav('pegawai')"><div>💼</div>Pegawai</button><button onclick="nav('bot')"><div>🤖</div>BOT</button><button onclick="nav('antrian')"><div>🔔</div>Antrian BOT</button><button onclick="nav('laporan')"><div>📊</div>Laporan</button><button onclick="nav('profil')"><div>👤</div>Profil</button><button onclick="nav('cleanup')" style="border-color:#ff4444;background:#2a1515"><div>🧹</div>Cleanup</button><button onclick="bersihinProduk()"><div>⚡</div>Bersihin Cepet</button>
 </div>
 <h2>Daftar Produk</h2><div class="search"><input id="cariProduk" placeholder="🔍 Cari produk / scan barcode..." oninput="renderProduk()"></div><div id="listProduk"></div>
 <div class="form"><div class="card" style="display:block"><h3 style="margin:0">Pesanan Terbaru</h3><div id="lastOrders">Loading...</div></div></div></div>
@@ -47,7 +47,7 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <small style="color:#aaa">Klik Scan -> arahkan kamera ke barcode yang udah nempel di barang / dus dari pabrik. Gak usah ketik manual, gak usah tempel ulang.</small>
 <div class="barcodePreview" id="barcodePreview"><b>D' LUSSO</b><br><span id="pvNama">Nama Produk</span><br><svg id="barcodeSvg"></svg><div id="pvBarcode" style="letter-spacing:4px;font-weight:bold;word-break:break-all">-</div><div id="pvHarga" style="font-weight:bold">Rp 0</div></div>
 <input type="file" id="p_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><input type="file" id="p_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><img id="p_preview" class="fotoPreview"><input id="p_foto" type="hidden"><small id="p_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('p_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('p_fotoFile').click()">🖼️ Galeri</button></div>
-<textarea id="p_desc" placeholder="Deskripsi"></textarea><button class="btn" onclick="saveProduk()">💾 SIMPAN PRODUK</button><button class="btn2" style="width:100%;margin-top:8px" onclick="bersihinProduk()">🧹 Bersihin Produk Kosong / Harga 0</button></div><div id="listProduk2"></div></div></div>
+<textarea id="p_desc" placeholder="Deskripsi"></textarea><button class="btn" onclick="saveProduk()">💾 SIMPAN PRODUK</button><button class="btn2" style="width:100%;margin-top:8px" onclick="bersihinProduk()">🧹 Bersihin Produk Kosong / Harga 0 / Stok 0</button></div><div id="listProduk2"></div></div></div>
 <div id="page-pesanan" class="hidden"><h2>Pesanan</h2><div class="form"><div class="card" style="display:block" id="listOrders"></div></div></div>
 <div id="page-pelanggan" class="hidden"><h2>👥 Pelanggan / Member</h2><div class="form"><div class="card" style="display:block"><input id="m_id" type="hidden"><input id="m_nama" placeholder="Nama Lengkap"><input id="m_wa" placeholder="WhatsApp"><input id="m_email" placeholder="Email">
 <div style="display:flex;gap:8px;align-items:center"><input id="m_password" type="password" placeholder="Password Member - kosongin kalo gak mau ganti" style="flex:1"><button class="btn2" type="button" onclick="lihatPass('m_password',this)">👁️</button></div><small style="color:#aaa">Kosongin aja kalo password member gak mau diganti</small>
@@ -74,7 +74,14 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <button class="btn" onclick="savePegawai()">💾 SIMPAN PEGAWAI</button></div><div class="card" style="display:block" id="listPegawai"></div></div></div>
 <div id="page-bot" class="hidden"><h2>🤖 Ajari BOT</h2><div class="form"><div class="card" style="display:block"><input id="b_id" type="hidden"><input id="b_q" placeholder="Pertanyaan member"><textarea id="b_a" placeholder="Jawaban bot"></textarea><button class="btn" onclick="saveBot()">💾 SIMPAN KE OTAK BOT</button></div><div class="card" style="display:block" id="listBot"></div><div class="card" style="display:block"><h3>Tes Bot</h3><input id="tesBotInput" placeholder="Coba tanya..."><button class="btn" onclick="tesBot()">🤖 TANYA BOT</button><div id="tesBotHasil" style="margin-top:10px">Belum ada tes</div></div></div></div>
 <div id="page-antrian" class="hidden"><h2>🔔 Antrian Pertanyaan BOT</h2><div class="form"><div class="card" style="display:block"><p style="font-size:12px;color:#aaa">Pertanyaan member yang belum ada jawabannya. Jawab di sini, langsung masuk otak BOT.</p><div id="listAntrian">Loading...</div></div></div></div>
-<div id="page-profil" class="hidden"><h2>👤 Profil</h2><div class="form"><div class="card" style="display:block;text-align:center"><div style="font-size:50px">👑</div><b>KO CHENG ADMIN</b><p>Admin Panel Luxury</p><button class="btn" onclick="nav('admin')">👑 Kelola Admin</button><br><br><button class="btn" onclick="nav('pegawai')">💼 Kelola Pegawai</button><br><br><button class="btn" onclick="nav('bot')">🤖 Ajari BOT</button><br><br><button class="btn" onclick="nav('antrian')">🔔 Antrian BOT</button><br><br><button class="btn" onclick="nav('pelanggan')">👥 Kelola Member</button></div></div></div>
+<div id="page-cleanup" class="hidden"><h2>🧹 Cleanup Database</h2>
+<div class="form">
+<div class="card" style="display:block;border-color:#ff4444;background:#2a1515"><h3 style="margin:0;color:#ff6666">⚠️ Sampah = Stok 0 + Foto Base64</h3><p style="font-size:12px;color:#ddd;line-height:1.5">Foto produk lu disimpen sebagai tulisan Base64 di dalam database (bukan file terpisah). 1 foto = ~130KB. Jadi kalo barang stok 0 dihapus, fotonya OTOMATIS ikut kehapus dan database langsung langsing. Nggak perlu hapus Storage, karena lu nggak pake Storage.</p></div>
+<div class="stats" style="padding:0"><div class="stat"><div>📦</div><p>Total Produk</p><b id="cTotal">0</b></div><div class="stat" style="border-color:#ff4444"><div>🗑️</div><p>Sampah (Stok 0)</p><b id="cSampah" style="color:#ff6666">0</b></div><div class="stat"><div>💾</div><p>Perkiraan Foto Sampah</p><b id="cUkuran">0 KB</b></div></div>
+<div class="card" style="display:block"><button class="btn" style="background:#ff4444" onclick="bersihkanSampahStok0()">🗑️ HAPUS SEMUA STOK 0 + FOTONYA</button><button class="btn2" style="width:100%;margin-top:8px;padding:12px" onclick="renderCleanup()">🔄 Refresh</button><p style="font-size:11px;color:#aaa;text-align:center">Diklik 2x konfirmasi dulu, biar nggak kepencet. Nggak bisa dibalikin!</p><div id="cleanupLog" style="font-size:12px;color:#7CFC00;margin-top:10px;white-space:pre-wrap"></div></div>
+<div class="card" style="display:block"><h3 style="margin:0">List Sampah (Stok 0)</h3><div id="listCleanup" style="margin-top:10px">Loading...</div></div>
+</div></div>
+<div id="page-profil" class="hidden"><h2>👤 Profil</h2><div class="form"><div class="card" style="display:block;text-align:center"><div style="font-size:50px">👑</div><b>KO CHENG ADMIN</b><p>Admin Panel Luxury</p><button class="btn" onclick="nav('admin')">👑 Kelola Admin</button><br><br><button class="btn" onclick="nav('pegawai')">💼 Kelola Pegawai</button><br><br><button class="btn" onclick="nav('bot')">🤖 Ajari BOT</button><br><br><button class="btn" onclick="nav('antrian')">🔔 Antrian BOT</button><br><br><button class="btn" onclick="nav('pelanggan')">👥 Kelola Member</button><br><br><button class="btn" style="background:#ff4444" onclick="nav('cleanup')">🧹 Cleanup Database</button></div></div></div>
 </div>
 <div class="bottom" id="bottomMenu"></div>
 <div id="scanModal" class="scanModal">
@@ -93,11 +100,9 @@ const SUPABASE_URL="https://kkydbnjxbfkzbcxpcpor.supabase.co";
 const SUPABASE_KEY="sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx";
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function rupiah(n){return 'Rp. '+Number(n||0).toLocaleString('id-ID')+',-';}
-// ===== FORMAT RUPIAH SEMUA NOMINAL - BARU =====
 function ketikRupiah(el){
   let angka = String(el.value||'').replace(/[^0-9]/g,'');
   if(!angka){ el.value=''; return; }
-  // Buang 0 di depan biar gak jadi Rp. 00050.000,-
   angka = String(Number(angka));
   el.value = 'Rp. ' + Number(angka).toLocaleString('id-ID') + ',-';
 }
@@ -110,7 +115,6 @@ function isiNominal(id, angka){
   if(!angka){ el.value=''; return; }
   el.value = 'Rp. ' + Number(angka).toLocaleString('id-ID') + ',-';
 }
-// ===== END FORMAT RUPIAH =====
 function lihatPass(id,btn){let i=document.getElementById(id);if(i.type==='password'){i.type='text';btn.innerText='🙈'}else{i.type='password';btn.innerText='👁️'}}
 function topupCepet(n){let inp=document.getElementById('m_saldo');let skrg=ambilNominal('m_saldo');isiNominal('m_saldo', skrg+n);}
 let filterMemberTier='';
@@ -119,8 +123,8 @@ function renderMember(){let q=(document.getElementById('cariMember')?document.ge
 function fotoPilih(input,targetId,previewId,infoId){let file=input.files[0];if(!file)return;let reader=new FileReader();reader.onload=function(e){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let max=600;let w=img.width,h=img.height;if(w>max||h>max){let r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r)}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);let q=0.65;let kecil=canvas.toDataURL('image/jpeg',q);while(kecil.length>130000&&q>0.25){q-=0.1;kecil=canvas.toDataURL('image/jpeg',q)}let kb=Math.round(kecil.length*0.75/1024);document.getElementById(targetId).value=kecil;let pv=document.getElementById(previewId);pv.src=kecil;pv.style.display='block';if(infoId)document.getElementById(infoId).innerText='Foto: '+kb+'KB - Udah dikompres ✅ (asli: '+Math.round(file.size/1024)+'KB)';};img.src=e.target.result;};reader.readAsDataURL(file);}
 function setPreview(previewId,url,infoId){let pv=document.getElementById(previewId);if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}if(infoId)document.getElementById(infoId).innerText='';}
 const menus=[['beranda','🏠 Beranda'],['produk','📦 Produk'],['pesanan','🧾 Pesanan'],['riwayat','💰 Riwayat'],['profil','👤 Profil']];
-const topMenus=[['beranda','Dashboard'],['produk','Produk'],['pesanan','Pesanan'],['pelanggan','Member'],['riwayat','Riwayat Saldo'],['admin','Admin'],['pegawai','Pegawai'],['bot','BOT'],['antrian','Antrian BOT 🔔'],['laporan','Laporan']];
-function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','pesanan','pelanggan','riwayat','laporan','admin','pegawai','bot','antrian','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);loadAll();}
+const topMenus=[['beranda','Dashboard'],['produk','Produk'],['pesanan','Pesanan'],['pelanggan','Member'],['riwayat','Riwayat Saldo'],['admin','Admin'],['pegawai','Pegawai'],['bot','BOT'],['antrian','Antrian BOT 🔔'],['laporan','Laporan'],['cleanup','🧹 Cleanup']];
+function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','pesanan','pelanggan','riwayat','laporan','admin','pegawai','bot','antrian','profil','cleanup'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);loadAll();if(m==='cleanup') renderCleanup();}
 document.getElementById('topTabs').innerHTML=topMenus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
 document.getElementById('bottomMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')"><div>${m[1].split(' ')[0]}</div>${m[1].split(' ')[1]||''}</button>`).join('');
 let D={products:[],orders:[],members:[],admins:[],pegawai:[],bot:[],riwayat:[],antrian:[]};
@@ -161,6 +165,37 @@ function sudahTransfer(id){alert('Oke, udah dicatet udah transfer.');}
 function lihatRiwayatMember(id){let m=D.members.find(v=>v.id==id);nav('riwayat');if(m){document.getElementById('cariRiwayat').value=m.full_name||'';renderRiwayat();}}
 async function loadAll(){try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}try{let o=await sb.from('orders').select('*').order('created_at',{ascending:false});D.orders=o.data||[];}catch(e){D.orders=[]}try{let m=await sb.from('members').select('*').order('created_at',{ascending:false});D.members=m.data||[];}catch(e){}try{let a=await sb.from('admins').select('*').order('created_at',{ascending:false});D.admins=a.data||[];}catch(e){}try{let pg=await sb.from('pegawai').select('*').order('created_at',{ascending:false});D.pegawai=pg.data||[];}catch(e){}try{let b=await sb.from('bot_faq').select('*').order('id',{ascending:false});D.bot=b.data||[];}catch(e){D.bot=[]}try{let an=await sb.from('bot_antrian').select('*').order('created_at',{ascending:false});D.antrian=an.data||[];}catch(e){D.antrian=[]}try{let r=await sb.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(200);D.riwayat=r.data||[];}catch(e){D.riwayat=[]}renderAll();}
 function renderAll(){let omset=D.orders.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);document.getElementById('tOmset').innerText=rupiah(omset);document.getElementById('tOmset2').innerText=rupiah(omset);document.getElementById('tOrders').innerText=D.orders.length;document.getElementById('tProduk').innerText=D.products.filter(x=>x.is_active!==false).length;document.getElementById('tProduk2').innerText=D.products.length;document.getElementById('tMember').innerText=D.members.length;document.getElementById('lastOrders').innerHTML=D.orders.slice(0,3).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'Pelanggan'} - <b>${rupiah(x.total||x.total_amount||0)}</b></div>`).join('')||'Belum ada pesanan';renderProduk();renderMember();renderRiwayat();let ordHtml=D.orders.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'-'} - ${rupiah(x.total||x.total_amount||0)} - ${x.status||''}</div>`).join('')||'Kosong';document.getElementById('listOrders').innerHTML=ordHtml;document.getElementById('listOrders2').innerHTML=ordHtml;document.getElementById('listAdmin').innerHTML=D.admins.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editAdmin('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('admins','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listPegawai').innerHTML=D.pegawai.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editPegawai('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('pegawai','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listBot').innerHTML=D.bot.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>Q: ${x.question||x.keyword||''}</b><br>A: ${x.answer||''}<br><button class="btn2" onclick="editBot('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('bot_faq','${x.id}')">🗑️</button></div>`).join('')||'Bot belum diajarin';document.getElementById('listAntrian').innerHTML=D.antrian.map(x=>{let tgl=x.created_at?new Date(x.created_at).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';let isTunggu=x.status!=='DIJAWAB';return `<div style="padding:12px 0;border-bottom:1px solid #333"><b>❓ ${x.pertanyaan||''}</b><br><small style="color:#aaa">Dari: ${x.member_name||'Tamu'} • ${x.whatsapp||''} • ${tgl} • <b style="color:${isTunggu?'#ff6666':'#7CFC00'}">${x.status||'MENUNGGU'}</b></small>${x.jawaban_admin?`<br><small style="color:#7CFC00">Jawaban: ${x.jawaban_admin}</small>`:''}${isTunggu?`<br><textarea id="jawaban_${x.id}" placeholder="Tulis jawaban Admin di sini..."></textarea><button class="btn" onclick="jawabAntrian('${x.id}')">💾 JAWAB & AJARI BOT</button>`:''}<br><button class="btn2" style="margin-top:8px" onclick="hapus('bot_antrian','${x.id}')">🗑️ Hapus Antrian</button></div>`;}).join('')||'Belum ada antrian, aman ko ✨';}
+// ===== CLEANUP - BARU =====
+function hitungUkuranFoto(p){ let url=p.image_url||''; if(url.startsWith('data:image')) return Math.round(url.length*0.75/1024); return 0; }
+function renderCleanup(){
+  let sampah = D.products.filter(x=> Number(x.stock||0) <= 0);
+  let totalKB = sampah.reduce((s,x)=> s + hitungUkuranFoto(x), 0);
+  let totalKBAll = D.products.reduce((s,x)=> s + hitungUkuranFoto(x), 0);
+  document.getElementById('cTotal').innerText = D.products.length;
+  document.getElementById('cSampah').innerText = sampah.length;
+  document.getElementById('cUkuran').innerText = totalKB >= 1024 ? (totalKB/1024).toFixed(2)+' MB' : totalKB+' KB';
+  document.getElementById('cleanupLog').innerText = `Total foto di DB: ${totalKBAll >= 1024 ? (totalKBAll/1024).toFixed(2)+' MB' : totalKBAll+' KB'} • Sampah foto: ${totalKB >= 1024 ? (totalKB/1024).toFixed(2)+' MB' : totalKB+' KB'}`;
+  document.getElementById('listCleanup').innerHTML = sampah.map(x=>{
+    let kb = hitungUkuranFoto(x);
+    return `<div style="padding:10px 0;border-bottom:1px solid #333;display:flex;gap:10px;align-items:center"><img src="${x.image_url||'https://via.placeholder.com/60'}" style="width:60px;height:60px;object-fit:cover;border-radius:8px"><div style="flex:1"><b>${x.name||'-'}</b><br><small style="color:#aaa">Stok: ${x.stock||0} • Foto: ${kb} KB Base64 • Barcode: ${x.barcode||'-'}</small></div><button class="btn2" onclick="hapus('products','${x.id}')">🗑️</button></div>`;
+  }).join('') || '<p style="text-align:center;color:#7CFC00;padding:16px">✅ Udah bersih! Nggak ada barang stok 0.</p>';
+}
+async function bersihkanSampahStok0(){
+  let sampah = D.products.filter(x=> Number(x.stock||0) <= 0);
+  if(!sampah.length) return alert('Udah bersih bro, nggak ada sampah!');
+  let totalKB = sampah.reduce((s,x)=> s + hitungUkuranFoto(x), 0);
+  let totalMB = totalKB >= 1024 ? (totalKB/1024).toFixed(2)+' MB' : totalKB+' KB';
+  if(!confirm(`Hapus PERMANEN ${sampah.length} produk stok 0?\n\nFoto Base64 yang kehapus: ${totalMB}\nIni nggak bisa dibalikin!`)) return;
+  if(!confirm(`BENERAN YAKIN? ${sampah.length} barang + fotonya bakal hilang selamanya.`)) return;
+  document.getElementById('cleanupLog').innerText = '⏳ Lagi ngapus...';
+  let sukses=0;
+  for(let p of sampah){
+    let r = await sb.from('products').delete().eq('id', p.id);
+    if(!r.error) sukses++;
+  }
+  alert(`Beres! ${sukses} sampah kehapus, ${totalMB} foto Base64 ikut kehapus. Database langsung langsing ✨`);
+  await loadAll(); renderCleanup();
+}
 let html5Qr = null;
 let sedangScan = false;
 async function bukaScanBarcode(){
@@ -238,7 +273,15 @@ async function saveProduk(){
   setPreview('p_preview','', 'p_info');loadAll();
 }
 function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;nav('produk');document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.name||'';isiNominal('p_harga', x.price||0);document.getElementById('p_stok').value=x.stock||'';document.getElementById('p_kategori').value=x.category||'';document.getElementById('p_tipe').value=x.tipe||'';document.getElementById('p_ukuran').value=x.ukuran||'';document.getElementById('p_foto').value=x.image_url||'';document.getElementById('p_desc').value=x.description||'';document.getElementById('p_barcode').value=x.barcode||'';setPreview('p_preview',x.image_url||'','p_info');updateBarcodePreview();window.scrollTo(0,0);}
-async function bersihinProduk(){if(!confirm('Hapus produk nama kosong / harga 0?'))return;let k=D.products.filter(x=>!x.name||Number(x.price||0)===0);for(let x of k)await sb.from('products').delete().eq('id',x.id);alert(k.length+' dibersihkan');loadAll();}
+async function bersihinProduk(){
+  let k=D.products.filter(x=>!x.name||Number(x.price||0)===0||Number(x.stock||0)<=0);
+  if(!k.length) return alert('Udah bersih, nggak ada sampah!');
+  let totalKB=k.reduce((s,x)=>s+hitungUkuranFoto(x),0);
+  let totalMB= totalKB>=1024 ? (totalKB/1024).toFixed(2)+' MB' : totalKB+' KB';
+  if(!confirm(`Hapus ${k.length} produk sampah?\n(Nama kosong / Harga 0 / Stok 0)\nFoto Base64 yang kehapus: ${totalMB}\nNggak bisa dibalikin!`))return;
+  for(let x of k)await sb.from('products').delete().eq('id',x.id);
+  alert(k.length+' dibersihkan, '+totalMB+' foto ikut kehapus ✨');loadAll();
+}
 async function saveMember(){
   let id=document.getElementById('m_id').value;
   let saldoBaru=ambilNominal('m_saldo');
