@@ -27,6 +27,7 @@ body{background:#0a0a0a;color:#fff}
 .card b{font-size:14px}.card span{font-size:12px;color:#999}
 .card .price{color:#d4af37;font-weight:800}
 .add{margin-left:auto;padding:10px 16px;background:#d4af37;border:none;border-radius:10px;font-weight:800;cursor:pointer}
+.add:disabled{opacity:.35}
 .cart{background:#141414;border:1px solid #c9a227;border-radius:16px;padding:16px;position:sticky;top:78px}
 .cart h2{color:#d4af37;font-size:16px}
 .member{margin:12px 0;background:#1a1a1a;border:1px dashed #444;border-radius:12px;padding:10px;display:flex;gap:8px}
@@ -104,8 +105,6 @@ body{background:#0a0a0a;color:#fff}
     <div class="history"><h3>🧾 Riwayat Hari Ini (Supabase)</h3><div id="historyList">Memuat...</div></div>
   </div>
 </div>
-
-<!-- MODAL KAMERA SCANNER -->
 <div class="modal" id="scanModal">
   <div class="modal-top">
     <b>📷 SCAN BARCODE</b>
@@ -118,101 +117,71 @@ body{background:#0a0a0a;color:#fff}
   <div class="scan-hint">Arahkan barcode ke dalam kotak kamera<br>Produk langsung masuk keranjang, kamera tetap nyala buat scan berikutnya</div>
   <div style="padding:0 14px 16px"><button class="btn-scan2" onclick="tutupScanner()">✅ Selesai Scan - Lihat Keranjang</button></div>
 </div>
-
-<!-- MODAL STRUK -->
 <div class="struk-modal" id="modal">
   <div class="struk"><h2>D' LUSSO</h2><p>Boutique Bandung<br>Jl. Braga No.88</p><hr><div id="strukIsi"></div><hr><p>Terima kasih sudah belanja ✨</p><button class="close" onclick="tutup()">Tutup & Transaksi Baru</button></div>
 </div>
-
 <script>
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ===== SESUAI TABEL products: id | name | category | tipe | ukuran | price | stock | image_url | description | is_active | created_at | barcode =====
 let produkDB = [];
 let cart={}, payMethod="Tunai", member=null, html5Qr=null, lastScan="", lastScanTime=0;
 const rupiah = n => "Rp "+Number(n||0).toLocaleString("id-ID");
-
-function normalisasiKode(code){
-  return String(code||"").trim().replace(/[\s-]/g,"");
-}
+function normalisasiKode(code){ return String(code||"").trim().replace(/[\s-]/g,""); }
 function mappingProduk(p){
   if(!p) return null;
-  return {
-    id: p.id,
-    barcode: normalisasiKode(p.barcode),
-    nama: p.name || "Tanpa Nama",
-    harga: Number(p.price || 0),
-    kat: p.category || p.tipe || "Produk",
-    tipe: p.tipe || "",
-    ukuran: p.ukuran || "",
-    stock: Number(p.stock ?? 999),
-    img: p.image_url || "https://via.placeholder.com/100",
-    description: p.description || "",
-    is_active: p.is_active
-  };
+  return { id:p.id, barcode:normalisasiKode(p.barcode), nama:p.name||"Tanpa Nama", harga:Number(p.price||0), kat:p.category||p.tipe||"Produk", tipe:p.tipe||"", ukuran:p.ukuran||"", stock:Number(p.stock??999), img:p.image_url||"https://via.placeholder.com/100", description:p.description||"", is_active:p.is_active };
 }
 async function loadProduk(){
   try{
     let { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true).limit(1000);
     if(error) throw error;
-    if(!data || !data.length){
-      document.getElementById("scanInfo").innerText = "⚠️ Tabel products kosong atau semua is_active = false";
-      return;
-    }
+    if(!data || !data.length){ document.getElementById("scanInfo").innerText="⚠️ Tabel products kosong atau semua is_active = false"; return; }
     produkDB = data.map(mappingProduk).filter(p=>p.barcode);
-    document.getElementById("scanInfo").innerText = `✅ ${produkDB.length} produk ter-load dari Supabase`;
-    console.log("Produk loaded:", produkDB);
-  }catch(e){
-    console.error(e);
-    document.getElementById("scanInfo").innerText = "❌ Gagal load: " + e.message + " - Cek RLS / Policy SELECT di tabel products";
-  }
+    document.getElementById("scanInfo").innerText=`✅ ${produkDB.length} produk ter-load dari Supabase`;
+  }catch(e){ document.getElementById("scanInfo").innerText="❌ Gagal load: "+e.message; }
 }
 
-// ===== BUNYI + NOTIF SCAN =====
+// ===== HELPER STOK - INI KUNCINYA =====
+function qtyDiKeranjang(barcode){
+  return cart[normalisasiKode(barcode)] ? cart[normalisasiKode(barcode)].qty : 0;
+}
+function sisaStok(p){
+  return Math.max(0, p.stock - qtyDiKeranjang(p.barcode));
+}
+function bisaTambah(p){
+  return qtyDiKeranjang(p.barcode) < p.stock;
+}
+
 function bunyiBeep(sukses){
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
     o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = sukses ? 880 : 200;
-    o.type = 'sine';
-    g.gain.value = 0.3;
-    o.start();
-    o.stop(ctx.currentTime + (sukses ? 0.15 : 0.4));
+    o.frequency.value = sukses ? 880 : 200; o.type='sine'; g.gain.value=0.3;
+    o.start(); o.stop(ctx.currentTime + (sukses ? 0.15 : 0.4));
   }catch(e){}
 }
 function tampilHasilScan(text, sukses){
   const el = sukses ? document.getElementById("scanResult") : document.getElementById("scanError");
   const elLain = sukses ? document.getElementById("scanError") : document.getElementById("scanResult");
-  elLain.style.display = "none";
-  el.style.display = "block";
-  el.innerText = text;
-  setTimeout(()=>{ el.style.display = "none"; }, 2500);
+  elLain.style.display="none"; el.style.display="block"; el.innerText=text;
+  setTimeout(()=>{ el.style.display="none"; }, 2500);
 }
 function updateBadge(){
   const totalItem = Object.values(cart).reduce((s,i)=>s+i.qty,0);
-  const badge = document.getElementById("cartBadge");
-  if(badge) badge.innerText = "🛒 " + totalItem + " item";
+  const badge=document.getElementById("cartBadge");
+  if(badge) badge.innerText="🛒 "+totalItem+" item";
 }
-
-// ===== SCANNER KAMERA =====
 async function bukaScanner(){
-  document.getElementById("scanModal").classList.add("show");
-  updateBadge();
+  document.getElementById("scanModal").classList.add("show"); updateBadge();
   try{
     html5Qr = new Html5Qrcode("reader");
-    await html5Qr.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 300, height: 150 },
-        formatsToSupport: [ Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.QR_CODE ]
-      },
-      (decodedText) => { onScan(decodedText); },
-      ()=>{}
-    );
-  }catch(e){ alert("Kamera gagal dibuka: "+e+". Coba pakai HTTPS / izinkan kamera di HP."); }
+    await html5Qr.start({ facingMode:"environment" },
+      { fps:10, qrbox:{width:300,height:150},
+        formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.QR_CODE] },
+      (decodedText)=>{ onScan(decodedText); }, ()=>{});
+  }catch(e){ alert("Kamera gagal dibuka: "+e); }
 }
 async function tutupScanner(){
   try{ if(html5Qr) await html5Qr.stop(); }catch(e){}
@@ -231,61 +200,81 @@ function tambahManual(){
 }
 async function cariByBarcode(code, dariScan){
   code = normalisasiKode(code);
-  console.log("Scan:", code, "DB:", produkDB.length);
-  let p = produkDB.find(x => {
-    const a = normalisasiKode(x.barcode);
-    return a == code || a.replace(/^0+/,"") == code.replace(/^0+/,"");
+  let p = produkDB.find(x=>{
+    const a=normalisasiKode(x.barcode);
+    return a==code || a.replace(/^0+/,"")==code.replace(/^0+/,"");
   });
   if(!p){
     try{
       let { data } = await supabaseClient.from('products').select('*').eq('barcode', code).maybeSingle();
-      if(!data){
-        let r = await supabaseClient.from('products').select('*').eq('barcode', code.replace(/^0+/,"")).maybeSingle();
-        data = r.data;
-      }
-      if(data){ p = mappingProduk(data); produkDB.push(p); }
-    }catch(e){ console.log("Query langsung gagal", e); }
+      if(!data){ let r=await supabaseClient.from('products').select('*').eq('barcode', code.replace(/^0+/,"")).maybeSingle(); data=r.data; }
+      if(data){ p=mappingProduk(data); produkDB.push(p); }
+    }catch(e){}
   }
   if(!p){
-    bunyiBeep(false);
-    if(navigator.vibrate) navigator.vibrate([100,100,100]);
-    if(dariScan){
-      tampilHasilScan("❌ Barcode " + code + " TIDAK DITEMUKAN", false);
-      document.getElementById("scanInfo").innerText = "❌ Barcode " + code + " tidak ditemukan";
-    } else alert("Barcode " + code + " tidak ditemukan. Cek kolom barcode di Supabase atau tambahkan produk dulu.");
+    bunyiBeep(false); if(navigator.vibrate) navigator.vibrate([100,100,100]);
+    if(dariScan){ tampilHasilScan("❌ Barcode "+code+" TIDAK DITEMUKAN", false); document.getElementById("scanInfo").innerText="❌ Barcode "+code+" tidak ditemukan"; }
+    else alert("Barcode "+code+" tidak ditemukan");
     return;
   }
-  if(p.stock <= 0){
-    bunyiBeep(false);
-    if(navigator.vibrate) navigator.vibrate([100,100,100]);
-    tampilHasilScan("❌ Stok " + p.nama + " HABIS", false);
+  // ===== CEK STOK VS KERANJANG =====
+  if(!bisaTambah(p)){
+    bunyiBeep(false); if(navigator.vibrate) navigator.vibrate([100,100,100]);
+    const pesan = `❌ STOK HABIS! ${p.nama} • Stok: ${p.stock} • Di keranjang udah: ${qtyDiKeranjang(p.barcode)}`;
+    if(dariScan) tampilHasilScan(pesan, false);
+    else alert(pesan);
+    document.getElementById("scanInfo").innerText = pesan;
     return;
   }
   tambahKeCart(p);
-  updateBadge();
-  bunyiBeep(true);
-  if(navigator.vibrate) navigator.vibrate(200);
-  document.getElementById("scanInfo").innerText = "✅ " + p.nama + " masuk keranjang!";
-  if(dariScan){
-    tampilHasilScan("✅ " + p.nama + " • " + rupiah(p.harga) + " • MASUK KERANJANG!", true);
-  }
+  updateBadge(); bunyiBeep(true); if(navigator.vibrate) navigator.vibrate(200);
+  document.getElementById("scanInfo").innerText="✅ "+p.nama+" masuk keranjang! Sisa stok: "+sisaStok(p);
+  if(dariScan) tampilHasilScan(`✅ ${p.nama} • ${rupiah(p.harga)} • MASUK! Sisa stok: ${sisaStok(p)}`, true);
 }
 function cariProduk(){
   const q=document.getElementById("search").value.toLowerCase().trim();
   if(!q){ document.getElementById("hasilCari").innerHTML="<p style='color:#777;font-size:13px;text-align:center;padding:20px'>Belum ada produk yang di-scan.<br>Scan barcode atau cari produk di atas 👆</p>"; return; }
   const list=produkDB.filter(p=>p.nama.toLowerCase().includes(q) || p.barcode.includes(q) || p.kat.toLowerCase().includes(q));
   if(!list.length){ document.getElementById("hasilCari").innerHTML="<p style='color:#777;text-align:center;padding:20px'>Produk tidak ditemukan</p>"; return; }
-  document.getElementById("hasilCari").innerHTML=list.map(p=>`
-    <div class="card"><img src="${p.img}"><div><b>${p.nama}</b><br><span>${p.kat} ${p.ukuran? '• '+p.ukuran : ''} • Barcode: ${p.barcode}</span><br><span class="price">${rupiah(p.harga)}</span> <span style="font-size:11px;color:#888">Stok: ${p.stock}</span></div>
-    <button class="add" onclick="tambahKeCartByBarcode('${p.barcode}')">+ Tambah</button></div>`).join("");
+  document.getElementById("hasilCari").innerHTML=list.map(p=>{
+    const sisa=sisaStok(p);
+    const habis=sisa<=0;
+    return `<div class="card" style="${habis?'opacity:.5':''}"><img src="${p.img}"><div><b>${p.nama}</b><br><span>${p.kat} ${p.ukuran? '• '+p.ukuran : ''} • Barcode: ${p.barcode}</span><br><span class="price">${rupiah(p.harga)}</span> <span style="font-size:11px;color:${habis?'#e74c3c':'#2ecc71'}">Stok: ${p.stock} • Sisa: ${sisa} ${habis?'• HABIS':''}</span></div>
+    <button class="add" ${habis?'disabled':''} onclick="tambahKeCartByBarcode('${p.barcode}')">${habis?'Habis':'+ Tambah'}</button></div>`;
+  }).join("");
 }
-function tambahKeCartByBarcode(barcode){ const p=produkDB.find(x=>normalisasiKode(x.barcode)==normalisasiKode(barcode)); if(p) tambahKeCart(p); }
+function tambahKeCartByBarcode(barcode){
+  const p=produkDB.find(x=>normalisasiKode(x.barcode)==normalisasiKode(barcode));
+  if(!p) return;
+  if(!bisaTambah(p)){ alert(`❌ Stok ${p.nama} habis! Stok: ${p.stock}, di keranjang udah: ${qtyDiKeranjang(p.barcode)}`); return; }
+  tambahKeCart(p);
+}
 function tambahKeCart(p){
+  // Pengaman ganda biar gak bisa tembus stok dari manapun
+  if(!bisaTambah(p)) return false;
   cart[p.barcode]=(cart[p.barcode]||{produk:p, qty:0});
   cart[p.barcode].qty++;
   renderCart();
+  cariProdukRefresh();
+  return true;
 }
-function ubahQty(barcode,delta){ if(!cart[barcode]) return; cart[barcode].qty+=delta; if(cart[barcode].qty<=0) delete cart[barcode]; renderCart(); }
+function cariProdukRefresh(){
+  // Biar angka sisa stok di hasil pencarian ikut update
+  const q=document.getElementById("search").value.trim();
+  if(q) cariProduk();
+}
+function ubahQty(barcode,delta){
+  if(!cart[barcode]) return;
+  const p=cart[barcode].produk;
+  if(delta>0 && !bisaTambah(p)){
+    alert(`❌ Stok ${p.nama} mentok! Stok cuma ${p.stock}`);
+    bunyiBeep(false);
+    return;
+  }
+  cart[barcode].qty+=delta;
+  if(cart[barcode].qty<=0) delete cart[barcode];
+  renderCart(); cariProdukRefresh();
+}
 async function cekMember(){
   const v=document.getElementById("memberInput").value.trim();
   if(!v) return alert("Isi WA / Nama member dulu");
@@ -303,7 +292,7 @@ function renderCart(){
   const keys=Object.keys(cart);
   const list=document.getElementById("cartList");
   if(!keys.length) list.innerHTML=`<div class="empty">Keranjang masih kosong<br>Scan barcode produk dulu</div>`;
-  else list.innerHTML=keys.map(k=>{ const it=cart[k]; return `<div class="item"><div><b>${it.produk.nama}</b><br><span>${rupiah(it.produk.harga)} x ${it.qty} • ${it.produk.barcode}</span></div><div class="qty"><button onclick="ubahQty('${k}',-1)">-</button><b>${it.qty}</b><button onclick="ubahQty('${k}',1)">+</button></div><b>${rupiah(it.produk.harga*it.qty)}</b></div>`; }).join("");
+  else list.innerHTML=keys.map(k=>{ const it=cart[k]; const sisa=sisaStok(it.produk)+it.qty; return `<div class="item"><div><b>${it.produk.nama}</b><br><span>${rupiah(it.produk.harga)} x ${it.qty} • ${it.produk.barcode}</span><br><span style="font-size:11px;color:#888">Sisa stok: ${sisaStok(it.produk)}</span></div><div class="qty"><button onclick="ubahQty('${k}',-1)">-</button><b>${it.qty}</b><button onclick="ubahQty('${k}',1)" ${!bisaTambah(it.produk)?'disabled style="opacity:.3"':''}>+</button></div><b>${rupiah(it.produk.harga*it.qty)}</b></div>`; }).join("");
   const {sub,disc,total}=hitung();
   document.getElementById("subtotal").innerText=rupiah(sub);
   document.getElementById("diskon").innerText="- "+rupiah(disc);
@@ -316,8 +305,22 @@ async function bayar(){
   const {sub,disc,total}=hitung(); if(total<=0) return;
   document.getElementById("statusBayar").innerText="⏳ Memproses ke database...";
   try{
+    // Cek ulang stok ke Supabase sebelum bayar - biar gak rebutan stok
+    for(let k of Object.keys(cart)){
+      const it=cart[k];
+      let { data: cek } = await supabaseClient.from('products').select('stock, name').eq('id', it.produk.id).single();
+      if(cek && Number(cek.stock) < it.qty) throw new Error(`Stok ${cek.name} tinggal ${cek.stock}, kamu beli ${it.qty}. Kurangi dulu!`);
+    }
     const namaProduk=Object.values(cart).map(i=>i.produk.nama+" x"+i.qty).join(", ");
     const noInv="INV-"+Date.now().toString().slice(-6);
+    // ===== KURANGI STOK DI SUPABASE =====
+    for(let k of Object.keys(cart)){
+      const it=cart[k];
+      let { data: cur } = await supabaseClient.from('products').select('stock').eq('id', it.produk.id).single();
+      if(cur){
+        await supabaseClient.from('products').update({ stock: Math.max(0, Number(cur.stock) - it.qty) }).eq('id', it.produk.id);
+      }
+    }
     if(payMethod=="Saldo Member"){
       if(!member) throw new Error("Pilih member dulu!");
       let { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
@@ -332,7 +335,8 @@ async function bayar(){
     const isi=Object.values(cart).map(i=>`<div class="row"><span>${i.produk.nama} x${i.qty}</span><b>${rupiah(i.produk.harga*i.qty)}</b></div>`).join("");
     document.getElementById("strukIsi").innerHTML=`<div class="row"><span>Invoice</span><b>${noInv}</b></div><div class="row"><span>Member</span><b>${member?member.full_name:"Non Member"}</b></div><div class="row"><span>Metode</span><b>${payMethod}</b></div><hr>${isi}<div class="row"><span>Subtotal</span><span>${rupiah(sub)}</span></div><div class="row"><span>Diskon</span><span>- ${rupiah(disc)}</span></div><div class="row total"><span>TOTAL</span><span>${rupiah(total)}</span></div>`;
     document.getElementById("modal").classList.add("show");
-    document.getElementById("statusBayar").innerText="✅ Berhasil tersimpan ke database!";
+    document.getElementById("statusBayar").innerText="✅ Berhasil tersimpan & stok berkurang!";
+    loadProduk();
     loadRiwayat();
   }catch(e){ alert("Gagal: "+e.message); document.getElementById("statusBayar").innerText="❌ "+e.message; }
 }
