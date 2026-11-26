@@ -549,6 +549,20 @@ function userImg(){
   if(el && el.src && !el.src.includes('placeholder')) return '<img src="'+el.src+'" class="user-avatar">';
   return '<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="user-avatar">';
 }
+function kapitalKota(s){ return s.split(' ').map(function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }).join(' '); }
+function ambilKota(t){
+  var m = t.toLowerCase().match(/(?:kirim(?:kan)?|pengiriman|ongkir|ke|di|buat|untuk|tujuan)\s+(?:ke\s+|di\s+)?([a-z]+(?:\s+[a-z]+)?)/);
+  if(!m) return null;
+  var kota = m[1].trim();
+  var buang = ['sana','sini','luar','kota','dong','ya','kak','min','aja','saja','itu','ini','mana','berapa','ongkir','ongkos','biaya','kirim','seluruh','indonesia'];
+  if(buang.includes(kota)) return null;
+  if(kota.length < 3) return null;
+  var parts = kota.split(' ');
+  if(parts.length > 1 && buang.includes(parts[1])) kota = parts[0];
+  return kapitalKota(kota);
+}
+function getLastKota(){ try{ return localStorage.getItem('dlusso_last_kota') || ''; }catch(e){ return ''; } }
+function setLastKota(k){ try{ localStorage.setItem('dlusso_last_kota', k); }catch(e){} }
 var rahasiaData = null;
 var rahasiaTujuan = '';
 async function cekKodeRahasia(text){
@@ -611,6 +625,28 @@ async function sendChatMsg(text){
   var rowBot=document.createElement('div'); rowBot.className='msg-row'; rowBot.innerHTML=sofiaImg()+'<div class="msg bot">...</div>'; body.appendChild(rowBot); body.scrollTop=body.scrollHeight;
   var bot=rowBot.querySelector('.msg.bot');
   var low=text.toLowerCase(); var jawaban=null;
+  var kotaBaru = ambilKota(text);
+  var isKirim = low.includes('kirim') || low.includes('pengiriman') || low.includes('dikirim') || low.includes('ke ') || low.includes('tujuan');
+  var isOngkir = low.includes('ongkir') || low.includes('ongkos') || low.includes('biaya') || low.includes('pengiriman');
+  if(kotaBaru && (isKirim || isOngkir || low.includes('semarang') || low.includes('ambon') || low.includes('medan'))){
+    setLastKota(kotaBaru);
+  }
+  var lastKota = getLastKota();
+  if(!jawaban && (low.includes('ongkir') || low.includes('ongkos') || low.includes('biaya') || low.includes('pengiriman') || low.includes('berapa ongkos') || low.includes('berapa biaya'))){
+    var kotaOngkir = kotaBaru || lastKota;
+    if(kotaOngkir){
+      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman ke ' + kotaOngkir + ' itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Kakak di ' + kotaOngkir + ' kecamatan mana? Biar Sofia bantu cekkan ke ekspedisi sekarang ya!';
+    } else {
+      jawaban = 'Untuk biaya / ongkos / ongkir serta lamanya pengiriman itu tergantung jasa ekspedisi kak ✨<br><br>Kami tidak bisa menentukan secara pasti, karena banyak faktor seperti berat paket, kecamatan, dan jenis layanan ekspedisi yang dipilih.<br><br>Jadi harga dan lama pengiriman tidak bisa dipastikan ya kak 🙏<br><br>Kakak mau kirim ke kota mana? Biar Sofia bantu cekkan ya!';
+    }
+  }
+  if(!jawaban && kotaBaru && isKirim){
+    jawaban = 'Bisa banget kak kirim ke ' + kotaBaru + '! ✨ Kita kirim ke seluruh Indonesia kok.<br><br>Kakak di ' + kotaBaru + ' kecamatan mana? Biar Sofia bantu cekkan ke ekspedisi ya!';
+  }
+  if(!jawaban && (low.includes('luar kota') || low.includes('keluar kota') || low.includes('bisa dikirim'))){
+    jawaban = 'Bisa kirim ke seluruh Indonesia kak. Kakak di kota mana?';
+  }
+  if(!jawaban){
   try{
     const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,intent_name,prioritas,skor');
     if(data){
@@ -665,6 +701,7 @@ async function sendChatMsg(text){
       else if(jawabanList.length>1) jawaban = jawabanList.join('<br><br>---<br><br>');
     }
   }catch(e){ console.log('bot gagal',e); }
+  }
   if(!jawaban){
     jawaban='Untuk "'+text+'" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨';
     try{
