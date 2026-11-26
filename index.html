@@ -533,7 +533,7 @@ function openChat(){ document.getElementById('chatBox').classList.add('show'); d
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
-// ===== PINTU RAHASIA @ # $ & - FIX: admins (pake S) =====
+// ===== PINTU RAHASIA @ # $ & - FIX: admins (pake S) - FIX ILIKE biar @phus = @PHUS = @Phus =====
 var rahasiaData = null;
 var rahasiaTujuan = '';
 async function cekKodeRahasia(text){
@@ -541,9 +541,9 @@ async function cekKodeRahasia(text){
   if(!m) return false;
   var kode = m[1].toUpperCase();
   try{
-    var a = await supabaseClient.from('admins').select('*').eq('code', kode).maybeSingle();
+    var a = await supabaseClient.from('admins').select('*').ilike('code', kode).maybeSingle();
     if(a.data){ rahasiaData = a.data; rahasiaTujuan = 'wes.html'; bukaPin(a.data); return true; }
-    var p = await supabaseClient.from('pegawai').select('*').eq('code', kode).maybeSingle();
+    var p = await supabaseClient.from('pegawai').select('*').ilike('code', kode).maybeSingle();
     if(p.data){ rahasiaData = p.data; rahasiaTujuan = 'ksr.html'; bukaPin(p.data); return true; }
   }catch(e){ console.log('cek kode gagal', e); }
   return false;
