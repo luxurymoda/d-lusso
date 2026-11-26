@@ -625,7 +625,6 @@ async function sendChatMsg(text){
   var rowBot=document.createElement('div'); rowBot.className='msg-row'; rowBot.innerHTML=sofiaImg()+'<div class="msg bot">...</div>'; body.appendChild(rowBot); body.scrollTop=body.scrollHeight;
   var bot=rowBot.querySelector('.msg.bot');
   var low=text.toLowerCase(); var jawaban=null;
-  // === SIAPA SOFIA? - JATI DIRI ===
   if(!jawaban && low.includes('sofia') && (low.includes('cewek') || low.includes('cowok') || low.includes('cowo') || low.includes('cewe') || low.includes('laki') || low.includes('perempuan') || low.includes('pria') || low.includes('wanita') || low.includes('gender') || low.includes('jenis kelamin'))){
     jawaban = 'Sofia cewek kak ✨👩<br><br>Sofia itu concierge wanita-nya D\' LUSSO, yang siap bantuin kakak cari Jas, Gaun, Tas, dan Accessories. Ciao!';
   }
@@ -681,7 +680,8 @@ async function sendChatMsg(text){
             calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || ketemu.length), prioritas:Number(r.prioritas || 99) });
           }
         });
-        calon.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
+        // ✅ FIX SOFIA: prioritas GEDE menang dulu (DESC) kayak SQL, baru skor
+        calon.sort(function(a,b){ if(b.prioritas!==a.prioritas) return b.prioritas-a.prioritas; return b.skor-a.skor; });
         if(calon.length>0){
           var menang = calon[0];
           if(!intentSudah[menang.intent]){
@@ -704,7 +704,8 @@ async function sendChatMsg(text){
           });
           if(ketemu) calonFull.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || ketemu.length), prioritas:Number(r.prioritas || 99) });
         });
-        calonFull.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
+        // ✅ FIX SOFIA: prioritas GEDE menang dulu (DESC) kayak SQL, baru skor
+        calonFull.sort(function(a,b){ if(b.prioritas!==a.prioritas) return b.prioritas-a.prioritas; return b.skor-a.skor; });
         if(calonFull.length>0) jawabanList.push(calonFull[0].answer);
       }
       if(jawabanList.length===1) jawaban = jawabanList[0];
