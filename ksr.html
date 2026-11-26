@@ -141,8 +141,6 @@ async function loadProduk(){
     document.getElementById("scanInfo").innerText=`✅ ${produkDB.length} produk ter-load dari Supabase`;
   }catch(e){ document.getElementById("scanInfo").innerText="❌ Gagal load: "+e.message; }
 }
-
-// ===== HELPER STOK - INI KUNCINYA =====
 function qtyDiKeranjang(barcode){
   return cart[normalisasiKode(barcode)] ? cart[normalisasiKode(barcode)].qty : 0;
 }
@@ -152,7 +150,6 @@ function sisaStok(p){
 function bisaTambah(p){
   return qtyDiKeranjang(p.barcode) < p.stock;
 }
-
 function bunyiBeep(sukses){
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -217,7 +214,6 @@ async function cariByBarcode(code, dariScan){
     else alert("Barcode "+code+" tidak ditemukan");
     return;
   }
-  // ===== CEK STOK VS KERANJANG =====
   if(!bisaTambah(p)){
     bunyiBeep(false); if(navigator.vibrate) navigator.vibrate([100,100,100]);
     const pesan = `❌ STOK HABIS! ${p.nama} • Stok: ${p.stock} • Di keranjang udah: ${qtyDiKeranjang(p.barcode)}`;
@@ -250,7 +246,6 @@ function tambahKeCartByBarcode(barcode){
   tambahKeCart(p);
 }
 function tambahKeCart(p){
-  // Pengaman ganda biar gak bisa tembus stok dari manapun
   if(!bisaTambah(p)) return false;
   cart[p.barcode]=(cart[p.barcode]||{produk:p, qty:0});
   cart[p.barcode].qty++;
@@ -259,7 +254,6 @@ function tambahKeCart(p){
   return true;
 }
 function cariProdukRefresh(){
-  // Biar angka sisa stok di hasil pencarian ikut update
   const q=document.getElementById("search").value.trim();
   if(q) cariProduk();
 }
@@ -305,7 +299,6 @@ async function bayar(){
   const {sub,disc,total}=hitung(); if(total<=0) return;
   document.getElementById("statusBayar").innerText="⏳ Memproses ke database...";
   try{
-    // Cek ulang stok ke Supabase sebelum bayar - biar gak rebutan stok
     for(let k of Object.keys(cart)){
       const it=cart[k];
       let { data: cek } = await supabaseClient.from('products').select('stock, name').eq('id', it.produk.id).single();
@@ -313,7 +306,6 @@ async function bayar(){
     }
     const namaProduk=Object.values(cart).map(i=>i.produk.nama+" x"+i.qty).join(", ");
     const noInv="INV-"+Date.now().toString().slice(-6);
-    // ===== KURANGI STOK DI SUPABASE =====
     for(let k of Object.keys(cart)){
       const it=cart[k];
       let { data: cur } = await supabaseClient.from('products').select('stock').eq('id', it.produk.id).single();
@@ -332,6 +324,20 @@ async function bayar(){
       let { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
       if(m){ await supabaseClient.from('riwayat_saldo').insert([{ member_id:m.id, full_name:m.full_name, whatsapp:m.whatsapp, email:m.email, tier:m.tier, tipe:'BELI', amount:0, saldo_sebelum:m.saldo, saldo_sesudah:m.saldo, keterangan:'BELI di Kasir - '+namaProduk+' - '+noInv+' - '+payMethod, diubah_oleh:'ADMIN', sumber:'KASIR' }]); await supabaseClient.from('members').update({ total_belanja:(m.total_belanja||0)+total }).eq('id', m.id); }
     }
+
+    // ===== KIRIM NOTIF KE MEMBER - BARU =====
+    if(member){
+      await supabaseClient.from('member_notifications').insert([{
+        member_id: member.id,
+        title: '✅ Pembayaran Berhasil',
+        message: `Terima kasih ${member.full_name}! Pembayaran ${namaProduk} sebesar ${rupiah(total)} via ${payMethod} sudah LUNAS. Invoice: ${noInv}`,
+        type: 'BELI',
+        amount: total,
+        invoice_no: noInv,
+        is_read: false
+      }]);
+    }
+
     const isi=Object.values(cart).map(i=>`<div class="row"><span>${i.produk.nama} x${i.qty}</span><b>${rupiah(i.produk.harga*i.qty)}</b></div>`).join("");
     document.getElementById("strukIsi").innerHTML=`<div class="row"><span>Invoice</span><b>${noInv}</b></div><div class="row"><span>Member</span><b>${member?member.full_name:"Non Member"}</b></div><div class="row"><span>Metode</span><b>${payMethod}</b></div><hr>${isi}<div class="row"><span>Subtotal</span><span>${rupiah(sub)}</span></div><div class="row"><span>Diskon</span><span>- ${rupiah(disc)}</span></div><div class="row total"><span>TOTAL</span><span>${rupiah(total)}</span></div>`;
     document.getElementById("modal").classList.add("show");
