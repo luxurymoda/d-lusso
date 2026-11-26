@@ -1,23 +1,35 @@
 {
   "name": "D' LUSSO - Il Lusso di Bandung",
   "short_name": "D' LUSSO",
-  "description": "Boutique Fashion Mewah Bandung - Jas, Dress, Sepatu, Tas",
+  "description": "Boutique Luxury Bandung - Eleganza Italiana",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=192",
+      "src": "logo.jpg",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=512",
+      "src": "logo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    },
+    {
+      "src": "logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
     }
   ]
 }
