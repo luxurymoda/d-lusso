@@ -573,10 +573,12 @@ function cekPinRahasia(){
   var pinBener = String(rahasiaData.pin || rahasiaData.pin_code || rahasiaData.password || '');
   if(inputPin !== '' && inputPin === pinBener){
     var karcis = 'DL-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random()*90+10);
-    localStorage.setItem('dlusso_staff', JSON.stringify({ ...rahasiaData, karcis: karcis, login_at: Date.now(), role: rahasiaTujuan === 'wes.html' ? 'admin' : 'pegawai' }));
+    var exp = Date.now() + 12*60*60*1000;
     localStorage.setItem('dlusso_karcis', karcis);
-    alert('Selamat datang! 🎟️ Karcis Anda: ' + karcis);
-    window.location.href = rahasiaTujuan + '?karcis=' + karcis;
+    localStorage.setItem('dlusso_karcis_exp', String(exp));
+    localStorage.setItem('dlusso_staff', JSON.stringify({ ...rahasiaData, karcis: karcis, login_at: Date.now(), exp: exp, role: rahasiaTujuan === 'wes.html' ? 'admin' : 'pegawai' }));
+    alert('Selamat datang! 🎟️ Karcis Anda berlaku 12 jam!');
+    window.location.href = rahasiaTujuan;
   } else {
     document.getElementById('pinError').style.display = 'block';
     document.getElementById('pinInput').value = '';
