@@ -91,7 +91,6 @@ body{background:#0a0a0a;color:#fff}
 .chat-input button{background:#C9A86A;border:none;padding:11px 16px;border-radius:10px;font-weight:bold}
 .quick{display:flex;gap:8px;padding:0 10px 10px;background:#111;flex-wrap:wrap}
 .quick button{background:#222;border:1px solid #444;color:#E8C97A;padding:7px 10px;border-radius:20px;font-size:11px}
-/* MEMBER - CASA MODA STYLE, FOTO DI DALAM KOTAK SALDO */
 .member-luxe{background:#0a0a0a;min-height:100vh;padding:14px 14px 90px}
 .member-head{text-align:center;padding:14px 0 10px}
 .member-head h1{font-size:32px;letter-spacing:3px;color:#E8C97A;line-height:1}
@@ -233,7 +232,6 @@ body{background:#0a0a0a;color:#fff}
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
-<!-- HALAMAN MEMBER - FOTO DI DALAM KOTAK SALDO -->
 <div id="page-member" class="page">
   <div id="memberEmpty" class="member-luxe" style="text-align:center;padding-top:80px">
     <div style="font-size:60px">👑</div>
@@ -244,7 +242,6 @@ body{background:#0a0a0a;color:#fff}
   <div id="memberCard" class="member-luxe" style="display:none">
     <div class="member-head"><div style="text-align:left;font-size:22px;cursor:pointer" onclick="showPage('home')">‹</div><h1>CASA MODA</h1><p>LUXURY BANDUNG</p></div>
     <div class="member-tabs"><div onclick="showPage('vip')">DAFTAR</div><div class="active">MASUK</div></div>
-    <!-- INI KOTAK SALDO + FOTO DI DALAMNYA -->
     <div class="saldo-card">
       <div class="saldo-top">
         <div>
@@ -321,6 +318,7 @@ async function daftarVip(){
   var { data, error } = await supabaseClient.from('members').insert([{ full_name:n, whatsapp:w, email:em||null, password:p, password_hash:p, tier:'Gold', saldo:0, discount:5, points:0 }]).select().single();
   if(error){ alert("Gagal daftar: "+error.message); return; }
   localStorage.setItem('dlusso_member', JSON.stringify(data));
+  localStorage.setItem('dlusso_login_at', Date.now().toString());
   alert("Benvenuto, "+n+"! Daftar VIP berhasil ✨");
   showPage('member');
 }
@@ -332,6 +330,7 @@ async function loginMember(){
   if(error || !data){ alert("No WA tidak ditemukan. Silakan Daftar dulu ya!"); return; }
   if(data.password !== p && data.password_hash !== p){ alert("Password salah!"); return; }
   localStorage.setItem('dlusso_member', JSON.stringify(data));
+  localStorage.setItem('dlusso_login_at', Date.now().toString());
   alert("Selamat datang kembali, "+(data.full_name||'Member')+" ✨");
   showPage('member');
 }
@@ -363,7 +362,7 @@ async function renderMember(){
     }
   }catch(e){}
 }
-function logoutMember(){ localStorage.removeItem('dlusso_member'); alert("Anda sudah logout. Arrivederci!"); renderMember(); }
+function logoutMember(){ localStorage.removeItem('dlusso_member'); localStorage.removeItem('dlusso_login_at'); alert("Anda sudah logout. Arrivederci!"); renderMember(); showPage('home'); }
 document.querySelectorAll('.card').forEach(function(card){
   var name = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Produk D LUSSO';
   var price = card.querySelector('.price') ? card.querySelector('.price').textContent : '';
@@ -392,7 +391,11 @@ async function sendChatMsg(text){
   }
   setTimeout(function(){ bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight; },600);
 }
+// FIX REFRESH - TETAP LOGIN
 renderMember();
+if(localStorage.getItem('dlusso_member')){
+  showPage('member');
+}
 </script>
 </body>
 </html>
