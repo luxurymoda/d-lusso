@@ -46,7 +46,6 @@ body{background:#0a0a0a;color:#fff}
 .history{margin-top:16px;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:16px}
 .history h3{color:#d4af37;font-size:14px}
 .h-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #222;font-size:13px}
-/* SCANNER MODAL */
 .modal{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:99}
 .modal.show{display:flex}
 .modal-top{padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
@@ -65,29 +64,24 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="logo">D' LUSSO<span>BOUTIQUE BANDUNG • KASIR SCAN</span></div>
   <div class="clock"><b id="jam">--:--:--</b><br><span id="tgl"></span></div>
 </div>
-
 <div class="wrap">
-  <!-- KIRI : SCAN / CARI -->
   <div class="left">
     <div class="scan-box">
       <h2>📷 SCAN PRODUK</h2>
       <p>Arahkan kamera ke barcode produk<br>Produk langsung masuk keranjang</p>
       <button class="btn-scan" onclick="bukaScanner()">📷 BUKA KAMERA & SCAN</button>
       <button class="btn-scan2" onclick="tambahManual()">⌨️ Input Kode Manual</button>
-      <input class="search" id="search" placeholder="🔍 Atau cari nama / kode barcode... (contoh: MILANO / 899001)" oninput="cariProduk()">
-      <div id="scanInfo" style="font-size:12px;color:#2ecc71;margin-top:8px"></div>
+      <input class="search" id="search" placeholder="🔍 Cari nama / barcode... (contoh: MILANO / 899001)" oninput="cariProduk()">
+      <div id="scanInfo" style="font-size:12px;color:#2ecc71;margin-top:8px">Memuat produk...</div>
     </div>
     <div class="hasil" id="hasilCari">
       <p style="color:#777;font-size:13px;text-align:center;padding:20px">Belum ada produk yang di-scan.<br>Scan barcode atau cari produk di atas 👆</p>
     </div>
   </div>
-
-  <!-- KANAN : KERANJANG -->
   <div class="right">
     <div class="cart">
       <h2>🛒 Keranjang Belanja</h2><small id="cartInfo">0 item</small>
@@ -110,38 +104,62 @@ body{background:#0a0a0a;color:#fff}
     <div class="history"><h3>🧾 Riwayat Hari Ini (Supabase)</h3><div id="historyList">Memuat...</div></div>
   </div>
 </div>
-
-<!-- MODAL KAMERA SCANNER -->
 <div class="modal" id="scanModal">
   <div class="modal-top"><b>📷 SCAN BARCODE PRODUK</b><button onclick="tutupScanner()">✕ Tutup</button></div>
   <div id="reader"></div>
   <div class="scan-hint">Arahkan barcode ke dalam kotak kamera<br>Kalo gagal, pastikan izinkan kamera di HP & pakai HTTPS / localhost</div>
   <div style="padding:0 14px 16px"><button class="btn-scan2" onclick="tambahManual()">⌨️ Gagal Scan? Input Kode Manual</button></div>
 </div>
-
-<!-- MODAL STRUK -->
 <div class="struk-modal" id="modal">
   <div class="struk"><h2>D' LUSSO</h2><p>Boutique Bandung<br>Jl. Braga No.88</p><hr><div id="strukIsi"></div><hr><p>Terima kasih sudah belanja ✨</p><button class="close" onclick="tutup()">Tutup & Transaksi Baru</button></div>
 </div>
-
 <script>
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ===== DATABASE PRODUK SEMENTARA - NANTI PINDAH KE SUPABASE =====
-// Ko, ini contohnya. Nanti tiap produk lu punya barcode sendiri.
-// Barcode ini yang ditempel di label produk / hangtag.
-const produkDB = [
-  {barcode:"899001", nama:"Tas Milano Handbag", harga:4499000, kat:"Tas", img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"},
-  {barcode:"899002", nama:"Sneaker Gold Edition", harga:1800000, kat:"Sepatu", img:"https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"},
-  {barcode:"899003", nama:"Milano Black Suit", harga:4999000, kat:"Jas", img:"https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500"},
-  {barcode:"899004", nama:"Gold Stiletto", harga:2899000, kat:"Sepatu", img:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400"},
-  {barcode:"899005", nama:"Golden Satin Gown", harga:3899000, kat:"Dress", img:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400"},
-  {barcode:"899006", nama:"Jaket Kulit Signature", harga:2500000, kat:"Pakaian", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"},
-];
+// ===== FIX: SESUAI TABEL products LU =====
+// id | name | category | tipe | ukuran | price | stock | image_url | description | is_active | created_at | barcode
+let produkDB = [];
 let cart={}, payMethod="Tunai", member=null, html5Qr=null, lastScan="", lastScanTime=0;
 const rupiah = n => "Rp "+Number(n||0).toLocaleString("id-ID");
+
+function normalisasiKode(code){
+  return String(code||"").trim().replace(/[\s-]/g,"");
+}
+function mappingProduk(p){
+  if(!p) return null;
+  return {
+    id: p.id,
+    barcode: normalisasiKode(p.barcode),
+    nama: p.name || "Tanpa Nama",
+    harga: Number(p.price || 0),
+    kat: p.category || p.tipe || "Produk",
+    tipe: p.tipe || "",
+    ukuran: p.ukuran || "",
+    stock: Number(p.stock ?? 999),
+    img: p.image_url || "https://via.placeholder.com/100",
+    description: p.description || "",
+    is_active: p.is_active
+  };
+}
+
+async function loadProduk(){
+  try{
+    let { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true).limit(1000);
+    if(error) throw error;
+    if(!data || !data.length){
+      document.getElementById("scanInfo").innerText = "⚠️ Tabel products kosong atau semua is_active = false";
+      return;
+    }
+    produkDB = data.map(mappingProduk).filter(p=>p.barcode);
+    document.getElementById("scanInfo").innerText = `✅ ${produkDB.length} produk ter-load dari Supabase`;
+    console.log("Produk loaded:", produkDB);
+  }catch(e){
+    console.error(e);
+    document.getElementById("scanInfo").innerText = "❌ Gagal load: " + e.message + " - Cek RLS / Policy SELECT di tabel products";
+  }
+}
 
 // ===== SCANNER KAMERA =====
 async function bukaScanner(){
@@ -149,8 +167,10 @@ async function bukaScanner(){
   try{
     html5Qr = new Html5Qrcode("reader");
     await html5Qr.start(
-      { facingMode: "environment" }, // kamera belakang HP
-      { fps: 10, qrbox: { width: 280, height: 180 } },
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 300, height: 150 },
+        formatsToSupport: [ Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8, Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.QR_CODE ]
+      },
       (decodedText) => { onScan(decodedText); },
       ()=>{}
     );
@@ -162,12 +182,10 @@ async function tutupScanner(){
   document.getElementById("scanModal").classList.remove("show");
 }
 function onScan(code){
-  // Cegah scan ganda dalam 2 detik
   const now=Date.now();
   if(code==lastScan && now-lastScanTime<2000) return;
   lastScan=code; lastScanTime=now;
   document.getElementById("scanInfo").innerText="✅ Terbaca: "+code;
-  // Getar HP biar kerasa ke-scan
   if(navigator.vibrate) navigator.vibrate(120);
   cariByBarcode(code, true);
 }
@@ -176,22 +194,42 @@ function tambahManual(){
   if(kode) cariByBarcode(kode.trim(), false);
 }
 async function cariByBarcode(code, dariScan){
-  // 1. Cari dulu di produkDB lokal (nanti ganti ke Supabase tabel produk)
-  let p = produkDB.find(x=>x.barcode==code);
-  // 2. Kalo di Supabase lu udah ada tabel produk, uncomment ini:
-  // let { data } = await supabaseClient.from('produk').select('*').eq('barcode', code).single();
-  // if(data) p = { barcode: data.barcode, nama: data.nama, harga: data.harga, kat: data.kategori, img: data.foto_url };
+  code = normalisasiKode(code);
+  console.log("Scan:", code, "DB:", produkDB.length);
+
+  // 1. Cari di memory - persis + tanpa nol depan
+  let p = produkDB.find(x => {
+    const a = normalisasiKode(x.barcode);
+    const b = code;
+    return a == b || a.replace(/^0+/,"") == b.replace(/^0+/,"");
+  });
+
+  // 2. Kalo belum ada, query langsung ke Supabase (buat jaga-jaga produk baru)
+  if(!p){
+    try{
+      let { data } = await supabaseClient.from('products').select('*').eq('barcode', code).maybeSingle();
+      if(!data){
+        let r = await supabaseClient.from('products').select('*').eq('barcode', code.replace(/^0+/,"")).maybeSingle();
+        data = r.data;
+      }
+      if(data) {
+        p = mappingProduk(data);
+        produkDB.push(p);
+      }
+    }catch(e){ console.log("Query langsung gagal", e); }
+  }
 
   if(!p){
-    if(dariScan){ /* jangan alert berulang kalo dari kamera */ document.getElementById("scanInfo").innerText="❌ Barcode "+code+" tidak ditemukan di database produk"; }
-    else alert("Barcode "+code+" tidak ditemukan. Cek lagi atau tambahkan produk ini dulu.");
+    if(dariScan) document.getElementById("scanInfo").innerText="❌ Barcode "+code+" tidak ditemukan di tabel products. Cek kolom barcode di Supabase!";
+    else alert("Barcode "+code+" tidak ditemukan. Cek kolom barcode di Supabase atau tambahkan produk dulu.");
+    return;
+  }
+  if(p.stock <= 0){
+    alert("Stok "+p.nama+" habis!");
     return;
   }
   tambahKeCart(p);
-  if(dariScan){
-    // Tetep buka kamera biar bisa scan produk berikutnya, gak usah tutup
-    document.getElementById("scanInfo").innerText="✅ "+p.nama+" masuk keranjang!";
-  }
+  if(dariScan) document.getElementById("scanInfo").innerText="✅ "+p.nama+" masuk keranjang!";
 }
 function cariProduk(){
   const q=document.getElementById("search").value.toLowerCase().trim();
@@ -199,18 +237,16 @@ function cariProduk(){
   const list=produkDB.filter(p=>p.nama.toLowerCase().includes(q) || p.barcode.includes(q) || p.kat.toLowerCase().includes(q));
   if(!list.length){ document.getElementById("hasilCari").innerHTML="<p style='color:#777;text-align:center;padding:20px'>Produk tidak ditemukan</p>"; return; }
   document.getElementById("hasilCari").innerHTML=list.map(p=>`
-    <div class="card"><img src="${p.img}"><div><b>${p.nama}</b><br><span>${p.kat} • Barcode: ${p.barcode}</span><br><span class="price">${rupiah(p.harga)}</span></div>
+    <div class="card"><img src="${p.img}"><div><b>${p.nama}</b><br><span>${p.kat} ${p.ukuran? '• '+p.ukuran : ''} • Barcode: ${p.barcode}</span><br><span class="price">${rupiah(p.harga)}</span> <span style="font-size:11px;color:#888">Stok: ${p.stock}</span></div>
     <button class="add" onclick="tambahKeCartByBarcode('${p.barcode}')">+ Tambah</button></div>`).join("");
 }
-function tambahKeCartByBarcode(barcode){ const p=produkDB.find(x=>x.barcode==barcode); if(p) tambahKeCart(p); }
+function tambahKeCartByBarcode(barcode){ const p=produkDB.find(x=>normalisasiKode(x.barcode)==normalisasiKode(barcode)); if(p) tambahKeCart(p); }
 function tambahKeCart(p){
   cart[p.barcode]=(cart[p.barcode]||{produk:p, qty:0});
   cart[p.barcode].qty++;
   renderCart();
 }
 function ubahQty(barcode,delta){ if(!cart[barcode]) return; cart[barcode].qty+=delta; if(cart[barcode].qty<=0) delete cart[barcode]; renderCart(); }
-
-// ===== MEMBER & BAYAR - SAMA KAYAK SEBELUMNYA, NYAMBUNG SUPABASE =====
 async function cekMember(){
   const v=document.getElementById("memberInput").value.trim();
   if(!v) return alert("Isi WA / Nama member dulu");
@@ -268,7 +304,7 @@ async function loadRiwayat(){
   }catch(e){ document.getElementById("historyList").innerHTML="Gagal load riwayat"; }
 }
 function updateJam(){ const d=new Date(); document.getElementById("jam").innerText=d.toLocaleTimeString("id-ID"); document.getElementById("tgl").innerText=d.toLocaleDateString("id-ID",{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
-setInterval(updateJam,1000); updateJam(); renderCart(); loadRiwayat();
+setInterval(updateJam,1000); updateJam(); renderCart(); loadRiwayat(); loadProduk();
 </script>
 </body>
 </html>
