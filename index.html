@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KO CHENG - D LUSSO Luxury</title>
+<title>KO CHENG - Admin Panel Luxury</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial;background:#000;color:#f5d98a}
@@ -9,188 +9,191 @@
 .logo{text-align:center;line-height:1}.logo div{font-size:28px}.logo b{font-size:20px;letter-spacing:2px;color:#e8c87a;font-family:Georgia}.logo span{font-size:10px;letter-spacing:4px}
 .tabs{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;background:#111010;position:sticky;top:68px;z-index:29;border-bottom:1px solid #333}.tabs button{white-space:nowrap;border:1px solid #d4af37;background:transparent;color:#e8c87a;padding:10px 18px;border-radius:99px;cursor:pointer;font-weight:700;flex-shrink:0}.tabs button.on{background:#e8c87a;color:#000}
 h2{padding:0 16px;font-family:Georgia;color:#f5d98a;font-weight:400}
-.banner{margin:0 16px;border:1px solid #d4af37;border-radius:16px;padding:20px;text-align:center;background:linear-gradient(135deg,#221f1b,#171512)}
-.banner b{font-size:22px;font-family:Georgia}.banner p{font-size:13px;color:#d8c27a}
+.stats{display:flex;gap:10px;padding:0 16px;flex-wrap:wrap}.stat{flex:1;min-width:100px;border:1px solid #d4af37;border-radius:14px;padding:14px 8px;text-align:center;background:#171512}.stat div{font-size:30px}.stat p{font-size:11px;margin:8px 0 4px;color:#d8c27a}.stat b{font-size:14px;color:#f5d98a}
+.menuGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}.menuGrid button{background:#221f1b;border:1px solid #d4af37;color:#e8c87a;border-radius:14px;padding:12px 4px;cursor:pointer;font-weight:700}.menuGrid button div{font-size:24px}
 .search{display:flex;gap:10px;padding:14px 16px}.search input{flex:1;background:#221f1b;border:1px solid #3a3220;border-radius:12px;padding:12px;color:#fff}
 .card{margin:0 16px 12px;border:1px solid #d4af37;border-radius:14px;padding:12px;display:flex;gap:12px;background:#171512;align-items:center}.card img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #d4af37;background:#222}.card b{font-size:16px;color:#f5d98a}.card p{font-size:13px;margin:6px 0;color:#d8c27a}.badge{background:#e8c87a;color:#000;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}
 input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #3a3220;background:#221f1b;color:#fff;margin:6px 0}
 .btn{background:#e8c87a;color:#000;border:0;padding:12px;border-radius:10px;font-weight:800;width:100%;cursor:pointer}.btn2{background:#2a261f;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:8px;cursor:pointer}
 .form{padding:0 16px}.hidden{display:none!important}
+.fotoPreview{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:none;margin:6px 0;border:1px solid #d4af37}
+.fotoBtns{display:flex;gap:8px;margin:6px 0}.fotoBtns button{flex:1;background:#221f1b;border:1px solid #d4af37;color:#e8c87a;padding:12px;border-radius:12px;font-weight:700;cursor:pointer}
 .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1a1815;border-top:2px solid #d4af37;display:flex;padding:10px 0 16px;z-index:50}.bottom button{flex:1;background:transparent;border:0;color:#a08c5a;font-size:11px;cursor:pointer}.bottom button.on{color:#e8c87a;font-weight:800}.bottom button div{font-size:24px}
-/* CHAT BOT */
-.chatFab{position:fixed;bottom:90px;right:16px;width:60px;height:60px;border-radius:50%;background:#e8c87a;color:#000;font-size:28px;border:0;cursor:pointer;z-index:60;box-shadow:0 4px 20px rgba(0,0,0,.5)}
-.chatBox{position:fixed;bottom:160px;right:12px;left:12px;max-width:456px;margin:0 auto;background:#1a1815;border:1px solid #d4af37;border-radius:16px;z-index:61;overflow:hidden;display:none}
-.chatBox.open{display:block}
-.chatHead{background:#e8c87a;color:#000;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:800}
-.chatBody{height:320px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#111010}
-.msg{max-width:85%;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.4}
-.msg.bot{background:#221f1b;color:#f5d98a;align-self:flex-start;border:1px solid #3a3220}
-.msg.me{background:#e8c87a;color:#000;align-self:flex-end;font-weight:600}
-.chatInput{display:flex;gap:8px;padding:10px;background:#1a1815;border-top:1px solid #333}.chatInput input{margin:0}.chatInput button{width:80px;background:#e8c87a;color:#000;border:0;border-radius:10px;font-weight:800;cursor:pointer}
-.chipRow{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px;background:#111010}.chipRow button{background:#221f1b;border:1px solid #d4af37;color:#e8c87a;padding:6px 12px;border-radius:99px;font-size:12px;cursor:pointer}
+.notif{margin:0 16px 12px;border:1px solid #ff4444;border-radius:14px;padding:12px;background:#2a1515}
+.notif-item{padding:10px 0;border-bottom:1px solid #444}.notif-item:last-child{border:none}
 </style></head><body>
 <div class="phone">
-<div class="header"><div class="logo"><div>👑</div><b>KO CHENG</b><br><span>D LUSSO • LUXURY</span></div><div style="text-align:right"><div id="memberInfo" style="font-size:12px;color:#d8c27a">Tamu</div><button class="btn2" onclick="nav('member')">👤 Member</button></div></div>
+<div class="header"><div class="logo"><div>👑</div><b>ADMIN PANEL</b><br><span>KO CHENG</span></div><div style="font-size:24px" onclick="nav('riwayat')">🔔 <span id="notifCount" style="font-size:14px;background:#ff4444;color:#fff;padding:2px 8px;border-radius:99px;display:none">0</span></div></div>
 <div class="tabs" id="topTabs"></div>
-
-<div id="page-beranda">
-<div class="banner"><b>Selamat Datang di<br>D LUSSO Luxury</b><p>Koleksi Premium • Harga Bersahabat • Pelayanan Concierge</p><button class="btn" onclick="nav('produk')">🛍️ LIHAT KOLEKSI</button></div>
-<h2>🔥 Koleksi Terbaru</h2>
-<div class="search"><input id="cariProduk" placeholder="🔍 Cari produk..." oninput="renderProduk()"></div>
-<div id="listProduk"></div>
-<div class="form"><div class="card" style="display:block"><h3 style="margin:0">Kenapa Belanja di KO CHENG?</h3><p>✨ 100% Original<br>🚚 Pengiriman Cepat<br>💬 Concierge BOT 24 Jam<br>💰 Member Dapat Saldo & Diskon</p></div></div>
+<div id="page-beranda"><h2>Ringkasan Statistik</h2><div class="stats"><div class="stat"><div>📈</div><p>Pendapatan</p><b id="tOmset">Rp. 0,-</b></div><div class="stat"><div>🛍️</div><p>Pesanan</p><b id="tOrders">0</b></div><div class="stat"><div>📦</div><p>Produk Aktif</p><b id="tProduk">0</b></div></div>
+<div id="notifTarikBox"></div>
+<h2>📋 MENU LENGKAP</h2><div class="menuGrid">
+<button onclick="nav('produk')"><div>📦</div>Produk</button><button onclick="nav('pesanan')"><div>🧾</div>Pesanan</button><button onclick="nav('pelanggan')"><div>👥</div>Member</button><button onclick="nav('riwayat')"><div>💰</div>Riwayat Saldo</button><button onclick="nav('admin')"><div>👑</div>Admin</button><button onclick="nav('pegawai')"><div>💼</div>Pegawai</button><button onclick="nav('bot')"><div>🤖</div>BOT</button><button onclick="nav('antrian')"><div>🔔</div>Antrian BOT</button><button onclick="nav('laporan')"><div>📊</div>Laporan</button><button onclick="nav('profil')"><div>👤</div>Profil</button>
 </div>
-
-<div id="page-produk" class="hidden"><h2>📦 Semua Produk</h2><div class="search"><input id="cariProduk2" placeholder="🔍 Cari produk..." oninput="renderProduk()"></div><div id="listProduk2"></div></div>
-
-<div id="page-keranjang" class="hidden"><h2>🛒 Keranjang</h2><div class="form"><div class="card" style="display:block" id="listKeranjang">Keranjang masih kosong</div><div id="totalKeranjang" style="padding:0 4px 10px"></div><button class="btn" onclick="checkout()">✅ CHECKOUT VIA WHATSAPP</button></div></div>
-
-<div id="page-member" class="hidden"><h2>👤 Member</h2>
-<div class="form"><div class="card" style="display:block" id="memberBox">
-<div id="loginForm"><input id="login_wa" placeholder="WhatsApp - contoh 0812..."><input id="login_pw" type="password" placeholder="Password"><button class="btn" onclick="loginMember()">🔐 MASUK MEMBER</button><p style="font-size:12px;color:#aaa;text-align:center">Belum punya akun? Daftar via WhatsApp Admin ya.</p></div>
-<div id="memberDetail" class="hidden"><b id="mdNama">-</b><p id="mdWa">-</p><p>Saldo: <b id="mdSaldo">Rp. 0,-</b></p><p>Poin: <b id="mdPoin">0</b> • Tier: <b id="mdTier">-</b> • Diskon: <b id="mdDiskon">0%</b></p><button class="btn" onclick="nav('riwayat')">💰 LIHAT RIWAYAT SALDO</button><br><br><button class="btn2" style="width:100%" onclick="logoutMember()">🚪 Keluar</button></div>
+<h2>Daftar Produk</h2><div class="search"><input id="cariProduk" placeholder="🔍 Cari produk..." oninput="renderProduk()"></div><div id="listProduk"></div>
+<div class="form"><div class="card" style="display:block"><h3 style="margin:0">Pesanan Terbaru</h3><div id="lastOrders">Loading...</div></div></div></div>
+<div id="page-produk" class="hidden"><h2>Produk</h2><div class="form"><div class="card" style="display:block"><input id="p_id" type="hidden"><input id="p_nama" placeholder="Nama Produk"><input id="p_harga" placeholder="Harga contoh: 250000" inputmode="numeric"><input id="p_stok" placeholder="Stok" type="number"><input id="p_kategori" placeholder="Kategori"><input id="p_tipe" placeholder="Tipe"><input id="p_ukuran" placeholder="Ukuran">
+<input type="file" id="p_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><input type="file" id="p_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><img id="p_preview" class="fotoPreview"><input id="p_foto" type="hidden"><small id="p_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('p_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('p_fotoFile').click()">🖼️ Galeri</button></div>
+<textarea id="p_desc" placeholder="Deskripsi"></textarea><button class="btn" onclick="saveProduk()">💾 SIMPAN PRODUK</button><button class="btn2" style="width:100%;margin-top:8px" onclick="bersihinProduk()">🧹 Bersihin Produk Kosong / Harga 0</button></div><div id="listProduk2"></div></div></div>
+<div id="page-pesanan" class="hidden"><h2>Pesanan</h2><div class="form"><div class="card" style="display:block" id="listOrders"></div></div></div>
+<div id="page-pelanggan" class="hidden"><h2>👥 Pelanggan / Member</h2><div class="form"><div class="card" style="display:block"><input id="m_id" type="hidden"><input id="m_nama" placeholder="Nama Lengkap"><input id="m_wa" placeholder="WhatsApp"><input id="m_email" placeholder="Email">
+<div style="display:flex;gap:8px;align-items:center"><input id="m_password" type="password" placeholder="Password Member - kosongin kalo gak mau ganti" style="flex:1"><button class="btn2" type="button" onclick="lihatPass('m_password',this)">👁️</button></div><small style="color:#aaa">Kosongin aja kalo password member gak mau diganti</small>
+<input id="m_saldo" placeholder="Saldo - contoh 500000" inputmode="numeric">
+<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1" type="button" onclick="topupCepet(50000)">+50rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(100000)">+100rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(200000)">+200rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(500000)">+500rb</button></div>
+<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1;background:#2a1515;border-color:#ff4444" type="button" onclick="adminTarikCepet()">💸 TARIK / POTONG</button><button class="btn2" style="flex:1" type="button" onclick="adminBeliCepet()">🛍️ BELI PAKAI SALDO</button></div>
+<input id="m_points" placeholder="Poin" type="number"><input id="m_diskon" placeholder="Diskon % - discount" type="number"><input id="m_tier" placeholder="Tier - GOLD / VIP"><input id="m_alamat" placeholder="Alamat">
+<input type="file" id="m_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><input type="file" id="m_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><img id="m_preview" class="fotoPreview"><input id="m_foto" type="hidden"><small id="m_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('m_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('m_fotoFile').click()">🖼️ Galeri</button></div>
+<button class="btn" onclick="saveMember()">💾 SIMPAN / TULIS TRANSAKSI</button></div>
+<div class="card" style="display:block"><input id="cariMember" placeholder="🔍 Cari member - nama / WA..." oninput="renderMember()"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" onclick="filterTier('')">Semua</button><button class="btn2" onclick="filterTier('GOLD')">GOLD</button><button class="btn2" onclick="filterTier('VIP')">VIP</button><button class="btn2" onclick="filterTier('Reguler')">Reguler</button></div><div id="listMember" style="margin-top:10px"></div></div></div></div>
+<div id="page-riwayat" class="hidden"><h2>💰 Riwayat Saldo - Semua Member</h2>
+<div class="form"><div class="card" style="display:block">
+<div style="display:flex;gap:8px"><button class="btn2" style="flex:1" onclick="filterRiwayat('')">Semua</button><button class="btn2" style="flex:1" onclick="filterRiwayat('TOP UP')">TOP UP</button><button class="btn2" style="flex:1" onclick="filterRiwayat('BELI')">BELI</button><button class="btn2" style="flex:1;background:#ff4444;color:#fff" onclick="filterRiwayat('TARIK')">TARIK 🔔</button></div>
+<input id="cariRiwayat" placeholder="🔍 Cari member - nama / WA..." oninput="renderRiwayat()"><div id="listRiwayat" style="margin-top:10px">Loading...</div>
 </div></div>
-<div class="form"><div class="card" style="display:block"><h3 style="margin:0">💸 Tarik Tunai</h3><p style="font-size:12px;color:#aaa">Minta tarik, Admin akan tulis & proses transfernya.</p><input id="tarik_nominal" placeholder="Nominal - contoh 100000" inputmode="numeric"><input id="tarik_rek" placeholder="No Rekening / e-Wallet + Nama"><button class="btn" onclick="mintaTarik()">💸 AJUKAN TARIK TUNAI</button></div></div>
+<div class="form"><div class="card" style="display:block"><h3 style="margin:0">🔔 Notif Tarik Tunai Terbaru</h3><p style="font-size:12px;color:#aaa">Tiap member minta TARIK, Admin yang tulis & proses transfernya.</p><div id="listTarik"></div></div></div>
 </div>
-
-<div id="page-riwayat" class="hidden"><h2>💰 Riwayat Saldo Saya</h2><div class="form"><div class="card" style="display:block" id="listRiwayatSaya">Login dulu ya ko.</div></div></div>
-
-<div id="page-profil" class="hidden"><h2>👤 Profil Toko</h2><div class="form"><div class="card" style="display:block;text-align:center"><div style="font-size:50px">👑</div><b>KO CHENG - D LUSSO</b><p>Luxury • Premium • Terpercaya<br>Bandung, Indonesia</p><button class="btn" onclick="bukaChat()">💬 CHAT CONCIERGE BOT</button><br><br><button class="btn2" style="width:100%" onclick="waAdmin()">💬 WhatsApp Admin</button></div></div></div>
+<div id="page-laporan" class="hidden"><h2>📊 Laporan</h2><div class="stats"><div class="stat"><div>📈</div><p>Total Omset</p><b id="tOmset2">Rp. 0,-</b></div><div class="stat"><div>👥</div><p>Pelanggan</p><b id="tMember">0</b></div><div class="stat"><div>📦</div><p>Produk</p><b id="tProduk2">0</b></div></div><div class="form"><div class="card" style="display:block"><h3>Semua Pesanan</h3><div id="listOrders2"></div></div></div></div>
+<div id="page-admin" class="hidden"><h2>👑 Admin</h2><div class="form"><div class="card" style="display:block"><input id="a_id" type="hidden"><input id="a_nama" placeholder="Nama Admin"><input id="a_nomor" placeholder="Nomor"><input id="a_code" placeholder="Code"><input id="a_pin" placeholder="PIN"><input id="a_email" placeholder="Email"><input id="a_alamat" placeholder="Alamat">
+<input type="file" id="a_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><input type="file" id="a_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><img id="a_preview" class="fotoPreview"><input id="a_foto" type="hidden"><small id="a_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('a_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('p_fotoFile').click()">🖼️ Galeri</button></div>
+<button class="btn" onclick="saveAdmin()">💾 SIMPAN ADMIN</button></div><div class="card" style="display:block" id="listAdmin"></div></div></div>
+<div id="page-pegawai" class="hidden"><h2>💼 Pegawai</h2><div class="form"><div class="card" style="display:block"><input id="pg_id" type="hidden"><input id="pg_nama" placeholder="Nama Pegawai"><input id="pg_nomor" placeholder="Nomor"><input id="pg_code" placeholder="Code"><input id="pg_pin" placeholder="PIN"><input id="pg_email" placeholder="Email"><input id="pg_alamat" placeholder="Alamat">
+<input type="file" id="pg_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'pg_foto','pg_preview','pg_info')"><input type="file" id="pg_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'pg_foto','pg_preview','pg_info')"><img id="pg_preview" class="fotoPreview"><input id="pg_foto" type="hidden"><small id="pg_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('pg_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('pg_fotoFile').click()">🖼️ Galeri</button></div>
+<button class="btn" onclick="savePegawai()">💾 SIMPAN PEGAWAI</button></div><div class="card" style="display:block" id="listPegawai"></div></div></div>
+<div id="page-bot" class="hidden"><h2>🤖 Ajari BOT</h2><div class="form"><div class="card" style="display:block"><input id="b_id" type="hidden"><input id="b_q" placeholder="Pertanyaan member"><textarea id="b_a" placeholder="Jawaban bot"></textarea><button class="btn" onclick="saveBot()">💾 SIMPAN KE OTAK BOT</button></div><div class="card" style="display:block" id="listBot"></div><div class="card" style="display:block"><h3>Tes Bot</h3><input id="tesBotInput" placeholder="Coba tanya..."><button class="btn" onclick="tesBot()">🤖 TANYA BOT</button><div id="tesBotHasil" style="margin-top:10px">Belum ada tes</div></div></div></div>
+<div id="page-antrian" class="hidden"><h2>🔔 Antrian Pertanyaan BOT</h2><div class="form"><div class="card" style="display:block"><p style="font-size:12px;color:#aaa">Pertanyaan member yang belum ada jawabannya. Jawab di sini, langsung masuk otak BOT.</p><div id="listAntrian">Loading...</div></div></div></div>
+<div id="page-profil" class="hidden"><h2>👤 Profil</h2><div class="form"><div class="card" style="display:block;text-align:center"><div style="font-size:50px">👑</div><b>KO CHENG ADMIN</b><p>Admin Panel Luxury</p><button class="btn" onclick="nav('admin')">👑 Kelola Admin</button><br><br><button class="btn" onclick="nav('pegawai')">💼 Kelola Pegawai</button><br><br><button class="btn" onclick="nav('bot')">🤖 Ajari BOT</button><br><br><button class="btn" onclick="nav('antrian')">🔔 Antrian BOT</button><br><br><button class="btn" onclick="nav('pelanggan')">👥 Kelola Member</button></div></div></div>
 </div>
-
-<button class="chatFab" onclick="toggleChat()">💬</button>
-<div class="chatBox" id="chatBox">
-<div class="chatHead"><span>🤖 Concierge KO CHENG</span><button onclick="toggleChat()" style="background:transparent;border:0;font-size:18px;cursor:pointer">✕</button></div>
-<div class="chatBody" id="chatBody"><div class="msg bot">Ciao! Selamat datang di KO CHENG - D LUSSO ✨<br>Ada yang bisa saya bantu? Silakan tanya soal produk, harga, stok, atau saldo member ya.</div></div>
-<div class="chipRow"><button onclick="kirimChip('Koleksi terbaru')">Koleksi terbaru</button><button onclick="kirimChip('Cara order')">Cara order</button><button onclick="kirimChip('Cek saldo')">Cek saldo</button><button onclick="kirimChip('Tarik tunai')">Tarik tunai</button></div>
-<div class="chatInput"><input id="chatInput" placeholder="Tulis pertanyaan..." onkeydown="if(event.key==='Enter')sendChatMsg()"><button onclick="sendChatMsg()">Kirim</button></div>
-</div>
-
 <div class="bottom" id="bottomMenu"></div>
 <script>
 const SUPABASE_URL="https://kkydbnjxbfkzbcxpcpor.supabase.co";
 const SUPABASE_KEY="sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx";
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function rupiah(n){return 'Rp. '+Number(n||0).toLocaleString('id-ID')+',-';}
-const menus=[['beranda','🏠 Beranda'],['produk','📦 Produk'],['keranjang','🛒 Keranjang'],['member','👤 Member'],['profil','👤 Profil']];
-const topMenus=[['beranda','Beranda'],['produk','Produk'],['keranjang','Keranjang'],['member','Member'],['riwayat','Riwayat Saldo'],['profil','Profil']];
-function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','keranjang','member','riwayat','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);if(m==='riwayat')renderRiwayatSaya();if(m==='member')renderMemberBox();}
+function lihatPass(id,btn){let i=document.getElementById(id);if(i.type==='password'){i.type='text';btn.innerText='🙈'}else{i.type='password';btn.innerText='👁️'}}
+function topupCepet(n){let inp=document.getElementById('m_saldo');inp.value=Number(inp.value||0)+n}
+let filterMemberTier='';
+function filterTier(t){filterMemberTier=t;renderMember()}
+function renderMember(){let q=(document.getElementById('cariMember')?document.getElementById('cariMember').value:'').toLowerCase();let list=D.members.filter(x=>{let cocok=(x.full_name||'').toLowerCase().includes(q)||(x.whatsapp||'').includes(q);let cocokTier=!filterMemberTier||(x.tier||'').toUpperCase().includes(filterMemberTier);return cocok&&cocokTier});document.getElementById('listMember').innerHTML=list.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.full_name||'-'}</b> - ${x.whatsapp||''} <span class="badge">${x.tier||'Reguler'}</span><br>Saldo: <b>${rupiah(x.saldo||0)}</b> • Poin: ${x.points||0} • Diskon: ${x.discount||0}%<br><button class="btn2" onclick="editMember('${x.id}')">✏️ Edit / Tulis Transaksi</button> <button class="btn2" onclick="lihatRiwayatMember('${x.id}')">💰 Riwayat</button> <button class="btn2" onclick="hapus('members','${x.id}')">🗑️</button></div>`).join('')||'Kosong'}
+function fotoPilih(input,targetId,previewId,infoId){let file=input.files[0];if(!file)return;let reader=new FileReader();reader.onload=function(e){let img=new Image();img.onload=function(){let canvas=document.createElement('canvas');let max=600;let w=img.width,h=img.height;if(w>max||h>max){let r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r)}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);let q=0.65;let kecil=canvas.toDataURL('image/jpeg',q);while(kecil.length>130000&&q>0.25){q-=0.1;kecil=canvas.toDataURL('image/jpeg',q)}let kb=Math.round(kecil.length*0.75/1024);document.getElementById(targetId).value=kecil;let pv=document.getElementById(previewId);pv.src=kecil;pv.style.display='block';if(infoId)document.getElementById(infoId).innerText='Foto: '+kb+'KB - Udah dikompres ✅ (asli: '+Math.round(file.size/1024)+'KB)';};img.src=e.target.result;};reader.readAsDataURL(file);}
+function setPreview(previewId,url,infoId){let pv=document.getElementById(previewId);if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}if(infoId)document.getElementById(infoId).innerText='';}
+const menus=[['beranda','🏠 Beranda'],['produk','📦 Produk'],['pesanan','🧾 Pesanan'],['riwayat','💰 Riwayat'],['profil','👤 Profil']];
+const topMenus=[['beranda','Dashboard'],['produk','Produk'],['pesanan','Pesanan'],['pelanggan','Member'],['riwayat','Riwayat Saldo'],['admin','Admin'],['pegawai','Pegawai'],['bot','BOT'],['antrian','Antrian BOT 🔔'],['laporan','Laporan']];
+function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','pesanan','pelanggan','riwayat','laporan','admin','pegawai','bot','antrian','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);loadAll();}
 document.getElementById('topTabs').innerHTML=topMenus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
 document.getElementById('bottomMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')"><div>${m[1].split(' ')[0]}</div>${m[1].split(' ')[1]||''}</button>`).join('');
-let D={products:[],bot:[],riwayat:[]};
-let cart=JSON.parse(localStorage.getItem('kocheng_cart')||'[]');
-let currentMember=JSON.parse(localStorage.getItem('kocheng_member')||'null');
-
-async function loadAll(){
-  try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}
-  try{let b=await sb.from('bot_faq').select('*').order('id',{ascending:false});D.bot=b.data||[];}catch(e){D.bot=[]}
-  try{if(currentMember){let r=await sb.from('riwayat_saldo').select('*').eq('member_id',currentMember.id).order('created_at',{ascending:false}).limit(50);D.riwayat=r.data||[];}}catch(e){D.riwayat=[]}
-  renderProduk();renderKeranjang();renderMemberBox();renderRiwayatSaya();
-}
-function renderProduk(){
-  let q1=(document.getElementById('cariProduk')?document.getElementById('cariProduk').value:'').toLowerCase();
-  let q2=(document.getElementById('cariProduk2')?document.getElementById('cariProduk2').value:'').toLowerCase();
-  let q=q1||q2;
-  let list=D.products.filter(x=>(x.is_active!==false)&&((x.name||'').toLowerCase().includes(q)));
-  let html=list.map(x=>`<div class="card"><img src="${x.image_url||'https://via.placeholder.com/90'}"><div style="flex:1"><b>${x.name}</b><p>Stok: ${x.stock||0} • ${x.category||''}</p><p>Harga: <b>${rupiah(x.price||0)}</b></p><button class="btn2" onclick="tambahKeranjang('${x.id}')">🛒 + Keranjang</button> <button class="btn2" onclick="tanyaBotProduk('${x.name}')">💬 Tanya BOT</button></div></div>`).join('')||'<p style="padding:0 16px">Produk kosong / belum ada yang aktif</p>';
-  document.getElementById('listProduk').innerHTML=html;
-  let e2=document.getElementById('listProduk2'); if(e2) e2.innerHTML=html;
-}
-function tambahKeranjang(id){let x=D.products.find(v=>v.id==id);if(!x)return;let ada=cart.find(v=>v.id==id);if(ada)ada.qty++;else cart.push({id:x.id,name:x.name,price:x.price,qty:1});localStorage.setItem('kocheng_cart',JSON.stringify(cart));renderKeranjang();alert(x.name+' masuk keranjang! 🛒');}
-function renderKeranjang(){
-  if(!cart.length){document.getElementById('listKeranjang').innerHTML='Keranjang masih kosong';document.getElementById('totalKeranjang').innerHTML='';return;}
-  let total=cart.reduce((s,x)=>s+Number(x.price||0)*x.qty,0);
-  document.getElementById('listKeranjang').innerHTML=cart.map((x,i)=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.name}</b><br>${rupiah(x.price)} x ${x.qty} = <b>${rupiah(Number(x.price)*x.qty)}</b><br><button class="btn2" onclick="ubahQty(${i},-1)">➖</button> <button class="btn2" onclick="ubahQty(${i},1)">➕</button> <button class="btn2" onclick="hapusCart(${i})">🗑️</button></div>`).join('');
-  document.getElementById('totalKeranjang').innerHTML=`<b>Total: ${rupiah(total)}</b>` + (currentMember?`<br><small>Saldo kamu: ${rupiah(currentMember.saldo||0)}</small>`:'');
-}
-function ubahQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);localStorage.setItem('kocheng_cart',JSON.stringify(cart));renderKeranjang();}
-function hapusCart(i){cart.splice(i,1);localStorage.setItem('kocheng_cart',JSON.stringify(cart));renderKeranjang();}
-function checkout(){if(!cart.length)return alert('Keranjang kosong');let total=cart.reduce((s,x)=>s+Number(x.price||0)*x.qty,0);let pesan='Halo KO CHENG! Saya mau order:%0A'+cart.map(x=>`- ${x.name} x ${x.qty} = ${rupiah(Number(x.price)*x.qty)}`).join('%0A')+'%0A%0ATotal: '+rupiah(total)+(currentMember?('%0AMember: '+currentMember.full_name+' ('+currentMember.whatsapp+')'):'');window.open('https://wa.me/6282112345678?text='+pesan,'_blank');}
-function waAdmin(){window.open('https://wa.me/6282112345678?text='+encodeURIComponent('Halo Admin KO CHENG! Saya mau tanya.'),'_blank');}
-async function loginMember(){
-  let wa=document.getElementById('login_wa').value.trim();
-  let pw=document.getElementById('login_pw').value.trim();
-  if(!wa||!pw) return alert('Isi WhatsApp + Password dulu');
-  let r=await sb.from('members').select('*').eq('whatsapp',wa).maybeSingle();
-  if(r.error||!r.data) return alert('Member tidak ditemukan, cek WhatsApp-nya');
-  let m=r.data;
-  if(String(m.password||m.password_hash||'')!==pw) return alert('Password salah');
-  currentMember=m; localStorage.setItem('kocheng_member',JSON.stringify(m));
-  alert('Selamat datang '+m.full_name+'! ✨'); loadAll(); nav('member');
-}
-function logoutMember(){currentMember=null;localStorage.removeItem('kocheng_member');loadAll();nav('member');}
-function renderMemberBox(){
-  document.getElementById('memberInfo').innerText=currentMember?('Hi, '+(currentMember.full_name||'Member')):'Tamu';
-  let loginForm=document.getElementById('loginForm');
-  let det=document.getElementById('memberDetail');
-  if(currentMember){loginForm.classList.add('hidden');det.classList.remove('hidden');document.getElementById('mdNama').innerText=currentMember.full_name||'-';document.getElementById('mdWa').innerText=currentMember.whatsapp||'-';document.getElementById('mdSaldo').innerText=rupiah(currentMember.saldo||0);document.getElementById('mdPoin').innerText=currentMember.points||0;document.getElementById('mdTier').innerText=currentMember.tier||'Reguler';document.getElementById('mdDiskon').innerText=(currentMember.discount||0)+'%';}
-  else{loginForm.classList.remove('hidden');det.classList.add('hidden');}
-}
-function renderRiwayatSaya(){
-  if(!currentMember){document.getElementById('listRiwayatSaya').innerHTML='Login dulu ya ko.';return;}
-  document.getElementById('listRiwayatSaya').innerHTML=D.riwayat.map(x=>{
+let D={products:[],orders:[],members:[],admins:[],pegawai:[],bot:[],riwayat:[],antrian:[]};
+let filterRiwayatTipe='';
+function filterRiwayat(t){filterRiwayatTipe=t;renderRiwayat();}
+function renderRiwayat(){
+  let q=(document.getElementById('cariRiwayat')?document.getElementById('cariRiwayat').value:'').toLowerCase();
+  let list=D.riwayat.filter(x=>{
+    let cocok=(x.full_name||'').toLowerCase().includes(q)||(x.whatsapp||'').includes(q)||(x.keterangan||'').toLowerCase().includes(q);
+    let cocokTipe=!filterRiwayatTipe||(x.tipe||'')===filterRiwayatTipe;
+    return cocok&&cocokTipe;
+  });
+  document.getElementById('listRiwayat').innerHTML=list.slice(0,50).map(x=>{
     let d=x.created_at?new Date(x.created_at):new Date();
+    let tgl=d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
     let warna=Number(x.amount||0)>=0?'#7CFC00':'#ff6666';
     let tanda=Number(x.amount||0)>=0?'+':'-';
     let isAdmin=(x.diubah_oleh&&String(x.diubah_oleh).includes('DITULIS ADMIN'));
-    let badge=isAdmin?' <span style="background:#1a1a1a;border:1px solid #E8C97A;color:#E8C97A;font-size:10px;padding:2px 6px;border-radius:99px">✍️ DITULIS ADMIN</span>':'';
-    return `<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.tipe||''}</b> ${badge}<br><span style="color:${warna};font-weight:800">${tanda} ${rupiah(Math.abs(x.amount||0))}</span> • Saldo: ${rupiah(x.saldo_sebelum||0)} → <b>${rupiah(x.saldo_sesudah||0)}</b><br><small style="color:#aaa">${d.toLocaleDateString('id-ID')} ${d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})} • ${x.keterangan||''}</small></div>`;
-  }).join('')||'Belum ada riwayat saldo.';
-}
-async function mintaTarik(){
-  if(!currentMember) return alert('Login member dulu ya');
-  let nominal=Number(String(document.getElementById('tarik_nominal').value||'').replace(/[^0-9]/g,''));
-  let rek=document.getElementById('tarik_rek').value.trim();
-  if(!nominal) return alert('Isi nominal tarik dulu');
-  if(!rek) return alert('Isi No Rekening / e-Wallet dulu');
-  if(nominal>Number(currentMember.saldo||0)) return alert('Saldo kurang, saldo kamu '+rupiah(currentMember.saldo||0));
-  if(!confirm('Ajukan TARIK '+rupiah(nominal)+' ke '+rek+'? Admin akan tulis & proses transfernya.')) return;
-  let saldoBaru=Number(currentMember.saldo||0)-nominal;
-  let r=await sb.from('members').update({saldo:saldoBaru}).eq('id',currentMember.id);
-  if(r.error) return alert('GAGAL: '+r.error.message);
-  await sb.from('riwayat_saldo').insert([{member_id:currentMember.id,full_name:currentMember.full_name,whatsapp:currentMember.whatsapp,tipe:'TARIK',amount:-nominal,saldo_sebelum:Number(currentMember.saldo||0),saldo_sesudah:saldoBaru,keterangan:'TARIK ke '+rek+' - DITULIS ADMIN',diubah_oleh:'DITULIS ADMIN'}]);
-  currentMember.saldo=saldoBaru; localStorage.setItem('kocheng_member',JSON.stringify(currentMember));
-  alert('Pengajuan TARIK '+rupiah(nominal)+' udah kami teruskan kepada Admin, mohon tunggu transfernya ya 🙏✨');
-  document.getElementById('tarik_nominal').value='';document.getElementById('tarik_rek').value=''; loadAll();
-}
-
-// ===== BOT - CONCIERGE =====
-function toggleChat(){document.getElementById('chatBox').classList.toggle('open');}
-function bukaChat(){toggleChat();document.getElementById('chatInput').focus();}
-function kirimChip(t){document.getElementById('chatInput').value=t;sendChatMsg();}
-function tanyaBotProduk(nama){bukaChat();document.getElementById('chatInput').value='Harga '+nama;sendChatMsg();}
-function tambahPesan(teks,siapa){
-  let body=document.getElementById('chatBody');
-  let div=document.createElement('div');div.className='msg '+(siapa==='me'?'me':'bot');div.innerHTML=teks;body.appendChild(div);body.scrollTop=body.scrollHeight;
-}
-function jawabBot(pesan){
-  let kecil=(pesan||'').toLowerCase();
-  // Cek dulu di otak BOT
-  let ketemu=D.bot.find(x=>{
-    let q=((x.question||x.keyword||'')).toLowerCase().trim();
-    if(!q) return false;
-    if(kecil.includes(q)) return true;
-    return q.split(' ').filter(w=>w.length>3).some(w=>kecil.includes(w));
-  });
-  if(ketemu) return {jawaban:ketemu.answer, ketemu:true};
-  // Kalo belum ada jawabannya: jawab NORMAL aja, jangan bilang belum diajarin
-  return {jawaban:`Untuk "${pesan}" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨`, ketemu:false};
-}
-async function sendChatMsg(){
-  let inp=document.getElementById('chatInput');
-  let teks=inp.value.trim();
-  if(!teks) return;
-  inp.value='';
-  tambahPesan(teks,'me');
-  let hasil=jawabBot(teks);
-  tambahPesan('🤖 '+hasil.jawaban,'bot');
-  // Kalo belum ketemu jawabannya, simpen ke Antrian biar Admin bisa jawab & ajari BOT
-  if(!hasil.ketemu){
-    try{
-      await sb.from('bot_antrian').insert([{pertanyaan:teks, member_name:currentMember?currentMember.full_name:'Tamu', whatsapp:currentMember?currentMember.whatsapp:'-', status:'MENUNGGU', jawaban_admin:null}]);
-    }catch(e){}
+    let badgeAdmin=isAdmin?' <span style="background:#1a1a1a;border:1px solid #E8C97A;color:#E8C97A;font-size:10px;padding:2px 6px;border-radius:99px">✍️ DITULIS ADMIN</span>':'';
+    return `<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.full_name||'-'}</b> - ${x.whatsapp||''} <span class="badge">${x.tipe||''}</span>${badgeAdmin}<br><span style="color:${warna};font-weight:800">${tanda} ${rupiah(Math.abs(x.amount||0))}</span> • Saldo: ${rupiah(x.saldo_sebelum||0)} → <b>${rupiah(x.saldo_sesudah||0)}</b><br><small style="color:#aaa">${tgl} • ${x.keterangan||''}</small></div>`;
+  }).join('')||'Belum ada transaksi';
+  let tarik=D.riwayat.filter(x=>x.tipe==='TARIK').slice(0,5);
+  document.getElementById('listTarik').innerHTML=tarik.map(x=>{
+    let d=x.created_at?new Date(x.created_at):new Date();
+    return `<div class="notif-item">🔔 <b>${x.full_name||'-'}</b> minta TARIK <b style="color:#ff6666">${rupiah(Math.abs(x.amount||0))}</b><br><small>${d.toLocaleDateString('id-ID')} ${d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})} • ${x.keterangan||''} • Sisa saldo: ${rupiah(x.saldo_sesudah||0)}</small><br><button class="btn2" onclick="waTarik('${x.whatsapp||''}','${x.full_name||''}',${Math.abs(x.amount||0)})">💬 WA Member</button> <button class="btn2" onclick="sudahTransfer('${x.id}')">✅ Udah Transfer</button></div>`;
+  }).join('')||'Belum ada yang tarik tunai, aman ko ✨';
+  let box=document.getElementById('notifTarikBox');
+  let badge=document.getElementById('notifCount');
+  if(tarik.length){
+    badge.style.display='inline'; badge.textContent=tarik.length;
+    box.innerHTML=`<div class="notif"><b>🔔 ADA ${tarik.length} TARIK TUNAI BARU!</b><br><small>Ditulis Admin, tinggal transfer</small><br><br>${tarik.slice(0,2).map(x=>`<div>${x.full_name} - <b>${rupiah(Math.abs(x.amount||0))}</b></div>`).join('')}<br><button class="btn" onclick="nav('riwayat')">LIHAT SEMUA TARIK →</button></div>`;
+  } else {
+    badge.style.display='none'; box.innerHTML='';
   }
 }
+function waTarik(wa,nama,nominal){window.open('https://wa.me/'+String(wa||'').replace(/[^0-9]/g,'')+'?text='+encodeURIComponent('Ciao '+nama+'! Tarik tunai '+rupiah(nominal)+' udah kami tulis & proses ya, mohon tunggu transfernya. Grazie! - D LUSSO'),'_blank');}
+function sudahTransfer(id){alert('Oke, udah dicatet udah transfer.');}
+function lihatRiwayatMember(id){let m=D.members.find(v=>v.id==id);nav('riwayat');if(m){document.getElementById('cariRiwayat').value=m.full_name||'';renderRiwayat();}}
+async function loadAll(){try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}try{let o=await sb.from('orders').select('*').order('created_at',{ascending:false});D.orders=o.data||[];}catch(e){D.orders=[]}try{let m=await sb.from('members').select('*').order('created_at',{ascending:false});D.members=m.data||[];}catch(e){}try{let a=await sb.from('admins').select('*').order('created_at',{ascending:false});D.admins=a.data||[];}catch(e){}try{let pg=await sb.from('pegawai').select('*').order('created_at',{ascending:false});D.pegawai=pg.data||[];}catch(e){}try{let b=await sb.from('bot_faq').select('*').order('id',{ascending:false});D.bot=b.data||[];}catch(e){D.bot=[]}try{let an=await sb.from('bot_antrian').select('*').order('created_at',{ascending:false});D.antrian=an.data||[];}catch(e){D.antrian=[]}try{let r=await sb.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(200);D.riwayat=r.data||[];}catch(e){D.riwayat=[]}renderAll();}
+function renderAll(){let omset=D.orders.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);document.getElementById('tOmset').innerText=rupiah(omset);document.getElementById('tOmset2').innerText=rupiah(omset);document.getElementById('tOrders').innerText=D.orders.length;document.getElementById('tProduk').innerText=D.products.filter(x=>x.is_active!==false).length;document.getElementById('tProduk2').innerText=D.products.length;document.getElementById('tMember').innerText=D.members.length;document.getElementById('lastOrders').innerHTML=D.orders.slice(0,3).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'Pelanggan'} - <b>${rupiah(x.total||x.total_amount||0)}</b></div>`).join('')||'Belum ada pesanan';renderProduk();renderMember();renderRiwayat();let ordHtml=D.orders.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'-'} - ${rupiah(x.total||x.total_amount||0)} - ${x.status||''}</div>`).join('')||'Kosong';document.getElementById('listOrders').innerHTML=ordHtml;document.getElementById('listOrders2').innerHTML=ordHtml;document.getElementById('listAdmin').innerHTML=D.admins.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editAdmin('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('admins','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listPegawai').innerHTML=D.pegawai.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editPegawai('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('pegawai','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listBot').innerHTML=D.bot.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>Q: ${x.question||x.keyword||''}</b><br>A: ${x.answer||''}<br><button class="btn2" onclick="editBot('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('bot_faq','${x.id}')">🗑️</button></div>`).join('')||'Bot belum diajarin';document.getElementById('listAntrian').innerHTML=D.antrian.map(x=>{let tgl=x.created_at?new Date(x.created_at).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';let isTunggu=x.status!=='DIJAWAB';return `<div style="padding:12px 0;border-bottom:1px solid #333"><b>❓ ${x.pertanyaan||''}</b><br><small style="color:#aaa">Dari: ${x.member_name||'Tamu'} • ${x.whatsapp||''} • ${tgl} • <b style="color:${isTunggu?'#ff6666':'#7CFC00'}">${x.status||'MENUNGGU'}</b></small>${x.jawaban_admin?`<br><small style="color:#7CFC00">Jawaban: ${x.jawaban_admin}</small>`:''}${isTunggu?`<br><textarea id="jawaban_${x.id}" placeholder="Tulis jawaban Admin di sini..."></textarea><button class="btn" onclick="jawabAntrian('${x.id}')">💾 JAWAB & AJARI BOT</button>`:''}<br><button class="btn2" style="margin-top:8px" onclick="hapus('bot_antrian','${x.id}')">🗑️ Hapus Antrian</button></div>`;}).join('')||'Belum ada antrian, aman ko ✨';}
+function renderProduk(){let q=(document.getElementById('cariProduk').value||'').toLowerCase();let list=D.products.filter(x=>(x.name||'').toLowerCase().includes(q));let html=list.map(x=>`<div class="card"><img src="${x.image_url||'https://via.placeholder.com/90'}"><div style="flex:1"><b>${x.name}</b><p>Stok: ${x.stock||0}</p><p>Harga: <b>${rupiah(x.price||0)}</b></p></div><div><span class="badge">${x.is_active===false?'Nonaktif':'Aktif'}</span><br><br><button class="btn2" onclick="editProduk('${x.id}')">✏️</button> <button class="btn2" onclick="hapus('products','${x.id}')">🗑️</button></div></div>`).join('')||'<p style="padding:0 16px">Produk kosong</p>';document.getElementById('listProduk').innerHTML=html;let e2=document.getElementById('listProduk2');if(e2)e2.innerHTML=html;}
+async function saveProduk(){let id=document.getElementById('p_id').value;let data={name:document.getElementById('p_nama').value,price:Number(document.getElementById('p_harga').value||0),stock:Number(document.getElementById('p_stok').value||0),category:document.getElementById('p_kategori').value,tipe:document.getElementById('p_tipe').value,ukuran:document.getElementById('p_ukuran').value,image_url:document.getElementById('p_foto').value,description:document.getElementById('p_desc').value,is_active:true};if(!data.name)return alert('Nama wajib');let r=id?await sb.from('products').update(data).eq('id',id):await sb.from('products').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Produk tersimpan! '+rupiah(data.price));['p_id','p_nama','p_harga','p_stok','p_kategori','p_tipe','p_ukuran','p_foto','p_desc'].forEach(i=>document.getElementById(i).value='');setPreview('p_preview','', 'p_info');loadAll();}
+function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;nav('produk');document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.name||'';document.getElementById('p_harga').value=x.price||'';document.getElementById('p_stok').value=x.stock||'';document.getElementById('p_kategori').value=x.category||'';document.getElementById('p_tipe').value=x.tipe||'';document.getElementById('p_ukuran').value=x.ukuran||'';document.getElementById('p_foto').value=x.image_url||'';document.getElementById('p_desc').value=x.description||'';setPreview('p_preview',x.image_url||'','p_info');window.scrollTo(0,0);}
+async function bersihinProduk(){if(!confirm('Hapus produk nama kosong / harga 0?'))return;let k=D.products.filter(x=>!x.name||Number(x.price||0)===0);for(let x of k)await sb.from('products').delete().eq('id',x.id);alert(k.length+' dibersihkan');loadAll();}
+async function saveMember(){
+  let id=document.getElementById('m_id').value;
+  let saldoBaru=Number(document.getElementById('m_saldo').value||0);
+  let data={full_name:document.getElementById('m_nama').value,whatsapp:document.getElementById('m_wa').value,email:document.getElementById('m_email').value,saldo:saldoBaru,points:Number(document.getElementById('m_points').value||0),discount:Number(document.getElementById('m_diskon').value||0),tier:document.getElementById('m_tier').value,alamat:document.getElementById('m_alamat').value,foto_url:document.getElementById('m_foto').value};
+  let pw=document.getElementById('m_password').value;
+  if(pw){data.password=pw; data.password_hash=pw;}
+  if(!data.full_name)return alert('Nama wajib');
+  if(id){
+    let lama=D.members.find(x=>x.id==id);
+    let saldoLama=lama?Number(lama.saldo||0):0;
+    if(saldoLama!==saldoBaru){
+      if(!confirm('Tulis transaksi untuk '+lama.full_name+'?\nDari '+rupiah(saldoLama)+' jadi '+rupiah(saldoBaru)+'?\n\nIni akan kecatet di Riwayat Saldo dan BISA DILIHAT MEMBER dengan label "✍️ DITULIS ADMIN". Lanjut tulis?')) return;
+    }
+    let r=await sb.from('members').update(data).eq('id',id);
+    if(r.error)return alert('GAGAL: '+r.error.message);
+    alert('Udah ditulis! Saldo: '+rupiah(data.saldo)+' - Udah kecatet di Riwayat dan bisa dilihat member ✅');
+  } else {
+    let r=await sb.from('members').insert([data]).select().single();
+    if(r.error)return alert('GAGAL: '+r.error.message);
+    alert('Member baru tersimpan!');
+  }
+  ['m_id','m_nama','m_wa','m_email','m_saldo','m_points','m_diskon','m_tier','m_alamat','m_foto'].forEach(i=>document.getElementById(i).value='');document.getElementById('m_password').value='';setPreview('m_preview','', 'm_info');loadAll();
+}
+function adminTarikCepet(){let inp=document.getElementById('m_saldo');let nominal=prompt('Mau TULIS TARIK berapa untuk member ini? Contoh: 100000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+'. Klik SIMPAN / TULIS TRANSAKSI, nanti kecatet sebagai DITULIS ADMIN.');}
+function adminBeliCepet(){let inp=document.getElementById('m_saldo');let barang=prompt('Member beli apa?');if(!barang)return;let nominal=prompt('Harganya berapa?');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+' buat beli '+barang+'. Klik SIMPAN biar kecatet.');}
+function editMember(id){let x=D.members.find(v=>v.id==id);if(!x)return;nav('pelanggan');document.getElementById('m_id').value=x.id;document.getElementById('m_nama').value=x.full_name||'';document.getElementById('m_wa').value=x.whatsapp||'';document.getElementById('m_email').value=x.email||'';document.getElementById('m_password').value='';document.getElementById('m_saldo').value=x.saldo||0;document.getElementById('m_points').value=x.points||0;document.getElementById('m_diskon').value=x.discount||0;document.getElementById('m_tier').value=x.tier||'';document.getElementById('m_alamat').value=x.alamat||'';document.getElementById('m_foto').value=x.foto_url||'';setPreview('m_preview',x.foto_url||'','m_info');window.scrollTo(0,0);}
+async function saveAdmin(){let id=document.getElementById('a_id').value;let data={nama:document.getElementById('a_nama').value,nomor:document.getElementById('a_nomor').value,code:document.getElementById('a_code').value,pin:document.getElementById('a_pin').value,email:document.getElementById('a_email').value,alamat:document.getElementById('a_alamat').value,foto_url:document.getElementById('a_foto').value};if(!data.nama)return alert('Nama wajib');let r=id?await sb.from('admins').update(data).eq('id',id):await sb.from('admins').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Admin tersimpan!');['a_id','a_nama','a_nomor','a_code','a_pin','a_email','a_alamat','a_foto'].forEach(i=>document.getElementById(i).value='');setPreview('a_preview','', 'a_info');loadAll();}
+function editAdmin(id){let x=D.admins.find(v=>v.id==id);nav('admin');document.getElementById('a_id').value=x.id;document.getElementById('a_nama').value=x.nama||'';document.getElementById('a_nomor').value=x.nomor||'';document.getElementById('a_code').value=x.code||'';document.getElementById('a_pin').value=x.pin||'';document.getElementById('a_email').value=x.email||'';document.getElementById('a_alamat').value=x.alamat||'';document.getElementById('a_foto').value=x.foto_url||'';setPreview('a_preview',x.foto_url||'','a_info');window.scrollTo(0,0);}
+async function savePegawai(){let id=document.getElementById('pg_id').value;let data={nama:document.getElementById('pg_nama').value,nomor:document.getElementById('pg_nomor').value,code:document.getElementById('pg_code').value,pin:document.getElementById('pg_pin').value,email:document.getElementById('pg_email').value,alamat:document.getElementById('pg_alamat').value,foto_url:document.getElementById('pg_foto').value};if(!data.nama)return alert('Nama wajib');let r=id?await sb.from('pegawai').update(data).eq('id',id):await sb.from('pegawai').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Pegawai tersimpan!');['pg_id','pg_nama','pg_nomor','pg_code','pg_pin','pg_email','pg_alamat','pg_foto'].forEach(i=>document.getElementById(i).value='');setPreview('pg_preview','', 'pg_info');loadAll();}
+function editPegawai(id){let x=D.pegawai.find(v=>v.id==id);nav('pegawai');document.getElementById('pg_id').value=x.id;document.getElementById('pg_nama').value=x.nama||'';document.getElementById('pg_nomor').value=x.nomor||'';document.getElementById('pg_code').value=x.code||'';document.getElementById('pg_pin').value=x.pin||'';document.getElementById('pg_email').value=x.email||'';document.getElementById('pg_alamat').value=x.alamat||'';document.getElementById('pg_foto').value=x.foto_url||'';setPreview('pg_preview',x.foto_url||'','pg_info');window.scrollTo(0,0);}
+async function saveBot(){
+  let id=document.getElementById('b_id').value;
+  let q=document.getElementById('b_q').value.trim();
+  let a=document.getElementById('b_a').value.trim();
+  if(!q||!a) return alert('Wajib isi pertanyaan + jawaban');
+  let dataFull={question:q, keyword:q, answer:a};
+  let dataSimple={keyword:q, answer:a};
+  let r;
+  if(id){
+    r=await sb.from('bot_faq').update(dataFull).eq('id',id);
+    if(r.error && String(r.error.message).includes('question')){
+      r=await sb.from('bot_faq').update(dataSimple).eq('id',id);
+    }
+  }else{
+    r=await sb.from('bot_faq').insert([dataFull]);
+    if(r.error && String(r.error.message).includes('question')){
+      r=await sb.from('bot_faq').insert([dataSimple]);
+    }
+  }
+  if(r.error) return alert('GAGAL: '+r.error.message);
+  alert('Bot diajarin! 🤖');
+  document.getElementById('b_id').value='';document.getElementById('b_q').value='';document.getElementById('b_a').value='';loadAll();
+}
+function editBot(id){let x=D.bot.find(v=>v.id==id);if(!x)return;nav('bot');document.getElementById('b_id').value=x.id;document.getElementById('b_q').value=x.question||x.keyword||'';document.getElementById('b_a').value=x.answer||'';window.scrollTo(0,0);}
+function jawabBot(p){let pesan=(p||'').toLowerCase();let k=D.bot.find(x=>{let q=((x.question||x.keyword||'')).toLowerCase();return pesan.includes(q)||q.split(' ').filter(w=>w.length>3).some(w=>pesan.includes(w))});return k?k.answer:'Maaf ko, belum diajarin, tanya admin ya 🙏';}
+function tesBot(){document.getElementById('tesBotHasil').innerText='🤖 Bot: '+jawabBot(document.getElementById('tesBotInput').value);}
+async function jawabAntrian(id){
+  let j=document.getElementById('jawaban_'+id).value.trim();
+  if(!j) return alert('Isi dulu jawabannya');
+  let x=D.antrian.find(v=>v.id==id);
+  if(!x) return;
+  let r1=await sb.from('bot_faq').insert([{question:x.pertanyaan, keyword:x.pertanyaan, answer:j}]);
+  if(r1.error && String(r1.error.message).includes('question')){
+    r1=await sb.from('bot_faq').insert([{keyword:x.pertanyaan, answer:j}]);
+  }
+  if(r1.error) return alert('GAGAL simpan ke BOT: '+r1.error.message);
+  let r2=await sb.from('bot_antrian').update({status:'DIJAWAB', jawaban_admin:j}).eq('id',id);
+  if(r2.error) return alert('GAGAL update antrian: '+r2.error.message);
+  alert('Udah dijawab + udah diajarin ke BOT! 🤖 Besok kalo ada yang nanya gini lagi, BOT langsung jawab sendiri.');
+  loadAll();
+}
+async function hapus(t,id){if(!confirm('Yakin hapus?'))return;let r=await sb.from(t).delete().eq('id',id);if(r.error)return alert('GAGAL: '+r.error.message);loadAll();}
 nav(localStorage.getItem('kocheng_last_page')||'beranda');
-loadAll();
 </script></body></html>
