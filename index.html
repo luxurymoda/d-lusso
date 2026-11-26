@@ -91,13 +91,52 @@ body{background:#0a0a0a;color:#fff}
 .chat-input button{background:#C9A86A;border:none;padding:11px 16px;border-radius:10px;font-weight:bold}
 .quick{display:flex;gap:8px;padding:0 10px 10px;background:#111;flex-wrap:wrap}
 .quick button{background:#222;border:1px solid #444;color:#E8C97A;padding:7px 10px;border-radius:20px;font-size:11px}
-.member-card{background:#1a1a1a;border:1px solid #C9A86A;border-radius:18px;padding:20px;text-align:left}
-.member-card .ava{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #C9A86A;background:#222}
-.member-stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
-.member-stat div{background:#0a0a0a;border:1px solid #333;border-radius:12px;padding:12px;text-align:center}
-.member-stat b{color:#E8C97A;font-size:18px;display:block}
-.member-stat span{font-size:11px;color:#aaa}
-.btn-logout{width:100%;background:#222;border:1px solid #C9A86A;color:#E8C97A;padding:14px;border-radius:12px;font-weight:bold;margin-top:14px;cursor:pointer}
+/* MEMBER - CASA MODA STYLE, FOTO DI DALAM KOTAK SALDO */
+.member-luxe{background:#0a0a0a;min-height:100vh;padding:14px 14px 90px}
+.member-head{text-align:center;padding:14px 0 10px}
+.member-head h1{font-size:32px;letter-spacing:3px;color:#E8C97A;line-height:1}
+.member-head p{letter-spacing:6px;font-size:13px;color:#E8C97A;margin-top:4px}
+.member-tabs{display:flex;gap:8px;margin:10px 0 14px}
+.member-tabs div{flex:1;text-align:center;background:#1a1a1a;color:#C9A86A;padding:12px;border-radius:10px;font-weight:bold;letter-spacing:1px;cursor:pointer}
+.member-tabs div.active{background:#222;color:#E8C97A;border-bottom:2px solid #E8C97A}
+.saldo-card{background:linear-gradient(135deg,#F5D98A 0%,#E8C97A 35%,#C9A86A 60%,#8a6a1f 100%);border-radius:18px;padding:16px;color:#000;position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.6)}
+.saldo-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.saldo-top .halo{font-size:15px}
+.saldo-top .halo b{display:block;font-size:15px}
+.saldo-top .tier{font-size:14px;margin-top:2px;display:flex;align-items:center;gap:6px}
+.saldo-top .tier .crown-mini{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,#fff8d6,#C9A86A);display:inline-flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.saldo-foto{width:88px;height:88px;border-radius:14px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.9);box-shadow:0 4px 12px rgba(0,0,0,.4);background:#fff}
+.saldo-foto img{width:100%;height:100%;object-fit:cover}
+.saldo-label{font-size:19px;font-weight:bold;margin-top:14px}
+.saldo-nominal{font-size:38px;font-weight:900;letter-spacing:-1px;line-height:1.05}
+.saldo-line{height:1px;background:rgba(0,0,0,.35);margin:14px 0 12px}
+.saldo-bottom{display:flex;justify-content:space-between;gap:10px}
+.saldo-bottom div{display:flex;gap:8px;align-items:center}
+.saldo-bottom .ic{font-size:26px}
+.saldo-bottom small{font-size:12px;display:block}
+.saldo-bottom b{font-size:15px}
+.btn-topup{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:15px;border-radius:12px;font-weight:900;letter-spacing:1px;font-size:17px;margin:12px 0 20px;cursor:pointer;color:#000;box-shadow:0 4px 0 #7a5c1a}
+.member-sec{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 12px}
+.member-sec h3{color:#E8C97A;font-size:19px}
+.member-sec span{color:#E8C97A;font-size:13px;cursor:pointer}
+.keranjang{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.keranjang div{text-align:center;cursor:pointer}
+.keranjang img{width:100%;height:110px;object-fit:cover;border-radius:14px;background:#222}
+.keranjang p{font-size:12px;margin-top:8px;line-height:1.3;color:#fff}
+.riwayat-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222}
+.riwayat-item .left{display:flex;gap:12px;align-items:center}
+.riwayat-item .plus{width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;flex-shrink:0}
+.riwayat-item b{font-size:14px;display:block}
+.riwayat-item small{color:#888;font-size:12px}
+.riwayat-item .time{color:#aaa;font-size:13px}
+.list-box{background:#141414;border-radius:16px;padding:6px 14px}
+.list-item{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #222}
+.list-item:last-child{border:none}
+.list-item .ava{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,#F5D98A,#C9A86A);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.list-item .ava img{width:100%;height:100%;object-fit:cover}
+.list-item .ava.silver{background:radial-gradient(circle,#eee,#999)}
+.list-item b{font-size:15px;display:block}
+.list-item small{color:#888;font-size:12px}
 </style>
 </head>
 <body>
@@ -165,14 +204,7 @@ body{background:#0a0a0a;color:#fff}
     <div class="cat-title">👞 SEPATU PRIA MEWAH</div>
     <div class="grid">
       <div class="card"><img src="https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=500"><div class="card-body"><small>PRIA • OXFORD</small><h3>Black Oxford Leather</h3><div class="price">Rp 3.499.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500"><div class="card-body"><small>PRIA • LOAFER</small><h3>Brown Suede Loafer</h3><div class="price">Rp 2.799.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500"><div class="card-body"><small>PRIA • SNEAKER LUXE</small><h3>White Luxury Sneaker</h3><div class="price">Rp 2.999.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500"><div class="card-body"><small>PRIA • DERBY</small><h3>Milano Derby Shoes</h3><div class="price">Rp 3.199.000</div><button class="add">+ Add to Cart</button></div></div>
-    </div>
-    <div class="cat-title">👡 SANDAL & SLINGBACK</div>
-    <div class="grid">
-      <div class="card"><img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?w=500"><div class="card-body"><small>SANDAL • PREMIUM</small><h3>Gold Strap Sandal</h3><div class="price">Rp 1.499.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500"><div class="card-body"><small>WANITA • SNEAKER</small><h3>White Fashion Sneaker</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500"><div class="card-body"><small>PRIA • LOAFER</small><h3>Brown Suede Loafer</h3><div class="price">Rp 2.799.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
   </div>
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
@@ -184,25 +216,6 @@ body{background:#0a0a0a;color:#fff}
     <div class="grid">
       <div class="card"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"><div class="card-body"><small>TAS • PREMIUM</small><h3>Milano Handbag</h3><div class="price">Rp 4.499.000</div><button class="add">+ Add to Cart</button></div></div>
       <div class="card"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500"><div class="card-body"><small>TAS • LUXURY</small><h3>Roma Leather Tote</h3><div class="price">Rp 3.299.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"><div class="card-body"><small>TAS • MINI</small><h3>Mini Crossbody</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500"><div class="card-body"><small>TAS • ELEGANT</small><h3>Chain Shoulder Bag</h3><div class="price">Rp 2.799.000</div><button class="add">+ Add to Cart</button></div></div>
-    </div>
-    <div class="cat-title">👛 DOMPET</div>
-    <div class="grid">
-      <div class="card"><img src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=500"><div class="card-body"><small>DOMPET • LEATHER</small><h3>Milano Leather Wallet</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500"><div class="card-body"><small>DOMPET • MINI</small><h3>Card Holder Gold</h3><div class="price">Rp 599.000</div><button class="add">+ Add to Cart</button></div></div>
-    </div>
-    <div class="cat-title">👔 IKAT PINGGANG</div>
-    <div class="grid">
-      <div class="card"><img src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=500"><div class="card-body"><small>BELT • LEATHER</small><h3>Black Leather Belt</h3><div class="price">Rp 749.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"><div class="card-body"><small>BELT • PREMIUM</small><h3>Gold Buckle Belt</h3><div class="price">Rp 999.000</div><button class="add">+ Add to Cart</button></div></div>
-    </div>
-    <div class="cat-title">✨ LAINNYA</div>
-    <div class="grid">
-      <div class="card"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500"><div class="card-body"><small>KACAMATA</small><h3>Gold Sunglasses</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=500"><div class="card-body"><small>SYAL • SCARF</small><h3>Silk Scarf Lusso</h3><div class="price">Rp 699.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500"><div class="card-body"><small>PERHIASAN</small><h3>Gold Necklace</h3><div class="price">Rp 1.299.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500"><div class="card-body"><small>JAM TANGAN</small><h3>Lusso Gold Watch</h3><div class="price">Rp 3.499.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
   </div>
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
@@ -219,36 +232,57 @@ body{background:#0a0a0a;color:#fff}
   </div>
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
+
+<!-- HALAMAN MEMBER - FOTO DI DALAM KOTAK SALDO -->
 <div id="page-member" class="page">
-  <div class="page-head"><h2>👤 Profil Member</h2><p>Club D' Lusso VIP</p></div>
-  <div class="section">
-    <div id="memberEmpty" style="text-align:center;padding:30px 10px">
-      <div style="font-size:48px">👑</div>
-      <h3 style="margin:12px 0;color:#E8C97A">Belum Login</h3>
-      <p style="color:#aaa;font-size:13px">Silakan masuk dulu untuk melihat profil member Anda.</p>
-      <button class="btn-vip" onclick="showPage('vip')">LOGIN / DAFTAR VIP →</button>
-    </div>
-    <div id="memberCard" class="member-card" style="display:none">
-      <div style="display:flex;gap:14px;align-items:center">
-        <img id="mFoto" class="ava" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200'">
-        <div><div id="mName" style="font-size:20px;font-weight:bold">-</div><div id="mTier" style="color:#E8C97A;font-size:13px">VIP</div><div id="mWa" style="color:#aaa;font-size:12px">-</div></div>
-      </div>
-      <div class="member-stat">
-        <div><b id="mSaldo">0</b><span>SALDO</span></div>
-        <div><b id="mPoints">0</b><span>POINTS</span></div>
-        <div><b id="mDiscount">0%</b><span>DISCOUNT</span></div>
-      </div>
-      <div style="margin-top:14px;font-size:13px;color:#ddd;line-height:1.8">
-        <div>📧 Email: <span id="mEmail" style="color:#E8C97A">-</span></div>
-        <div>📍 Alamat: <span id="mAlamat" style="color:#E8C97A">-</span></div>
-        <div>🗓️ Member Sejak: <span id="mSince" style="color:#E8C97A">-</span></div>
-      </div>
-      <button class="btn-vip" onclick="showPage('collezione')">🛍️ BELANJA SEBAGAI VIP →</button>
-      <button class="btn-logout" onclick="logoutMember()">LOGOUT</button>
-    </div>
+  <div id="memberEmpty" class="member-luxe" style="text-align:center;padding-top:80px">
+    <div style="font-size:60px">👑</div>
+    <h2 style="color:#E8C97A;margin:14px 0">Belum Login</h2>
+    <p style="color:#aaa;font-size:13px">Silakan masuk dulu untuk melihat profil member Anda.</p>
+    <button class="btn-vip" style="max-width:300px" onclick="showPage('vip')">LOGIN / DAFTAR VIP →</button>
   </div>
-  <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
+  <div id="memberCard" class="member-luxe" style="display:none">
+    <div class="member-head"><div style="text-align:left;font-size:22px;cursor:pointer" onclick="showPage('home')">‹</div><h1>CASA MODA</h1><p>LUXURY BANDUNG</p></div>
+    <div class="member-tabs"><div onclick="showPage('vip')">DAFTAR</div><div class="active">MASUK</div></div>
+    <!-- INI KOTAK SALDO + FOTO DI DALAMNYA -->
+    <div class="saldo-card">
+      <div class="saldo-top">
+        <div>
+          <div class="halo">Halo <b id="mName">Ko Cheng</b></div>
+          <div class="tier"><span id="mTier">Gold member</span> <span class="crown-mini">👑</span></div>
+        </div>
+        <div class="saldo-foto"><img id="mFoto" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300'"></div>
+      </div>
+      <div class="saldo-label">Saldo</div>
+      <div class="saldo-nominal" id="mSaldo">Rp 1.000.000</div>
+      <div class="saldo-line"></div>
+      <div class="saldo-bottom">
+        <div><span class="ic">✩</span><div><small>Poin</small><b id="mPoints">2.450 Poin</b></div></div>
+        <div><span class="ic">🛍️</span><div><small>Total Belanja</small><b id="mTotal">Rp 5.200.000</b></div></div>
+      </div>
+    </div>
+    <button class="btn-topup" onclick="topupSaldo()">TOP UP SALDO</button>
+    <div class="member-sec"><h3>Keranjang Lu</h3><span onclick="checkoutCart()">Lihat Semua</span></div>
+    <div class="keranjang" id="mKeranjang">
+      <div onclick="showPage('collezione')"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"><p>Jaket Kulit Signature<br>- Rp 2.500.000 -</p></div>
+      <div onclick="showPage('scarpe')"><img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"><p>Sneakers Gold Edition<br>- Rp 1.800.000</p></div>
+      <div onclick="showPage('accessorio')"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><p>Tas Crossbody<br>- Rp 1.200.000 -</p></div>
+    </div>
+    <div class="member-sec"><h3>Riwayat Top Up</h3><span>Lihat Semua</span></div>
+    <div>
+      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 500.000</b><small>12 Okt 2024 • Berhasil</small></div></div><span class="time">10:32</span></div>
+      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 300.000</b><small>05 Okt 2024 • Berhasil</small></div></div><span class="time">14:15</span></div>
+      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 200.000</b><small>29 Sep 2024 • Berhasil</small></div></div><span class="time">09:20</span></div>
+    </div>
+    <div class="member-sec"><h3>LIST MEMBER</h3><span>Lihat Semua</span></div>
+    <div class="list-box" id="mListMember">
+      <div class="list-item"><div class="ava">👑</div><div><b>Ko Cheng</b><small>Bergabung 20 Sep 2024</small></div></div>
+      <div class="list-item"><div class="ava silver">👑</div><div><b>Andi Wijaya</b><small>Bergabung 01 Okt 2024</small></div></div>
+    </div>
+    <div style="text-align:center;margin-top:18px;font-size:12px;color:#aaa">📧 <span id="mEmail">-</span> • 📱 <span id="mWa">-</span> • 🏷️ Discount <span id="mDiscount">5%</span> • 📍 <span id="mAlamat">-</span><br><span style="color:#C9A86A;text-decoration:underline;cursor:pointer" onclick="logoutMember()">Logout dari akun ini</span></div>
+  </div>
 </div>
+
 <div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div><div onclick="openChat()">CONTATTI</div></div>
 <div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 <script>
@@ -284,7 +318,7 @@ async function daftarVip(){
   var em=document.getElementById('regEmail').value.trim();
   var p=document.getElementById('regPass').value.trim();
   if(!n||!w||!p){ alert("Isi Nama, No WA dan Password dulu ya!"); return; }
-  var { data, error } = await supabaseClient.from('members').insert([{ full_name:n, whatsapp:w, email:em||null, password:p, password_hash:p, tier:'VIP', saldo:0, discount:5, points:0 }]).select().single();
+  var { data, error } = await supabaseClient.from('members').insert([{ full_name:n, whatsapp:w, email:em||null, password:p, password_hash:p, tier:'Gold', saldo:0, discount:5, points:0 }]).select().single();
   if(error){ alert("Gagal daftar: "+error.message); return; }
   localStorage.setItem('dlusso_member', JSON.stringify(data));
   alert("Benvenuto, "+n+"! Daftar VIP berhasil ✨");
@@ -301,22 +335,33 @@ async function loginMember(){
   alert("Selamat datang kembali, "+(data.full_name||'Member')+" ✨");
   showPage('member');
 }
-function renderMember(){
+function topupSaldo(){ var nominal = prompt("Mau Top Up berapa? Contoh: 500000"); if(!nominal) return; openWA("Ciao! Saya mau TOP UP SALDO sebesar Rp " + Number(nominal).toLocaleString('id-ID') + "\nNama: " + (JSON.parse(localStorage.getItem('dlusso_member')||'{}').full_name||'')); }
+async function renderMember(){
   var raw = localStorage.getItem('dlusso_member');
   var empty=document.getElementById('memberEmpty'); var card=document.getElementById('memberCard');
   if(!raw){ empty.style.display='block'; card.style.display='none'; return; }
   var m=JSON.parse(raw);
   empty.style.display='none'; card.style.display='block';
   document.getElementById('mName').textContent = m.full_name || '-';
-  document.getElementById('mTier').textContent = (m.tier||'VIP') + ' MEMBER';
+  document.getElementById('mTier').textContent = (m.tier||'Gold') + ' member';
   document.getElementById('mWa').textContent = m.whatsapp || '-';
   document.getElementById('mSaldo').textContent = 'Rp ' + (m.saldo||0).toLocaleString('id-ID');
-  document.getElementById('mPoints').textContent = m.points||0;
-  document.getElementById('mDiscount').textContent = (m.discount||0) + '%';
+  document.getElementById('mPoints').textContent = (m.points||0).toLocaleString('id-ID') + ' Poin';
+  document.getElementById('mTotal').textContent = 'Rp ' + ((m.total_belanja||0)).toLocaleString('id-ID');
   document.getElementById('mEmail').textContent = m.email || '-';
   document.getElementById('mAlamat').textContent = m.alamat || '-';
-  document.getElementById('mSince').textContent = m.created_at ? new Date(m.created_at).toLocaleDateString('id-ID') : '-';
+  document.getElementById('mDiscount').textContent = (m.discount||0) + '%';
   if(m.foto_url) document.getElementById('mFoto').src = m.foto_url;
+  try{
+    var { data: list } = await supabaseClient.from('members').select('full_name,created_at,foto_url').order('created_at',{ascending:false}).limit(5);
+    if(list && list.length){
+      document.getElementById('mListMember').innerHTML = list.map(function(x,i){
+        var d = x.created_at ? new Date(x.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-';
+        var img = x.foto_url ? '<img src="'+x.foto_url+'">' : '👑';
+        return '<div class="list-item"><div class="ava '+(i>0?'silver':'')+'">'+img+'</div><div><b>'+(x.full_name||'-')+'</b><small>Bergabung '+d+'</small></div></div>';
+      }).join('');
+    }
+  }catch(e){}
 }
 function logoutMember(){ localStorage.removeItem('dlusso_member'); alert("Anda sudah logout. Arrivederci!"); renderMember(); }
 document.querySelectorAll('.card').forEach(function(card){
