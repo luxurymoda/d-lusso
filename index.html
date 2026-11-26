@@ -4,16 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>D' LUSSO - Il Lusso di Bandung</title>
+<link rel="manifest" href="manifest-v3.json">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="D' LUSSO">
+<link rel="apple-touch-icon" href="icon-v3.png">
+<link rel="icon" href="icon-v3.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
 .top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
 .logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.top-install{background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;font-size:11px;font-weight:bold;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.5);border:none}
 .top-icons{font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8);cursor:pointer;padding:4px 8px}
 .menu-drop{display:none;position:absolute;top:58px;right:12px;z-index:50;background:#151515;border:1px solid #C9A86A;border-radius:14px;overflow:hidden;width:230px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 .menu-drop.show{display:block}
@@ -27,8 +31,6 @@ body{background:#0a0a0a;color:#fff}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
 .hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
 .btn-gold{margin-top:12px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.45);padding:12px 20px;letter-spacing:1px;font-size:13px;cursor:pointer}
-.install-bar{display:none;background:linear-gradient(90deg,#F5D98A,#C9A86A);color:#000;padding:11px 14px;text-align:center;font-weight:bold;font-size:13px;cursor:pointer;position:fixed;top:12px;left:50%;transform:translateX(-50%);width:88%;max-width:340px;z-index:100;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.5)}
-.install-bar.show{display:block}
 .boutique{position:relative;margin-top:-18px;padding:20px;padding-top:16px;text-align:center;background:#0a0a0a;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
@@ -91,12 +93,11 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
-<div id="installBar" class="install-bar" onclick="installApp()">📱 INSTALL APLIKASI D' LUSSO →</div>
 <div id="cartBadge" class="cart-badge" onclick="checkoutCart()">🛒 0 • Checkout</div>
 
 <div id="page-home" class="page active">
   <div class="hero">
-    <div class="top"><div class="logo">D' LUSSO</div><div class="top-icons" onclick="toggleMenu(event)">☰</div>
+    <div class="top"><div class="logo">D' LUSSO</div><button id="installTopBtn" class="top-install" onclick="installApp()">📱 INSTALL</button><div class="top-icons" onclick="toggleMenu(event)">☰</div>
       <div id="menuDrop" class="menu-drop">
         <div onclick="showPage('home')">🏠 HOME</div>
         <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
@@ -222,8 +223,13 @@ body{background:#0a0a0a;color:#fff}
 
 <script>
 var cart=[]; var deferredPrompt=null;
-function installApp(){ alert("Untuk sekarang, install via Chrome: klik titik 3 > Tambah ke Layar Utama"); }
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(regs){ regs.forEach(function(r){ r.unregister(); }); }); if('caches' in window){ caches.keys().then(function(keys){ keys.forEach(function(k){ caches.delete(k); }); }); } }
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; });
+window.addEventListener('appinstalled',function(){ var b=document.getElementById('installTopBtn'); if(b) b.style.display='none'; });
+function installApp(){
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
+  else { alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama / Install App\n\nDi iPhone: klik tombol Share di Safari > Tambah ke Layar Utama"); }
+}
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
 function showPage(p){ document.querySelectorAll('.page').forEach(e=>e.classList.remove('active')); document.getElementById('page-'+p).classList.add('active'); document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active'); if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active'); document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0); }
 function toggleMenu(e){ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show'); }
 document.addEventListener('click',function(e){ if(!e.target.closest('.menu-drop')) document.getElementById('menuDrop').classList.remove('show') });
