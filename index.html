@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="D' LUSSO">
-<link rel="apple-touch-icon" href="logo.jpg">
-<link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="logo.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
@@ -258,4 +258,4 @@ function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value
 function sendChatMsg(text){ var body=document.getElementById('chatBody'); var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight; setTimeout(function(){ var bot=document.createElement('div'); bot.className='msg bot'; var low=text.toLowerCase(); if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨"; else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎"; else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛"; else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas."; body.appendChild(bot); body.scrollTop=body.scrollHeight; },800); }
 </script>
 </body>
-</html>
+  </html>
