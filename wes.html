@@ -13,7 +13,6 @@ h2{padding:0 16px;font-family:Georgia;color:#f5d98a;font-weight:400}
 .menuGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}.menuGrid button{background:#221f1b;border:1px solid #d4af37;color:#e8c87a;border-radius:14px;padding:12px 4px;cursor:pointer;font-weight:700}.menuGrid button div{font-size:24px}
 .search{display:flex;gap:10px;padding:14px 16px}.search input{flex:1;background:#221f1b;border:1px solid #3a3220;border-radius:12px;padding:12px;color:#fff}
 .card{margin:0 16px 12px;border:1px solid #d4af37;border-radius:14px;padding:12px;display:flex;gap:12px;background:#171512;align-items:center}.card img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #d4af37;background:#222}.card b{font-size:16px;color:#f5d98a}.card p{font-size:13px;margin:6px 0;color:#d8c27a}.badge{background:#e8c87a;color:#000;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}
-.badge-red{background:#ff4444;color:#fff;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:800}
 input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #3a3220;background:#221f1b;color:#fff;margin:6px 0}
 .btn{background:#e8c87a;color:#000;border:0;padding:12px;border-radius:10px;font-weight:800;width:100%;cursor:pointer}.btn2{background:#2a261f;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:8px;cursor:pointer}
 .form{padding:0 16px}.hidden{display:none!important}
@@ -33,24 +32,20 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 </div>
 <h2>Daftar Produk</h2><div class="search"><input id="cariProduk" placeholder="🔍 Cari produk..." oninput="renderProduk()"></div><div id="listProduk"></div>
 <div class="form"><div class="card" style="display:block"><h3 style="margin:0">Pesanan Terbaru</h3><div id="lastOrders">Loading...</div></div></div></div>
-
 <div id="page-produk" class="hidden"><h2>Produk</h2><div class="form"><div class="card" style="display:block"><input id="p_id" type="hidden"><input id="p_nama" placeholder="Nama Produk"><input id="p_harga" placeholder="Harga contoh: 250000" inputmode="numeric"><input id="p_stok" placeholder="Stok" type="number"><input id="p_kategori" placeholder="Kategori"><input id="p_tipe" placeholder="Tipe"><input id="p_ukuran" placeholder="Ukuran">
 <input type="file" id="p_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><input type="file" id="p_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'p_foto','p_preview','p_info')"><img id="p_preview" class="fotoPreview"><input id="p_foto" type="hidden"><small id="p_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('p_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('p_fotoFile').click()">🖼️ Galeri</button></div>
 <textarea id="p_desc" placeholder="Deskripsi"></textarea><button class="btn" onclick="saveProduk()">💾 SIMPAN PRODUK</button><button class="btn2" style="width:100%;margin-top:8px" onclick="bersihinProduk()">🧹 Bersihin Produk Kosong / Harga 0</button></div><div id="listProduk2"></div></div></div>
-
 <div id="page-pesanan" class="hidden"><h2>Pesanan</h2><div class="form"><div class="card" style="display:block" id="listOrders"></div></div></div>
-
 <div id="page-pelanggan" class="hidden"><h2>👥 Pelanggan / Member</h2><div class="form"><div class="card" style="display:block"><input id="m_id" type="hidden"><input id="m_nama" placeholder="Nama Lengkap"><input id="m_wa" placeholder="WhatsApp"><input id="m_email" placeholder="Email">
 <div style="display:flex;gap:8px;align-items:center"><input id="m_password" type="password" placeholder="Password Member - kosongin kalo gak mau ganti" style="flex:1"><button class="btn2" type="button" onclick="lihatPass('m_password',this)">👁️</button></div><small style="color:#aaa">Kosongin aja kalo password member gak mau diganti</small>
 <input id="m_saldo" placeholder="Saldo - contoh 500000" inputmode="numeric">
 <div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1" type="button" onclick="topupCepet(50000)">+50rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(100000)">+100rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(200000)">+200rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(500000)">+500rb</button></div>
-<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1;background:#2a1515;border-color:#ff4444" type="button" onclick="adminTarikCepet()">💸 TARIK / POTONG SALDO</button><button class="btn2" style="flex:1" type="button" onclick="adminBeliCepet()">🛍️ BELI PAKAI SALDO</button></div>
-<small style="color:#E8C97A">⚠️ Saldo yang lu ubah di sini OTOMATIS kecatet ke Riwayat Saldo. Jadi gak ada lagi saldo berubah tanpa jejak.</small>
+<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1;background:#2a1515;border-color:#ff4444" type="button" onclick="adminTarikCepet()">💸 TARIK / POTONG</button><button class="btn2" style="flex:1" type="button" onclick="adminBeliCepet()">🛍️ BELI PAKAI SALDO</button></div>
+<small style="color:#ff6666">⚠️ PERHATIAN: Setiap ubah saldo di sini OTOMATIS kecatet ke Riwayat Saldo + BISA DILIHAT MEMBER. Ada badge MERAH "DIUBAH ADMIN". Jadi jangan asal ubah, member langsung tau!</small>
 <input id="m_points" placeholder="Poin" type="number"><input id="m_diskon" placeholder="Diskon % - discount" type="number"><input id="m_tier" placeholder="Tier - GOLD / VIP"><input id="m_alamat" placeholder="Alamat">
 <input type="file" id="m_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><input type="file" id="m_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><img id="m_preview" class="fotoPreview"><input id="m_foto" type="hidden"><small id="m_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('m_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('m_fotoFile').click()">🖼️ Galeri</button></div>
 <button class="btn" onclick="saveMember()">💾 SIMPAN / TOP UP</button></div>
 <div class="card" style="display:block"><input id="cariMember" placeholder="🔍 Cari member - nama / WA..." oninput="renderMember()"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" onclick="filterTier('')">Semua</button><button class="btn2" onclick="filterTier('GOLD')">GOLD</button><button class="btn2" onclick="filterTier('VIP')">VIP</button><button class="btn2" onclick="filterTier('Reguler')">Reguler</button></div><div id="listMember" style="margin-top:10px"></div></div></div></div>
-
 <div id="page-riwayat" class="hidden"><h2>💰 Riwayat Saldo - Semua Member</h2>
 <div class="form"><div class="card" style="display:block">
 <div style="display:flex;gap:8px"><button class="btn2" style="flex:1" onclick="filterRiwayat('')">Semua</button><button class="btn2" style="flex:1" onclick="filterRiwayat('TOP UP')">TOP UP</button><button class="btn2" style="flex:1" onclick="filterRiwayat('BELI')">BELI</button><button class="btn2" style="flex:1;background:#ff4444;color:#fff" onclick="filterRiwayat('TARIK')">TARIK 🔔</button></div>
@@ -58,10 +53,9 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 </div></div>
 <div class="form"><div class="card" style="display:block"><h3 style="margin:0">🔔 Notif Tarik Tunai Terbaru</h3><p style="font-size:12px;color:#aaa">Tiap member klik TARIK di web, langsung muncul di sini. Saldo udah kepotong, tinggal lu transfer / kasih cash.</p><div id="listTarik"></div></div></div>
 </div>
-
 <div id="page-laporan" class="hidden"><h2>📊 Laporan</h2><div class="stats"><div class="stat"><div>📈</div><p>Total Omset</p><b id="tOmset2">Rp. 0,-</b></div><div class="stat"><div>👥</div><p>Pelanggan</p><b id="tMember">0</b></div><div class="stat"><div>📦</div><p>Produk</p><b id="tProduk2">0</b></div></div><div class="form"><div class="card" style="display:block"><h3>Semua Pesanan</h3><div id="listOrders2"></div></div></div></div>
 <div id="page-admin" class="hidden"><h2>👑 Admin</h2><div class="form"><div class="card" style="display:block"><input id="a_id" type="hidden"><input id="a_nama" placeholder="Nama Admin"><input id="a_nomor" placeholder="Nomor"><input id="a_code" placeholder="Code"><input id="a_pin" placeholder="PIN"><input id="a_email" placeholder="Email"><input id="a_alamat" placeholder="Alamat">
-<input type="file" id="a_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><input type="file" id="a_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><img id="a_preview" class="fotoPreview"><input id="a_foto" type="hidden"><small id="a_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('a_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('a_fotoFile').click()">🖼️ Galeri</button></div>
+<input type="file" id="a_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><input type="file" id="a_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'a_foto','a_preview','a_info')"><img id="a_preview" class="fotoPreview"><input id="a_foto" type="hidden"><small id="a_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('a_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('p_fotoFile').click()">🖼️ Galeri</button></div>
 <button class="btn" onclick="saveAdmin()">💾 SIMPAN ADMIN</button></div><div class="card" style="display:block" id="listAdmin"></div></div></div>
 <div id="page-pegawai" class="hidden"><h2>💼 Pegawai</h2><div class="form"><div class="card" style="display:block"><input id="pg_id" type="hidden"><input id="pg_nama" placeholder="Nama Pegawai"><input id="pg_nomor" placeholder="Nomor"><input id="pg_code" placeholder="Code"><input id="pg_pin" placeholder="PIN"><input id="pg_email" placeholder="Email"><input id="pg_alamat" placeholder="Alamat">
 <input type="file" id="pg_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'pg_foto','pg_preview','pg_info')"><input type="file" id="pg_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'pg_foto','pg_preview','pg_info')"><img id="pg_preview" class="fotoPreview"><input id="pg_foto" type="hidden"><small id="pg_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('pg_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('pg_fotoFile').click()">🖼️ Galeri</button></div>
@@ -102,15 +96,15 @@ function renderRiwayat(){
     let tgl=d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
     let warna=Number(x.amount||0)>=0?'#7CFC00':'#ff6666';
     let tanda=Number(x.amount||0)>=0?'+':'-';
-    return `<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.full_name||'-'}</b> - ${x.whatsapp||''} <span class="badge">${x.tipe||''}</span><br><span style="color:${warna};font-weight:800">${tanda} ${rupiah(Math.abs(x.amount||0))}</span> • Saldo: ${rupiah(x.saldo_sebelum||0)} → <b>${rupiah(x.saldo_sesudah||0)}</b><br><small style="color:#aaa">${tgl} • ${x.keterangan||''}</small></div>`;
+    let isAdmin=(x.sumber==='TRIGGER'||(x.diubah_oleh&&String(x.diubah_oleh).includes('ADMIN')));
+    let badgeAdmin=isAdmin?' <span style="background:#ff4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:99px">DIUBAH ADMIN</span>':'';
+    return `<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.full_name||'-'}</b> - ${x.whatsapp||''} <span class="badge">${x.tipe||''}</span>${badgeAdmin}<br><span style="color:${warna};font-weight:800">${tanda} ${rupiah(Math.abs(x.amount||0))}</span> • Saldo: ${rupiah(x.saldo_sebelum||0)} → <b>${rupiah(x.saldo_sesudah||0)}</b><br><small style="color:#aaa">${tgl} • ${x.keterangan||''} • ${x.diubah_oleh||''}</small></div>`;
   }).join('')||'Belum ada transaksi';
-  // NOTIF TARIK
   let tarik=D.riwayat.filter(x=>x.tipe==='TARIK').slice(0,5);
   document.getElementById('listTarik').innerHTML=tarik.map(x=>{
     let d=x.created_at?new Date(x.created_at):new Date();
     return `<div class="notif-item">🔔 <b>${x.full_name||'-'}</b> mau TARIK <b style="color:#ff6666">${rupiah(Math.abs(x.amount||0))}</b><br><small>${d.toLocaleDateString('id-ID')} ${d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})} • ${x.keterangan||''} • Sisa saldo: ${rupiah(x.saldo_sesudah||0)}</small><br><button class="btn2" onclick="waTarik('${x.whatsapp||''}','${x.full_name||''}',${Math.abs(x.amount||0)})">💬 WA Member</button> <button class="btn2" onclick="sudahTransfer('${x.id}')">✅ Udah Transfer</button></div>`;
   }).join('')||'Belum ada yang tarik tunai, aman ko ✨';
-  // NOTIF DI BERANDA
   let box=document.getElementById('notifTarikBox');
   let badge=document.getElementById('notifCount');
   if(tarik.length){
@@ -121,7 +115,7 @@ function renderRiwayat(){
   }
 }
 function waTarik(wa,nama,nominal){window.open('https://wa.me/'+String(wa||'').replace(/[^0-9]/g,'')+'?text='+encodeURIComponent('Ciao '+nama+'! Tarik tunai '+rupiah(nominal)+' udah kami proses ya, mohon tunggu transfernya. Grazie! - D LUSSO'),'_blank');}
-function sudahTransfer(id){alert('Oke, udah dicatet udah transfer. Kalo mau, lu bisa edit keterangan-nya di Supabase jadi "Sudah Transfer" ya ko.');}
+function sudahTransfer(id){alert('Oke, udah dicatet udah transfer.');}
 function lihatRiwayatMember(id){let m=D.members.find(v=>v.id==id);nav('riwayat');if(m){document.getElementById('cariRiwayat').value=m.full_name||'';renderRiwayat();}}
 async function loadAll(){try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}try{let o=await sb.from('orders').select('*').order('created_at',{ascending:false});D.orders=o.data||[];}catch(e){D.orders=[]}try{let m=await sb.from('members').select('*').order('created_at',{ascending:false});D.members=m.data||[];}catch(e){}try{let a=await sb.from('admins').select('*').order('created_at',{ascending:false});D.admins=a.data||[];}catch(e){}try{let pg=await sb.from('pegawai').select('*').order('created_at',{ascending:false});D.pegawai=pg.data||[];}catch(e){}try{let b=await sb.from('bot_faq').select('*').order('created_at',{ascending:false});D.bot=b.data||[];}catch(e){}try{let r=await sb.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(200);D.riwayat=r.data||[];}catch(e){D.riwayat=[]}renderAll();}
 function renderAll(){let omset=D.orders.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);document.getElementById('tOmset').innerText=rupiah(omset);document.getElementById('tOmset2').innerText=rupiah(omset);document.getElementById('tOrders').innerText=D.orders.length;document.getElementById('tProduk').innerText=D.products.filter(x=>x.is_active!==false).length;document.getElementById('tProduk2').innerText=D.products.length;document.getElementById('tMember').innerText=D.members.length;document.getElementById('lastOrders').innerHTML=D.orders.slice(0,3).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'Pelanggan'} - <b>${rupiah(x.total||x.total_amount||0)}</b></div>`).join('')||'Belum ada pesanan';renderProduk();renderMember();renderRiwayat();let ordHtml=D.orders.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'-'} - ${rupiah(x.total||x.total_amount||0)} - ${x.status||''}</div>`).join('')||'Kosong';document.getElementById('listOrders').innerHTML=ordHtml;document.getElementById('listOrders2').innerHTML=ordHtml;document.getElementById('listAdmin').innerHTML=D.admins.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editAdmin('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('admins','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listPegawai').innerHTML=D.pegawai.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editPegawai('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('pegawai','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listBot').innerHTML=D.bot.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>Q: ${x.question}</b><br>A: ${x.answer}<br><button class="btn2" onclick="editBot('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('bot_faq','${x.id}')">🗑️</button></div>`).join('')||'Bot belum diajarin';}
@@ -129,17 +123,6 @@ function renderProduk(){let q=(document.getElementById('cariProduk').value||'').
 async function saveProduk(){let id=document.getElementById('p_id').value;let data={name:document.getElementById('p_nama').value,price:Number(document.getElementById('p_harga').value||0),stock:Number(document.getElementById('p_stok').value||0),category:document.getElementById('p_kategori').value,tipe:document.getElementById('p_tipe').value,ukuran:document.getElementById('p_ukuran').value,image_url:document.getElementById('p_foto').value,description:document.getElementById('p_desc').value,is_active:true};if(!data.name)return alert('Nama wajib');let r=id?await sb.from('products').update(data).eq('id',id):await sb.from('products').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Produk tersimpan! '+rupiah(data.price));['p_id','p_nama','p_harga','p_stok','p_kategori','p_tipe','p_ukuran','p_foto','p_desc'].forEach(i=>document.getElementById(i).value='');setPreview('p_preview','', 'p_info');loadAll();}
 function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;nav('produk');document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.name||'';document.getElementById('p_harga').value=x.price||'';document.getElementById('p_stok').value=x.stock||'';document.getElementById('p_kategori').value=x.category||'';document.getElementById('p_tipe').value=x.tipe||'';document.getElementById('p_ukuran').value=x.ukuran||'';document.getElementById('p_foto').value=x.image_url||'';document.getElementById('p_desc').value=x.description||'';setPreview('p_preview',x.image_url||'','p_info');window.scrollTo(0,0);}
 async function bersihinProduk(){if(!confirm('Hapus produk nama kosong / harga 0?'))return;let k=D.products.filter(x=>!x.name||Number(x.price||0)===0);for(let x of k)await sb.from('products').delete().eq('id',x.id);alert(k.length+' dibersihkan');loadAll();}
-// === INI YANG PALING PENTING: SAVE MEMBER SEKARANG SELALU CATET KE riwayat_saldo ===
-async function catatDariAdmin(memberId, tipe, amount, keterangan){
-  try{
-    let {data:m}=await sb.from('members').select('*').eq('id',memberId).single();
-    if(!m) return;
-    let sebelum=m.saldo||0;
-    let sesudah=sebelum+amount;
-    await sb.from('riwayat_saldo').insert([{member_id:m.id, full_name:m.full_name, whatsapp:m.whatsapp, email:m.email, tier:m.tier, tipe:tipe, amount:amount, saldo_sebelum:sebelum, saldo_sesudah:sesudah, keterangan:keterangan||tipe}]);
-    return sesudah;
-  }catch(e){console.log('catat gagal',e); return null;}
-}
 async function saveMember(){
   let id=document.getElementById('m_id').value;
   let saldoBaru=Number(document.getElementById('m_saldo').value||0);
@@ -148,32 +131,23 @@ async function saveMember(){
   if(pw){data.password=pw; data.password_hash=pw;}
   if(!data.full_name)return alert('Nama wajib');
   if(id){
-    // MEMBER LAMA: HITUNG SELISIH SALDO, JANGAN LANGSUNG TIMPA
     let lama=D.members.find(x=>x.id==id);
     let saldoLama=lama?Number(lama.saldo||0):0;
-    let selisih=saldoBaru-saldoLama;
+    if(saldoLama!==saldoBaru){
+      if(!confirm('Lu mau ubah saldo '+lama.full_name+' dari '+rupiah(saldoLama)+' jadi '+rupiah(saldoBaru)+'?\n\nPerubahan ini OTOMATIS kecatet ke Riwayat Saldo dan BISA DILIHAT MEMBER dengan badge MERAH "DIUBAH ADMIN". Lanjut?')) return;
+    }
     let r=await sb.from('members').update(data).eq('id',id);
     if(r.error)return alert('GAGAL: '+r.error.message);
-    if(selisih!==0){
-      let tipe=selisih>0?'TOP UP':'TARIK';
-      let ket=selisih>0?'Top Up via Admin':'Potong saldo via Admin - '+document.getElementById('m_nama').value;
-      // Catet selisihnya ke riwayat_saldo - saldo di members udah ke-update di atas, jadi di sini cuma insert riwayat aja
-      let mBaru={...lama,...data};
-      await sb.from('riwayat_saldo').insert([{member_id:id, full_name:mBaru.full_name, whatsapp:mBaru.whatsapp, email:mBaru.email, tier:mBaru.tier, tipe:tipe, amount:selisih, saldo_sebelum:saldoLama, saldo_sesudah:saldoBaru, keterangan:ket+' (via Admin)'}]);
-    }
-    alert('Tersimpan! Saldo: '+rupiah(data.saldo)+(selisih!==0?' - Udah kecatet ke Riwayat Saldo ✅':''));
+    alert('Tersimpan! Saldo: '+rupiah(data.saldo)+' - Udah kecatet di Riwayat dan bisa dilihat member ✅');
   } else {
     let r=await sb.from('members').insert([data]).select().single();
     if(r.error)return alert('GAGAL: '+r.error.message);
-    if(saldoBaru!==0){
-      await sb.from('riwayat_saldo').insert([{member_id:r.data.id, full_name:data.full_name, whatsapp:data.whatsapp, email:data.email, tier:data.tier, tipe:'SALDO AWAL', amount:saldoBaru, saldo_sebelum:0, saldo_sesudah:saldoBaru, keterangan:'Member baru via Admin'}]);
-    }
-    alert('Member baru tersimpan! Saldo: '+rupiah(data.saldo));
+    alert('Member baru tersimpan!');
   }
   ['m_id','m_nama','m_wa','m_email','m_saldo','m_points','m_diskon','m_tier','m_alamat','m_foto'].forEach(i=>document.getElementById(i).value='');document.getElementById('m_password').value='';setPreview('m_preview','', 'm_info');loadAll();
 }
-function adminTarikCepet(){let inp=document.getElementById('m_saldo');let nominal=prompt('Mau POTONG / TARIK berapa dari member ini? Contoh: 100000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+'. Klik SIMPAN biar kecatet ke Riwayat sebagai TARIK.');}
-function adminBeliCepet(){let inp=document.getElementById('m_saldo');let barang=prompt('Mau beli apa pake saldo member ini?');if(!barang)return;let nominal=prompt('Harganya berapa?');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+' buat beli '+barang+'. Klik SIMPAN biar kecatet. Nanti keterangan-nya lu edit jadi BELI di Riwayat ya ko, atau bilang gw biar gw tambahin kolom keterangan belanja-nya.');}
+function adminTarikCepet(){let inp=document.getElementById('m_saldo');let nominal=prompt('Mau POTONG / TARIK berapa dari member ini? Contoh: 100000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+'. Klik SIMPAN, nanti muncul konfirmasi dan kecatet sebagai DIUBAH ADMIN.');}
+function adminBeliCepet(){let inp=document.getElementById('m_saldo');let barang=prompt('Mau beli apa pake saldo member ini?');if(!barang)return;let nominal=prompt('Harganya berapa?');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+' buat beli '+barang+'. Klik SIMPAN biar kecatet.');}
 function editMember(id){let x=D.members.find(v=>v.id==id);if(!x)return;nav('pelanggan');document.getElementById('m_id').value=x.id;document.getElementById('m_nama').value=x.full_name||'';document.getElementById('m_wa').value=x.whatsapp||'';document.getElementById('m_email').value=x.email||'';document.getElementById('m_password').value='';document.getElementById('m_saldo').value=x.saldo||0;document.getElementById('m_points').value=x.points||0;document.getElementById('m_diskon').value=x.discount||0;document.getElementById('m_tier').value=x.tier||'';document.getElementById('m_alamat').value=x.alamat||'';document.getElementById('m_foto').value=x.foto_url||'';setPreview('m_preview',x.foto_url||'','m_info');window.scrollTo(0,0);}
 async function saveAdmin(){let id=document.getElementById('a_id').value;let data={nama:document.getElementById('a_nama').value,nomor:document.getElementById('a_nomor').value,code:document.getElementById('a_code').value,pin:document.getElementById('a_pin').value,email:document.getElementById('a_email').value,alamat:document.getElementById('a_alamat').value,foto_url:document.getElementById('a_foto').value};if(!data.nama)return alert('Nama wajib');let r=id?await sb.from('admins').update(data).eq('id',id):await sb.from('admins').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Admin tersimpan!');['a_id','a_nama','a_nomor','a_code','a_pin','a_email','a_alamat','a_foto'].forEach(i=>document.getElementById(i).value='');setPreview('a_preview','', 'a_info');loadAll();}
 function editAdmin(id){let x=D.admins.find(v=>v.id==id);nav('admin');document.getElementById('a_id').value=x.id;document.getElementById('a_nama').value=x.nama||'';document.getElementById('a_nomor').value=x.nomor||'';document.getElementById('a_code').value=x.code||'';document.getElementById('a_pin').value=x.pin||'';document.getElementById('a_email').value=x.email||'';document.getElementById('a_alamat').value=x.alamat||'';document.getElementById('a_foto').value=x.foto_url||'';setPreview('a_preview',x.foto_url||'','a_info');window.scrollTo(0,0);}
