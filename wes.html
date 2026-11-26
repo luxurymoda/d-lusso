@@ -158,8 +158,20 @@ async function saveBot(){
   let q=document.getElementById('b_q').value.trim();
   let a=document.getElementById('b_a').value.trim();
   if(!q||!a) return alert('Wajib isi pertanyaan + jawaban');
-  let data={question:q, keyword:q, answer:a};
-  let r=id?await sb.from('bot_faq').update(data).eq('id',id):await sb.from('bot_faq').insert([data]);
+  let dataFull={question:q, keyword:q, answer:a};
+  let dataSimple={keyword:q, answer:a};
+  let r;
+  if(id){
+    r=await sb.from('bot_faq').update(dataFull).eq('id',id);
+    if(r.error && String(r.error.message).includes('question')){
+      r=await sb.from('bot_faq').update(dataSimple).eq('id',id);
+    }
+  }else{
+    r=await sb.from('bot_faq').insert([dataFull]);
+    if(r.error && String(r.error.message).includes('question')){
+      r=await sb.from('bot_faq').insert([dataSimple]);
+    }
+  }
   if(r.error) return alert('GAGAL: '+r.error.message);
   alert('Bot diajarin! 🤖');
   document.getElementById('b_id').value='';document.getElementById('b_q').value='';document.getElementById('b_a').value='';loadAll();
@@ -173,6 +185,9 @@ async function jawabAntrian(id){
   let x=D.antrian.find(v=>v.id==id);
   if(!x) return;
   let r1=await sb.from('bot_faq').insert([{question:x.pertanyaan, keyword:x.pertanyaan, answer:j}]);
+  if(r1.error && String(r1.error.message).includes('question')){
+    r1=await sb.from('bot_faq').insert([{keyword:x.pertanyaan, answer:j}]);
+  }
   if(r1.error) return alert('GAGAL simpan ke BOT: '+r1.error.message);
   let r2=await sb.from('bot_antrian').update({status:'DIJAWAB', jawaban_admin:j}).eq('id',id);
   if(r2.error) return alert('GAGAL update antrian: '+r2.error.message);
