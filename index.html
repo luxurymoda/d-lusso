@@ -30,7 +30,7 @@ body{background:#0a0a0a;color:#fff}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
 .hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
 .btn-gold{margin-top:12px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.45);padding:12px 20px;letter-spacing:1px;font-size:13px;cursor:pointer}
-.install-bar{display:none;background:linear-gradient(90deg,#F5D98A,#C9A86A);color:#000;padding:12px 14px;text-align:center;font-weight:bold;font-size:13px;cursor:pointer;position:fixed;top:0;left:0;right:0;z-index:100}
+.install-bar{display:none;background:linear-gradient(90deg,#F5D98A,#C9A86A);color:#000;padding:11px 14px;text-align:center;font-weight:bold;font-size:13px;cursor:pointer;position:fixed;top:12px;left:50%;transform:translateX(-50%);width:88%;max-width:340px;z-index:100;border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.5)}
 .install-bar.show{display:block}
 .boutique{position:relative;margin-top:-18px;padding:20px;padding-top:16px;text-align:center;background:#0a0a0a;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
@@ -94,7 +94,7 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
-<div id="installBar" class="install-bar" onclick="installApp()">📱 INSTALL APLIKASI D' LUSSO → KLIK DISINI</div>
+<div id="installBar" class="install-bar" onclick="installApp()">📱 INSTALL APLIKASI D' LUSSO →</div>
 <div id="cartBadge" class="cart-badge" onclick="checkoutCart()">🛒 0 • Checkout</div>
 
 <div id="page-home" class="page active">
@@ -225,9 +225,10 @@ body{background:#0a0a0a;color:#fff}
 
 <script>
 var cart=[]; var deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; document.getElementById('installBar').classList.add('show'); });
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; var bar=document.getElementById('installBar'); bar.classList.add('show'); setTimeout(function(){ bar.classList.remove('show'); },5000); });
 function installApp(){
-  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; document.getElementById('installBar').classList.remove('show'); }); }
+  document.getElementById('installBar').classList.remove('show');
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
   else { alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama / Install App\n\nDi iPhone: klik tombol Share (kotak + panah) di Safari > Tambah ke Layar Utama"); }
 }
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
@@ -258,4 +259,4 @@ function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value
 function sendChatMsg(text){ var body=document.getElementById('chatBody'); var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight; setTimeout(function(){ var bot=document.createElement('div'); bot.className='msg bot'; var low=text.toLowerCase(); if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨"; else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎"; else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛"; else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas."; body.appendChild(bot); body.scrollTop=body.scrollHeight; },800); }
 </script>
 </body>
-  </html>
+</html>
