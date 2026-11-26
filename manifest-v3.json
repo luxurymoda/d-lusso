@@ -1,0 +1,13 @@
+{
+  "name": "D' LUSSO - Il Lusso di Bandung",
+  "short_name": "D' LUSSO",
+  "description": "Boutique Luxury Bandung - Eleganza Italiana",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    { "src": "icon-v3.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-v3.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
