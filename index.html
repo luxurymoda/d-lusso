@@ -111,7 +111,9 @@ body{background:#0a0a0a;color:#fff}
 .saldo-bottom .ic{font-size:26px}
 .saldo-bottom small{font-size:12px;display:block}
 .saldo-bottom b{font-size:15px}
-.btn-topup{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:15px;border-radius:12px;font-weight:900;letter-spacing:1px;font-size:17px;margin:12px 0 20px;cursor:pointer;color:#000;box-shadow:0 4px 0 #7a5c1a}
+.btn-topup{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:15px;border-radius:12px;font-weight:900;letter-spacing:1px;font-size:17px;margin:12px 0 8px;cursor:pointer;color:#000;box-shadow:0 4px 0 #7a5c1a}
+.btn-row{display:flex;gap:10px;margin:0 0 20px}
+.btn-row button{flex:1;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:12px 6px;border-radius:12px;font-weight:bold;font-size:13px;cursor:pointer}
 .member-sec{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 12px}
 .member-sec h3{color:#E8C97A;font-size:19px}
 .member-sec span{color:#E8C97A;font-size:13px;cursor:pointer}
@@ -122,17 +124,10 @@ body{background:#0a0a0a;color:#fff}
 .riwayat-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222}
 .riwayat-item .left{display:flex;gap:12px;align-items:center}
 .riwayat-item .plus{width:36px;height:36px;border-radius:50%;background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;flex-shrink:0}
+.riwayat-item .plus.minus{background:#333;color:#fff}
 .riwayat-item b{font-size:14px;display:block}
 .riwayat-item small{color:#888;font-size:12px}
 .riwayat-item .time{color:#aaa;font-size:13px}
-.list-box{background:#141414;border-radius:16px;padding:6px 14px}
-.list-item{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #222}
-.list-item:last-child{border:none}
-.list-item .ava{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,#F5D98A,#C9A86A);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
-.list-item .ava img{width:100%;height:100%;object-fit:cover}
-.list-item .ava.silver{background:radial-gradient(circle,#eee,#999)}
-.list-item b{font-size:15px;display:block}
-.list-item small{color:#888;font-size:12px}
 </style>
 </head>
 <body>
@@ -271,24 +266,19 @@ body{background:#0a0a0a;color:#fff}
         <div><span class="ic">🛍️</span><div><small>Total Belanja</small><b id="mTotal">Rp 0</b></div></div>
       </div>
     </div>
-    <button class="btn-topup" onclick="topupSaldo()">TOP UP SALDO</button>
+    <button class="btn-topup" onclick="topupSaldo()">+ TOP UP SALDO</button>
+    <div class="btn-row">
+      <button onclick="beliSaldo()">🛍️ BELI PAKAI SALDO</button>
+      <button onclick="tarikSaldo()">💸 TARIK SALDO</button>
+    </div>
     <div class="member-sec"><h3>Keranjang Lu</h3><span onclick="checkoutCart()">Lihat Semua</span></div>
     <div class="keranjang" id="mKeranjang">
       <div onclick="showPage('collezione')"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"><p>Jaket Kulit Signature<br>- Rp 2.500.000 -</p></div>
       <div onclick="showPage('scarpe')"><img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"><p>Sneakers Gold Edition<br>- Rp 1.800.000</p></div>
       <div onclick="showPage('accessorio')"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><p>Tas Crossbody<br>- Rp 1.200.000 -</p></div>
     </div>
-    <div class="member-sec"><h3>Riwayat Top Up</h3><span>Lihat Semua</span></div>
-    <div>
-      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 500.000</b><small>12 Okt 2024 • Berhasil</small></div></div><span class="time">10:32</span></div>
-      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 300.000</b><small>05 Okt 2024 • Berhasil</small></div></div><span class="time">14:15</span></div>
-      <div class="riwayat-item"><div class="left"><span class="plus">+</span><div><b>Top Up Saldo - Rp 200.000</b><small>29 Sep 2024 • Berhasil</small></div></div><span class="time">09:20</span></div>
-    </div>
-    <div class="member-sec"><h3>LIST MEMBER</h3><span>Lihat Semua</span></div>
-    <div class="list-box" id="mListMember">
-      <div class="list-item"><div class="ava">👑</div><div><b>Phus</b><small>Bergabung 20 Sep 2024</small></div></div>
-      <div class="list-item"><div class="ava silver">👑</div><div><b>Andi Wijaya</b><small>Bergabung 01 Okt 2024</small></div></div>
-    </div>
+    <div class="member-sec"><h3>Semua Transaksi</h3><span onclick="renderRiwayatSaldo()">Lihat Semua</span></div>
+    <div id="mRiwayat"><p style="color:#888;font-size:13px;text-align:center;padding:14px">Memuat riwayat...</p></div>
     <div style="text-align:center;margin-top:18px;font-size:12px;color:#aaa">📧 <span id="mEmail">-</span> • 📱 <span id="mWa">-</span> • 🏷️ Discount <span id="mDiscount">5%</span> • 📍 <span id="mAlamat">-</span><br><span style="color:#C9A86A;text-decoration:underline;cursor:pointer" onclick="logoutMember()">Logout dari akun ini</span></div>
   </div>
 </div>
@@ -297,7 +287,6 @@ body{background:#0a0a0a;color:#fff}
 <div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 <script>
 var cart=[]; var deferredPrompt=null;
-// INSTALL DIBIKIN MANUAL, TANPA PWA / SW BIAR GAK NYANGKUT CACHE
 function installApp(){ alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama\n\nDi iPhone: klik tombol Share di Safari > Tambah ke Layar Utama"); }
 function showPage(p){
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
@@ -333,6 +322,7 @@ async function daftarVip(){
   if(!n||!w||!p){ alert("Isi Nama, No WA dan Password dulu ya!"); return; }
   var { data, error } = await supabaseClient.from('members').insert([{ full_name:n, whatsapp:w, email:em||null, password:p, password_hash:p, tier:'Gold', saldo:0, discount:5, points:0 }]).select().single();
   if(error){ alert("Gagal daftar: "+error.message); return; }
+  await supabaseClient.from('riwayat_saldo').insert([{ member_id:data.id, full_name:n, whatsapp:w, email:em||null, tier:'Gold', tipe:'SALDO AWAL', amount:0, saldo_sebelum:0, saldo_sesudah:0, keterangan:'Member baru daftar' }]);
   localStorage.setItem('dlusso_member', JSON.stringify(data));
   localStorage.setItem('dlusso_login_at', Date.now().toString());
   alert("Benvenuto, "+n+"! Daftar VIP berhasil ✨");
@@ -350,7 +340,87 @@ async function loginMember(){
   alert("Selamat datang kembali, "+(data.full_name||'Member')+" ✨");
   showPage('member');
 }
-function topupSaldo(){ var nominal = prompt("Mau Top Up berapa? Contoh: 500000"); if(!nominal) return; openWA("Ciao! Saya mau TOP UP SALDO sebesar Rp " + Number(nominal).toLocaleString('id-ID') + "\nNama: " + (JSON.parse(localStorage.getItem('dlusso_member')||'{}').full_name||'')); }
+// SATU FUNGSI UNTUK SEMUA TRANSAKSI - TOP UP / BELI / TARIK SEMUA MASUK KE riwayat_saldo
+async function catatTransaksi(member, tipe, amount, keterangan){
+  try{
+    var { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
+    var sebelum = m ? (m.saldo||0) : 0;
+    var sesudah = sebelum + amount;
+    if(sesudah < 0){ alert("Saldo tidak cukup! Saldo lu tinggal Rp " + sebelum.toLocaleString('id-ID')); return null; }
+    await supabaseClient.from('members').update({ saldo: sesudah }).eq('id', member.id);
+    await supabaseClient.from('riwayat_saldo').insert([{
+      member_id: member.id, full_name: m.full_name, whatsapp: m.whatsapp, email: m.email, tier: m.tier,
+      tipe: tipe, amount: amount, saldo_sebelum: sebelum, saldo_sesudah: sesudah, keterangan: keterangan || tipe
+    }]);
+    var local = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+    local.saldo = sesudah;
+    localStorage.setItem('dlusso_member', JSON.stringify(local));
+    return sesudah;
+  }catch(e){ console.log('catatTransaksi gagal', e); return null; }
+}
+async function topupSaldo(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  var nominal = prompt("Mau TOP UP berapa? Contoh: 500000");
+  if(!nominal) return;
+  var amt = Number(nominal.replace(/[^0-9]/g,''));
+  if(!amt){ alert("Nominal tidak valid"); return; }
+  var hasil = await catatTransaksi(m, 'TOP UP', amt, 'Top Up via WA');
+  if(hasil !== null){ openWA("Ciao! Saya mau TOP UP SALDO sebesar Rp " + amt.toLocaleString('id-ID') + "\nNama: " + (m.full_name||'')); renderMember(); }
+}
+async function beliSaldo(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  var barang = prompt("Mau beli apa? Contoh: Milano Black Suit");
+  if(!barang) return;
+  var nominal = prompt("Harganya berapa? Contoh: 200000");
+  if(!nominal) return;
+  var amt = Number(nominal.replace(/[^0-9]/g,''));
+  if(!amt){ alert("Nominal tidak valid"); return; }
+  var hasil = await catatTransaksi(m, 'BELI', -amt, 'Beli: ' + barang);
+  if(hasil !== null){ alert("Berhasil beli " + barang + " pake saldo! Sisa saldo Rp " + hasil.toLocaleString('id-ID')); renderMember(); }
+}
+async function tarikSaldo(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  var nominal = prompt("Mau TARIK berapa? Contoh: 100000");
+  if(!nominal) return;
+  var amt = Number(nominal.replace(/[^0-9]/g,''));
+  if(!amt){ alert("Nominal tidak valid"); return; }
+  var hasil = await catatTransaksi(m, 'TARIK', -amt, 'Tarik saldo ke rekening / cash');
+  if(hasil !== null){ openWA("Ciao! Saya mau TARIK SALDO sebesar Rp " + amt.toLocaleString('id-ID') + "\nNama: " + (m.full_name||'')); renderMember(); }
+}
+async function renderRiwayatSaldo(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  var box = document.getElementById('mRiwayat');
+  if(!box) return;
+  box.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:14px">Memuat riwayat...</p>';
+  try{
+    // DI WEB: CARI MEMBERNYA PAKE member_id - JADI CUMA LIAT PUNYA DIA SENDIRI
+    var q = supabaseClient.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(30);
+    if(m.id) q = q.eq('member_id', m.id);
+    else if(m.whatsapp) q = q.eq('whatsapp', m.whatsapp);
+    var { data, error } = await q;
+    if(error) throw error;
+    var filtered = data.filter(function(x){ return !(x.tipe==='SALDO AWAL' && Number(x.amount||0)===0); });
+    if(filtered.length) data = filtered;
+    if(!data || !data.length){
+      box.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:14px">Belum ada transaksi.<br>Top Up / Beli / Tarik dulu ✨</p>';
+      return;
+    }
+    box.innerHTML = data.map(function(x){
+      var d = x.created_at ? new Date(x.created_at) : new Date();
+      var tgl = d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+      var jam = d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+      var amt = Number(x.amount||0);
+      var isPlus = amt >= 0;
+      var label = (x.tipe||'TOP UP') + ' - Rp ' + Math.abs(amt).toLocaleString('id-ID');
+      var icon = isPlus ? '+' : '-';
+      var cls = isPlus ? '' : ' minus';
+      var ket = x.keterangan ? ' • ' + x.keterangan : '';
+      return '<div class="riwayat-item"><div class="left"><span class="plus'+cls+'">'+icon+'</span><div><b>'+label+'</b><small>'+tgl+ket+'</small></div></div><span class="time">'+jam+'</span></div>';
+    }).join('');
+  }catch(e){
+    box.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:14px">Belum ada transaksi.<br>Top Up / Beli / Tarik dulu ✨</p>';
+  }
+}
 async function renderMember(){
   var raw = localStorage.getItem('dlusso_member');
   var empty=document.getElementById('memberEmpty'); var card=document.getElementById('memberCard');
@@ -367,16 +437,7 @@ async function renderMember(){
   document.getElementById('mAlamat').textContent = m.alamat || '-';
   document.getElementById('mDiscount').textContent = (m.discount||0) + '%';
   if(m.foto_url) document.getElementById('mFoto').src = m.foto_url;
-  try{
-    var { data: list } = await supabaseClient.from('members').select('full_name,created_at,foto_url').order('created_at',{ascending:false}).limit(5);
-    if(list && list.length){
-      document.getElementById('mListMember').innerHTML = list.map(function(x,i){
-        var d = x.created_at ? new Date(x.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-';
-        var img = x.foto_url ? '<img src="'+x.foto_url+'">' : '👑';
-        return '<div class="list-item"><div class="ava '+(i>0?'silver':'')+'">'+img+'</div><div><b>'+(x.full_name||'-')+'</b><small>Bergabung '+d+'</small></div></div>';
-      }).join('');
-    }
-  }catch(e){}
+  renderRiwayatSaldo();
 }
 function logoutMember(){ localStorage.removeItem('dlusso_member'); localStorage.removeItem('dlusso_login_at'); alert("Anda sudah logout. Arrivederci!"); renderMember(); showPage('home'); }
 document.querySelectorAll('.card').forEach(function(card){
