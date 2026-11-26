@@ -58,8 +58,6 @@ body{background:#0a0a0a;color:#fff}
 .page-head{padding:28px 20px 10px;text-align:center}
 .page-head h2{font-size:28px;color:#E8C97A}
 .page-head p{font-size:13px;color:#aaa;margin-top:6px}
-/* CHAT MEWAH */
-.chat-btn{position:fixed;right:16px;bottom:70px;z-index:60;width:56px;height:56px;border-radius:50%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;font-size:26px;box-shadow:0 8px 20px rgba(0,0,0,.5);cursor:pointer}
 .chat-box{display:none;position:fixed;right:12px;left:12px;bottom:70px;z-index:70;background:#151515;border:1px solid #C9A86A;border-radius:18px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.7)}
 .chat-box.show{display:block}
 .chat-head{background:linear-gradient(90deg,#1a1a1a,#2a2110);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #C9A86A}
@@ -88,9 +86,10 @@ body{background:#0a0a0a;color:#fff}
       <div id="menuDrop" class="menu-drop">
         <div onclick="showPage('home')">🏠 HOME</div>
         <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
+        <div onclick="showPage('scarpe')">👠 SCARPE COL TACCO</div>
+        <div onclick="showPage('accessorio')">👜 ACCESSORIO</div>
         <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
         <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
-        <div onclick="openChat()">💬 CHAT CUSTOMER</div>
         <div onclick="showPage('home');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">📍 LOKASI BOUTIQUE</div>
       </div>
     </div>
@@ -110,7 +109,6 @@ body{background:#0a0a0a;color:#fff}
     <b>📍 D' LUSSO BOUTIQUE BANDUNG</b><br>
     Jl. Braga No.88, Braga, Kec. Sumur Bandung<br>
     Kota Bandung, Jawa Barat 40111<br>
-    🕙 Setiap Hari 10.00 - 21.00 WIB<br>
     📱 WA: +62 812-3456-7890 • IG: @d.lusso<br>
     © 2026 D' LUSSO • Il Lusso di Bandung
   </div>
@@ -130,18 +128,55 @@ body{background:#0a0a0a;color:#fff}
       <div class="card"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"><div class="card-body"><small>GAUN • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div></div>
       <div class="card"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500"><div class="card-body"><small>GAUN • ELEGANT</small><h3>Black Evening Dress</h3><div class="price">Rp 2.899.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
+  </div>
+  <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
+</div>
+
+<!-- HALAMAN SCARPE COL TACCO -->
+<div id="page-scarpe" class="page">
+  <div class="page-head"><h2>👠 Scarpe Col Tacco</h2><p>Collezione Sepatu High Heels • Eleganza Italiana</p></div>
+  <div class="section">
+    <div class="cat-title">👠 HIGH HEELS</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"><div class="card-body"><small>HEELS • LUXURY</small><h3>Gold Stiletto</h3><div class="price">Rp 2.899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500"><div class="card-body"><small>HEELS • PREMIUM</small><h3>Black Classic Pump</h3><div class="price">Rp 1.999.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=500"><div class="card-body"><small>HEELS • ELEGANT</small><h3>Red Velvet Heels</h3><div class="price">Rp 2.499.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1596703263926-eb0762ee17e4?w=500"><div class="card-body"><small>HEELS • LUXURY</small><h3>White Satin Heels</h3><div class="price">Rp 2.299.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+  </div>
+  <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
+</div>
+
+<!-- HALAMAN ACCESSORIO - BARU -->
+<div id="page-accessorio" class="page">
+  <div class="page-head"><h2>👜 Accessorio</h2><p>Tas • Dompet • Ikat Pinggang • Kacamata & Lainnya</p></div>
+  <div class="section">
     <div class="cat-title">👜 TAS</div>
     <div class="grid">
       <div class="card"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"><div class="card-body"><small>TAS • PREMIUM</small><h3>Milano Handbag</h3><div class="price">Rp 4.499.000</div><button class="add">+ Add to Cart</button></div></div>
       <div class="card"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500"><div class="card-body"><small>TAS • LUXURY</small><h3>Roma Leather Tote</h3><div class="price">Rp 3.299.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500"><div class="card-body"><small>TAS • MINI</small><h3>Mini Crossbody</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"><div class="card-body"><small>TAS • ELEGANT</small><h3>Chain Shoulder Bag</h3><div class="price">Rp 2.799.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
-    <div class="cat-title">✨ ACCESSORIES</div>
+    <div class="cat-title">👛 DOMPET</div>
     <div class="grid">
-      <div class="card"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500"><div class="card-body"><small>ACCESSORIES</small><h3>Gold Sunglasses</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
-      <div class="card"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500"><div class="card-body"><small>ACCESSORIES</small><h3>Classic Outerwear</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=500"><div class="card-body"><small>DOMPET • LEATHER</small><h3>Milano Leather Wallet</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1606503825002-909a2e750d45?w=500"><div class="card-body"><small>DOMPET • MINI</small><h3>Card Holder Gold</h3><div class="price">Rp 599.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+    <div class="cat-title">👔 IKAT PINGGANG</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=500"><div class="card-body"><small>BELT • LEATHER</small><h3>Black Leather Belt</h3><div class="price">Rp 749.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"><div class="card-body"><small>BELT • PREMIUM</small><h3>Gold Buckle Belt</h3><div class="price">Rp 999.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+    <div class="cat-title">✨ LAINNYA</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500"><div class="card-body"><small>KACAMATA</small><h3>Gold Sunglasses</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500"><div class="card-body"><small>SYAL • SCARF</small><h3>Silk Scarf Lusso</h3><div class="price">Rp 699.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500"><div class="card-body"><small>PERHIASAN</small><h3>Gold Necklace</h3><div class="price">Rp 1.299.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=500"><div class="card-body"><small>JAM TANGAN</small><h3>Lusso Gold Watch</h3><div class="price">Rp 3.499.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
   </div>
-  <div class="footer">📍 Jl. Braga No.88, Bandung • 🕙 10.00 - 21.00 WIB<br>© 2026 D' LUSSO</div>
+  <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
 <!-- HALAMAN DAFTAR VIP -->
@@ -167,16 +202,12 @@ body{background:#0a0a0a;color:#fff}
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom">
   <div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div>
-  <div id="nav-collezione" onclick="showPage('collezione')">COLLEZIONE</div>
+  <div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div>
   <div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div>
   <div onclick="openChat()">CONTATTI</div>
 </div>
-
-<!-- TOMBOL CHAT MEWAH -->
-<button class="chat-btn" onclick="openChat()">💬</button>
 
 <!-- BOX CHAT MEWAH -->
 <div id="chatBox" class="chat-box">
@@ -204,7 +235,7 @@ function showPage(p){
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('nav-home').classList.remove('active');
-  document.getElementById('nav-collezione').classList.remove('active');
+  document.getElementById('nav-accessorio').classList.remove('active');
   document.getElementById('nav-vip').classList.remove('active');
   if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
   document.getElementById('menuDrop').classList.remove('show');
@@ -232,7 +263,7 @@ function sendChatMsg(text){
     var bot=document.createElement('div'); bot.className='msg bot';
     var low=text.toLowerCase();
     if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
-    else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Buka setiap hari 10.00 - 21.00 WIB. Ditunggu kedatangannya! 💎";
+    else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎";
     else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Kemeja, Gaun, Tas atau Accessories? Saya cekkan stoknya untuk Anda 💛";
     else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas. Sementara itu, mau lihat Collezione terbaru kami?";
     body.appendChild(bot); body.scrollTop=body.scrollHeight;
