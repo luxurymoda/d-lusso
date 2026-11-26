@@ -287,6 +287,8 @@ body{background:#0a0a0a;color:#fff}
 var cart=[]; var deferredPrompt=null;
 function installApp(){ alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama\n\nDi iPhone: klik tombol Share di Safari > Tambah ke Layar Utama"); }
 function showPage(p){
+  // Kalo klik VIP tapi udah login, langsung ke Profil Member, gak perlu login lagi
+  if(p==='vip' && localStorage.getItem('dlusso_member')){ p='member'; }
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active');
@@ -467,7 +469,7 @@ async function sendChatMsg(text){
     else if(low.includes('lokasi')) jawaban="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎";
     else if(low.includes('harga')||low.includes('ukuran')) jawaban="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛";
     else {
-      jawaban="Maaf ko, pertanyaan ini belum diajarin ke saya 🙏 Udah saya terusin ke Admin, nanti Admin yang jawab ya. Tunggu sebentar ya ✨";
+      jawaban='Untuk "'+text+'" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨';
       try{
         var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
         await supabaseClient.from('bot_antrian').insert([{ pertanyaan: text, member_name: m.full_name || 'Tamu', whatsapp: m.whatsapp || '', status: 'MENUNGGU' }]);
@@ -477,7 +479,8 @@ async function sendChatMsg(text){
   setTimeout(function(){ bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight; },600);
 }
 renderMember();
-if(localStorage.getItem('dlusso_member')){ showPage('member'); }
+// Refresh selalu ke HOME, login tetep keinget di localStorage
+showPage('home');
 </script>
 </body>
 </html>
