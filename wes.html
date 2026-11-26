@@ -1,103 +1,62 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WES</title>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KO CHENG - Admin Luxury</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{font-family:sans-serif;padding:12px;background:#111;color:#fff;margin:0}
-input,select,button,textarea{width:100%;padding:12px;margin:5px 0;border-radius:10px;border:none;box-sizing:border-box}
-button{background:#d4af37;font-weight:bold;color:#000}
-.tab{display:flex;gap:5px;overflow-x:auto} .tab button{background:#333;color:#fff;white-space:nowrap}
-.tab button.on{background:#d4af37;color:#000}
-.card{background:#222;padding:12px;border-radius:12px;margin:10px 0}
-img{width:100%;border-radius:10px}
-h2{margin:5px 0} small{color:#aaa}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial;background:#0a0a0a;color:#fff}
+.top{position:sticky;top:0;z-index:10;background:#0a0a0a;border-bottom:1px solid #d4af37;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.top b{color:#d4af37;letter-spacing:2px}.top span{font-size:12px;color:#aaa}
+.wrap{display:flex}.side{width:250px;min-height:100vh;background:#111;border-right:1px solid #222;padding:16px;position:sticky;top:0}
+.side button{display:block;width:100%;text-align:left;background:transparent;border:1px solid #222;color:#ddd;padding:12px;border-radius:12px;margin-bottom:8px;cursor:pointer}
+.side button.on{background:#d4af37;color:#000;font-weight:800}
+.main{flex:1;padding:18px;padding-bottom:100px}.card{background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid .card b{font-size:26px;color:#d4af37}
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#1c1c1c;color:#fff;margin:6px 0}
+.btn{background:#d4af37;color:#000;border:0;padding:12px 16px;border-radius:10px;font-weight:800;cursor:pointer;width:100%}
+.btn2{background:#222;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:8px;cursor:pointer}
+.badge{background:#d4af37;color:#000;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:800}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hidden{display:none!important}.bottom{display:none}
+@media(max-width:800px){.side{display:none}.grid{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.main{padding:12px;padding-bottom:110px}.bottom{display:flex;position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #d4af37;z-index:20}.bottom button{flex:1;background:transparent;border:0;color:#aaa;padding:12px 2px;font-size:11px}.bottom button.on{color:#d4af37;font-weight:800}}
 </style></head><body>
-<h2>👑 WES - D' LUSSO FULL</h2><small>Tanpa keamanan - buat tes</small>
-<div class="tab">
-<button class="on" onclick="show('produk',this)">Produk</button>
-<button onclick="show('member',this)">Member</button>
-<button onclick="show('order',this)">Pesanan</button>
-<button onclick="show('admin',this)">Admin</button>
-<button onclick="show('pegawai',this)">Pegawai</button>
-</div>
-
-<!-- PRODUK -->
-<div id="produk">
-<h3>Tambah Produk</h3>
-<input id="p_name" placeholder="Nama Produk">
-<input id="p_category" placeholder="Kategori - ketik baru = otomatis kebikin" list="listKat"><datalist id="listKat"></datalist>
-<input id="p_tipe" placeholder="Tipe, misal Kulit / Canvas">
-<input id="p_ukuran" placeholder="Ukuran, misal M / 42">
-<input id="p_price" type="number" placeholder="Harga">
-<input id="p_stock" type="number" placeholder="Stok">
-<input id="p_image" placeholder="Link Foto">
-<textarea id="p_desc" placeholder="Atribut Tambahan / Deskripsi, misal Warna: Merah, Bahan: Kulit Asli"></textarea>
-<button onclick="tambahProduk()">+ SIMPAN PRODUK</button>
-<button onclick="bersihkan()" style="background:#ff4444;color:#fff">🗑️ BERSIHKAN PRODUK KOSONG (Stok 0)</button>
-<div id="listProduk"></div>
-</div>
-
-<!-- MEMBER -->
-<div id="member" style="display:none">
-<h3>Tambah Member</h3>
-<input id="m_name" placeholder="Nama Member">
-<input id="m_wa" placeholder="WhatsApp">
-<input id="m_email" placeholder="Email">
-<input id="m_pass" placeholder="Password">
-<input id="m_foto" placeholder="Link Foto">
-<input id="m_alamat" placeholder="Alamat">
-<select id="m_tier"><option>VIP</option><option>VVIP</option><option>ELITE</option></select>
-<input id="m_saldo" type="number" placeholder="Saldo" value="0">
-<input id="m_disc" type="number" placeholder="Discount %" value="0">
-<input id="m_points" type="number" placeholder="Points" value="0">
-<button onclick="tambahMember()">+ SIMPAN MEMBER</button>
-<div id="listMember"></div>
-</div>
-
-<!-- ORDER -->
-<div id="order" style="display:none">
-<h3>Daftar Pesanan</h3>
-<div id="listOrder"></div>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" style="display:none">
-<h3>Tambah Admin</h3>
-<input id="a_nama" placeholder="Nama Admin"><input id="a_nomor" placeholder="Nomor WA"><input id="a_code" placeholder="Code, misal ADM001"><input id="a_pin" placeholder="PIN"><input id="a_foto" placeholder="Link Foto"><input id="a_alamat" placeholder="Alamat"><input id="a_email" placeholder="Email">
-<button onclick="tambahAdmin()">+ SIMPAN ADMIN</button>
-<div id="listAdmin"></div>
-</div>
-
-<!-- PEGAWAI -->
-<div id="pegawai" style="display:none">
-<h3>Tambah Pegawai</h3>
-<input id="pg_nama" placeholder="Nama Pegawai"><input id="pg_nomor" placeholder="Nomor WA"><input id="pg_code" placeholder="Code, misal PGW001"><input id="pg_pin" placeholder="PIN"><input id="pg_foto" placeholder="Link Foto"><input id="pg_alamat" placeholder="Alamat"><input id="pg_email" placeholder="Email">
-<button onclick="tambahPegawai()">+ SIMPAN PEGAWAI</button>
-<div id="listPegawai"></div>
-</div>
-
+<div class="top"><div><b>KO CHENG</b><br><span>ADMIN LUXURY • Rp. Format</span></div><div><span id="jam"></span> • <span class="badge">OPEN - NO RLS</span></div></div>
+<div class="wrap"><div class="side" id="sideMenu"></div><div class="main">
+<div id="page-beranda"><h2>Beranda</h2><div class="grid"><div class="card">Total Omset<br><b id="tOmset">Rp. 0,-</b></div><div class="card">Produk<br><b id="tProduk">0</b></div><div class="card">Pelanggan<br><b id="tMember">0</b></div></div><br><div class="card"><h3>Pesanan Terbaru</h3><div id="lastOrders">Loading...</div></div></div>
+<div id="page-produk" class="hidden"><h2>Produk</h2><div class="card"><input id="p_id" type="hidden"><input id="p_nama" placeholder="Nama Produk"><input id="p_harga" placeholder="Harga contoh: 250000" inputmode="numeric"><input id="p_stok" placeholder="Stok" type="number"><input id="p_kategori" placeholder="Kategori"><input id="p_foto" placeholder="Link Foto (opsional)"><button class="btn" onclick="saveProduk()">💾 SIMPAN PRODUK</button><button class="btn2" style="width:100%;margin-top:8px" onclick="bersihinProduk()">🧹 Bersihin Produk Kosong / 0</button></div><br><div class="card"><input id="cariProduk" placeholder="Cari produk..." oninput="renderProduk()"><div id="listProduk"></div></div></div>
+<div id="page-pesanan" class="hidden"><h2>Pesanan</h2><div class="card" id="listOrders"></div></div>
+<div id="page-pelanggan" class="hidden"><h2>Pelanggan / Member</h2><div class="card"><input id="m_id" type="hidden"><input id="m_nama" placeholder="Nama Pelanggan"><input id="m_wa" placeholder="Nomor WA"><input id="m_saldo" placeholder="Saldo - ketik angka saja, contoh 500000" inputmode="numeric"><input id="m_points" placeholder="Poin" type="number"><input id="m_diskon" placeholder="Diskon % - contoh 10" type="number"><input id="m_voucher" placeholder="Voucher Dadakan - contoh DISKON50 (opsional)"><input id="m_tier" placeholder="Tier - contoh GOLD / VIP"><input id="m_alamat" placeholder="Alamat"><button class="btn" onclick="saveMember()">💾 SIMPAN PELANGGAN / TOP UP</button><p style="font-size:12px;color:#aaa">Tips Top Up: Pencet EDIT, ubah Saldo jadi nominal baru, SIMPAN. Voucher dicatat di alamat.</p></div><br><div class="card" id="listMember"></div></div>
+<div id="page-admin" class="hidden"><h2>Admin</h2><div class="card"><input id="a_id" type="hidden"><input id="a_nama" placeholder="Nama Admin"><input id="a_wa" placeholder="Nomor WA"><input id="a_code" placeholder="Code Admin"><input id="a_pin" placeholder="PIN"><input id="a_email" placeholder="Email"><button class="btn" onclick="saveAdmin()">💾 SIMPAN ADMIN</button></div><br><div class="card" id="listAdmin"></div></div>
+<div id="page-pegawai" class="hidden"><h2>Pegawai</h2><div class="card"><input id="pg_id" type="hidden"><input id="pg_nama" placeholder="Nama Pegawai"><input id="pg_wa" placeholder="Nomor WA"><input id="pg_code" placeholder="Code Pegawai"><input id="pg_pin" placeholder="PIN"><input id="pg_alamat" placeholder="Alamat"><input id="pg_foto" placeholder="Link Foto"><button class="btn" onclick="savePegawai()">💾 SIMPAN PEGAWAI</button></div><br><div class="card" id="listPegawai"></div></div>
+<div id="page-bot" class="hidden"><h2>🤖 Ajari BOT</h2><div class="card"><input id="b_id" type="hidden"><input id="b_q" placeholder="Pertanyaan member - contoh: jam buka berapa?"><textarea id="b_a" placeholder="Jawaban bot - contoh: Buka jam 08.00 - 21.00 ko"></textarea><button class="btn" onclick="saveBot()">💾 SIMPAN KE OTAK BOT</button><p style="font-size:12px;color:#aaa">Member nanya -> Bot cari pertanyaan mirip -> Bot jawab pake jawaban ini. Makin banyak diajarin, makin pinter.</p></div><br><div class="card"><h3>Otak Bot Saat Ini</h3><div id="listBot"></div></div><br><div class="card"><h3>Tes Bot Di Sini</h3><input id="tesBotInput" placeholder="Coba tanya: jam buka berapa?"><button class="btn" onclick="tesBot()">🤖 TANYA BOT</button><div id="tesBotHasil" style="margin-top:10px;background:#1c1c1c;padding:12px;border-radius:10px">Belum ada tes</div></div></div>
+</div></div><div class="bottom" id="bottomMenu"></div>
 <script>
-const supabase = window.supabase.createClient("https://kkydbnjxbfkzbcxpcpor.supabase.co","sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx");
-function show(id,btn){ ['produk','member','order','admin','pegawai'].forEach(x=>document.getElementById(x).style.display=x==id?'block':'none'); document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); load(); }
-async function load(){
-  let {data:p}=await supabase.from('products').select('*').order('created_at',{ascending:false});
-  let cats=[...new Set((p||[]).map(x=>x.category).filter(Boolean))];
-  document.getElementById('listKat').innerHTML=cats.map(c=>`<option value="${c}">`).join('');
-  document.getElementById('listProduk').innerHTML=(p||[]).map(x=>`<div class="card">${x.image_url?`<img src="${x.image_url}">`:''}<b>${x.name}</b><br>${x.category||''} | ${x.tipe||''} | ${x.ukuran||''}<br>Harga ${x.price} | Stok ${x.stock}<br><small>${x.description||''}</small><br><button onclick="hapus('products','${x.id}')">Hapus</button></div>`).join('')||'Belum ada produk';
-  let {data:m}=await supabase.from('members').select('*').order('created_at',{ascending:false});
-  document.getElementById('listMember').innerHTML=(m||[]).map(x=>`<div class="card"><b>${x.full_name}</b> - ${x.tier}<br>WA: ${x.whatsapp} | Email: ${x.email||''}<br>Saldo: ${x.saldo} | Disc: ${x.discount}% | Poin: ${x.points}<br>${x.alamat||''}<br><button onclick="hapus('members','${x.id}')">Hapus</button></div>`).join('')||'Belum ada member';
-  let {data:o}=await supabase.from('orders').select('*').order('created_at',{ascending:false});
-  document.getElementById('listOrder').innerHTML=(o||[]).map(x=>`<div class="card"><b>${x.customer_name||''}</b> - ${x.status}<br>Total: ${x.total_amount} | ${x.payment_method||''}<br>${x.whatsapp||''}<br><button onclick="hapus('orders','${x.id}')">Hapus</button></div>`).join('')||'Belum ada pesanan';
-  let {data:a}=await supabase.from('admins').select('*').order('created_at',{ascending:false});
-  document.getElementById('listAdmin').innerHTML=(a||[]).map(x=>`<div class="card"><b>${x.nama}</b> - ${x.code||''}<br>${x.nomor} | ${x.email||''}<br>${x.alamat||''}<br><button onclick="hapus('admins','${x.id}')">Hapus</button></div>`).join('')||'Belum ada admin';
-  let {data:pg}=await supabase.from('pegawai').select('*').order('created_at',{ascending:false});
-  document.getElementById('listPegawai').innerHTML=(pg||[]).map(x=>`<div class="card"><b>${x.nama}</b> - ${x.code||''}<br>${x.nomor} | ${x.email||''}<br>${x.alamat||''}<br><button onclick="hapus('pegawai','${x.id}')">Hapus</button></div>`).join('')||'Belum ada pegawai';
-}
-async function tambahProduk(){ let {error}=await supabase.from('products').insert([{name:p_name.value,category:p_category.value,tipe:p_tipe.value,ukuran:p_ukuran.value,price:Number(p_price.value||0),stock:Number(p_stock.value||0),image_url:p_image.value,description:p_desc.value}]); if(error) alert(error.message); else {alert('Produk tersimpan! Kategori baru otomatis kebikin'); load();} }
-async function tambahMember(){ let {error}=await supabase.from('members').insert([{full_name:m_name.value,whatsapp:m_wa.value,email:m_email.value,password_hash:m_pass.value,foto_url:m_foto.value,alamat:m_alamat.value,tier:m_tier.value,saldo:Number(m_saldo.value||0),discount:Number(m_disc.value||0),points:Number(m_points.value||0)}]); if(error) alert(error.message); else {alert('Member tersimpan!'); load();} }
-async function tambahAdmin(){ let {error}=await supabase.from('admins').insert([{nama:a_nama.value,nomor:a_nomor.value,code:a_code.value,pin:a_pin.value,foto_url:a_foto.value,alamat:a_alamat.value,email:a_email.value}]); if(error) alert(error.message); else {alert('Admin tersimpan!'); load();} }
-async function tambahPegawai(){ let {error}=await supabase.from('pegawai').insert([{nama:pg_nama.value,nomor:pg_nomor.value,code:pg_code.value,pin:pg_pin.value,foto_url:pg_foto.value,alamat:pg_alamat.value,email:pg_email.value}]); if(error) alert(error.message); else {alert('Pegawai tersimpan!'); load();} }
-async function hapus(tabel,id){ if(confirm('Hapus?')){ await supabase.from(tabel).delete().eq('id',id); load(); } }
-async function bersihkan(){ if(!confirm('Hapus SEMUA produk stok 0?')) return; let {error}=await supabase.from('products').delete().eq('stock',0); if(error) alert(error.message); else {alert('Beres! Produk kosong udah kehapus semua'); load();} }
-load();
+const SUPABASE_URL="GANTI_URL_SUPABASE_LU";
+const SUPABASE_KEY="GANTI_ANON_KEY_LU";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+function rupiah(n){return 'Rp. '+Number(n||0).toLocaleString('id-ID')+',-';}
+function jam(){document.getElementById('jam').innerText=new Date().toLocaleString('id-ID')}
+setInterval(jam,1000);jam();
+const menus=[['beranda','🏠 Beranda'],['produk','🛍️ Produk'],['pesanan','🧾 Pesanan'],['pelanggan','👥 Pelanggan'],['admin','👑 Admin'],['pegawai','💼 Pegawai'],['bot','🤖 BOT']];
+let cur='beranda';
+function nav(m){cur=m;menus.forEach(x=>{document.getElementById('page-'+x[0]).classList.toggle('hidden',x[0]!==m)});document.querySelectorAll('#sideMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));loadAll();}
+document.getElementById('sideMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
+document.getElementById('bottomMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
+let D={products:[],orders:[],members:[],admins:[],pegawai:[],bot:[]};
+async function loadAll(){let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];let o=await sb.from('orders').select('*').order('created_at',{ascending:false});D.orders=o.data||[];let m=await sb.from('members').select('*').order('created_at',{ascending:false});D.members=m.data||[];let a=await sb.from('admins').select('*').order('created_at',{ascending:false});D.admins=a.data||[];let pg=await sb.from('pegawai').select('*').order('created_at',{ascending:false});D.pegawai=pg.data||[];let b=await sb.from('bot_faq').select('*').order('created_at',{ascending:false});D.bot=b.data||[];renderAll();}
+function renderAll(){document.getElementById('tProduk').innerText=D.products.length;document.getElementById('tMember').innerText=D.members.length;document.getElementById('tOmset').innerText=rupiah(D.orders.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0));document.getElementById('lastOrders').innerHTML=D.orders.slice(0,5).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #222">${x.customer_name||x.nama||'Pelanggan'} - <b style="color:#d4af37">${rupiah(x.total||x.total_amount||0)}</b> - ${x.status||'baru'}</div>`).join('')||'Belum ada pesanan';renderProduk();document.getElementById('listOrders').innerHTML=D.orders.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #222">${x.customer_name||x.nama||'-'} - ${rupiah(x.total||x.total_amount||0)} - ${x.status||''}</div>`).join('')||'Kosong';document.getElementById('listMember').innerHTML=D.members.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #222"><b>${x.nama||x.name||'-'}</b> - ${x.wa||x.phone||''}<br>Saldo: <b style="color:#d4af37">${rupiah(x.saldo||0)}</b> • Poin: ${x.points||0} • Diskon: ${x.discount||x.diskon||0}% • Tier: ${x.tier||'-'}<br><button class="btn2" onclick="editMember('${x.id}')">✏️ Edit / Top Up</button> <button class="btn2" onclick="hapus('members','${x.id}')">🗑️ Hapus</button></div>`).join('')||'Kosong';document.getElementById('listAdmin').innerHTML=D.admins.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #222"><b>${x.nama||x.name}</b> - ${x.wa||''} - Code: ${x.code||''}<br><button class="btn2" onclick="editAdmin('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('admins','${x.id}')">🗑️ Hapus</button></div>`).join('')||'Kosong';document.getElementById('listPegawai').innerHTML=D.pegawai.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #222"><b>${x.nama||x.name}</b> - ${x.wa||''} - Code: ${x.code||''}<br><button class="btn2" onclick="editPegawai('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('pegawai','${x.id}')">🗑️ Hapus</button></div>`).join('')||'Kosong';document.getElementById('listBot').innerHTML=D.bot.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #222"><b>Q: ${x.question}</b><br>A: ${x.answer}<br><button class="btn2" onclick="editBot('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('bot_faq','${x.id}')">🗑️ Hapus</button></div>`).join('')||'Bot belum diajarin apa-apa';}
+function renderProduk(){let q=(document.getElementById('cariProduk').value||'').toLowerCase();let list=D.products.filter(x=>(x.nama||x.name||'').toLowerCase().includes(q));document.getElementById('listProduk').innerHTML=list.map(x=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #222"><div><b>${x.nama||x.name}</b><br><span style="color:#d4af37">${rupiah(x.harga||x.price||0)}</span> • Stok: ${x.stok||x.stock||0}</div><div><button class="btn2" onclick="editProduk('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('products','${x.id}')">🗑️</button></div></div>`).join('')||'Produk kosong';}
+async function saveProduk(){let id=document.getElementById('p_id').value;let data={nama:document.getElementById('p_nama').value,harga:Number(document.getElementById('p_harga').value||0),stok:Number(document.getElementById('p_stok').value||0),kategori:document.getElementById('p_kategori').value,foto_url:document.getElementById('p_foto').value};if(!data.nama)return alert('Nama produk wajib diisi');let r=id?await sb.from('products').update(data).eq('id',id):await sb.from('products').insert([data]);if(r.error)return alert(r.error.message);alert('Produk tersimpan! '+rupiah(data.harga));['p_id','p_nama','p_harga','p_stok','p_kategori','p_foto'].forEach(i=>document.getElementById(i).value='');loadAll();}
+function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.nama||x.name||'';document.getElementById('p_harga').value=x.harga||x.price||'';document.getElementById('p_stok').value=x.stok||x.stock||'';document.getElementById('p_kategori').value=x.kategori||x.category||'';document.getElementById('p_foto').value=x.foto_url||'';window.scrollTo(0,0);alert('Mode EDIT produk: '+x.nama);}
+async function bersihinProduk(){if(!confirm('Hapus semua produk yang namanya kosong / harga 0?'))return;let kosong=D.products.filter(x=>!x.nama&&!x.name||Number(x.harga||x.price||0)===0);for(let x of kosong){await sb.from('products').delete().eq('id',x.id)}alert(kosong.length+' produk kosong dibersihkan');loadAll();}
+async function saveMember(){let id=document.getElementById('m_id').value;let voucher=document.getElementById('m_voucher').value;let alamat=document.getElementById('m_alamat').value;if(voucher)alamat=(alamat?alamat+' | ':'')+'Voucher: '+voucher;let data={nama:document.getElementById('m_nama').value,wa:document.getElementById('m_wa').value,saldo:Number(document.getElementById('m_saldo').value||0),points:Number(document.getElementById('m_points').value||0),discount:Number(document.getElementById('m_diskon').value||0),tier:document.getElementById('m_tier').value,alamat:alamat};if(!data.nama)return alert('Nama pelanggan wajib');let r=id?await sb.from('members').update(data).eq('id',id):await sb.from('members').insert([data]);if(r.error)return alert(r.error.message);alert('Pelanggan tersimpan! Saldo: '+rupiah(data.saldo)+(voucher?' | Voucher '+voucher+' dicatat':''));['m_id','m_nama','m_wa','m_saldo','m_points','m_diskon','m_voucher','m_tier','m_alamat'].forEach(i=>document.getElementById(i).value='');loadAll();}
+function editMember(id){let x=D.members.find(v=>v.id==id);if(!x)return;document.getElementById('m_id').value=x.id;document.getElementById('m_nama').value=x.nama||x.name||'';document.getElementById('m_wa').value=x.wa||x.phone||'';document.getElementById('m_saldo').value=x.saldo||0;document.getElementById('m_points').value=x.points||0;document.getElementById('m_diskon').value=x.discount||x.diskon||0;document.getElementById('m_tier').value=x.tier||'';document.getElementById('m_alamat').value=x.alamat||'';nav('pelanggan');window.scrollTo(0,0);alert('Mode EDIT / TOP UP: '+x.nama+' - Saldo sekarang '+rupiah(x.saldo||0));}
+async function saveAdmin(){let id=document.getElementById('a_id').value;let data={nama:document.getElementById('a_nama').value,wa:document.getElementById('a_wa').value,code:document.getElementById('a_code').value,pin:document.getElementById('a_pin').value,email:document.getElementById('a_email').value};if(!data.nama)return alert('Nama admin wajib');let r=id?await sb.from('admins').update(data).eq('id',id):await sb.from('admins').insert([data]);if(r.error)return alert(r.error.message);alert('Admin tersimpan!');['a_id','a_nama','a_wa','a_code','a_pin','a_email'].forEach(i=>document.getElementById(i).value='');loadAll();}
+function editAdmin(id){let x=D.admins.find(v=>v.id==id);document.getElementById('a_id').value=x.id;document.getElementById('a_nama').value=x.nama||x.name||'';document.getElementById('a_wa').value=x.wa||'';document.getElementById('a_code').value=x.code||'';document.getElementById('a_pin').value=x.pin||'';document.getElementById('a_email').value=x.email||'';window.scrollTo(0,0);}
+async function savePegawai(){let id=document.getElementById('pg_id').value;let data={nama:document.getElementById('pg_nama').value,wa:document.getElementById('pg_wa').value,code:document.getElementById('pg_code').value,pin:document.getElementById('pg_pin').value,alamat:document.getElementById('pg_alamat').value,foto_url:document.getElementById('pg_foto').value};if(!data.nama)return alert('Nama pegawai wajib');let r=id?await sb.from('pegawai').update(data).eq('id',id):await sb.from('pegawai').insert([data]);if(r.error)return alert(r.error.message);alert('Pegawai tersimpan!');['pg_id','pg_nama','pg_wa','pg_code','pg_pin','pg_alamat','pg_foto'].forEach(i=>document.getElementById(i).value='');loadAll();}
+function editPegawai(id){let x=D.pegawai.find(v=>v.id==id);document.getElementById('pg_id').value=x.id;document.getElementById('pg_nama').value=x.nama||x.name||'';document.getElementById('pg_wa').value=x.wa||'';document.getElementById('pg_code').value=x.code||'';document.getElementById('pg_pin').value=x.pin||'';document.getElementById('pg_alamat').value=x.alamat||'';document.getElementById('pg_foto').value=x.foto_url||'';window.scrollTo(0,0);}
+async function saveBot(){let id=document.getElementById('b_id').value;let data={question:document.getElementById('b_q').value,answer:document.getElementById('b_a').value};if(!data.question||!data.answer)return alert('Pertanyaan & Jawaban wajib diisi');let r=id?await sb.from('bot_faq').update(data).eq('id',id):await sb.from('bot_faq').insert([data]);if(r.error)return alert(r.error.message);alert('Bot udah diajarin! 🤖');document.getElementById('b_id').value='';document.getElementById('b_q').value='';document.getElementById('b_a').value='';loadAll();}
+function editBot(id){let x=D.bot.find(v=>v.id==id);document.getElementById('b_id').value=x.id;document.getElementById('b_q').value=x.question||'';document.getElementById('b_a').value=x.answer||'';window.scrollTo(0,0);}
+function jawabBot(pesanMember){let pesan=(pesanMember||'').toLowerCase();let ketemu=D.bot.find(x=>{let q=(x.question||'').toLowerCase();let kata=q.split(' ').filter(k=>k.length>3);return pesan.includes(q)||kata.some(k=>pesan.includes(k))});return ketemu?ketemu.answer:'Maaf ko, belum diajarin pertanyaan itu, coba tanya admin ya 🙏';}
+function tesBot(){let q=document.getElementById('tesBotInput').value;document.getElementById('tesBotHasil').innerText='🤖 Bot: '+jawabBot(q);}
+async function hapus(tabel,id){if(!confirm('Yakin hapus?'))return;let r=await sb.from(tabel).delete().eq('id',id);if(r.error)return alert(r.error.message);loadAll();}
+nav('beranda');
 </script></body></html>
