@@ -41,7 +41,7 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 </div>
 <h2>Daftar Produk</h2><div class="search"><input id="cariProduk" placeholder="🔍 Cari produk / scan barcode..." oninput="renderProduk()"></div><div id="listProduk"></div>
 <div class="form"><div class="card" style="display:block"><h3 style="margin:0">Pesanan Terbaru</h3><div id="lastOrders">Loading...</div></div></div></div>
-<div id="page-produk" class="hidden"><h2>Produk</h2><div class="form"><div class="card" style="display:block"><input id="p_id" type="hidden"><input id="p_nama" placeholder="Nama Produk" oninput="updateBarcodePreview()"><input id="p_harga" placeholder="Harga contoh: 250000" inputmode="numeric" oninput="updateBarcodePreview()"><input id="p_stok" placeholder="Stok" type="number"><input id="p_kategori" placeholder="Kategori"><input id="p_tipe" placeholder="Tipe"><input id="p_ukuran" placeholder="Ukuran">
+<div id="page-produk" class="hidden"><h2>Produk</h2><div class="form"><div class="card" style="display:block"><input id="p_id" type="hidden"><input id="p_nama" placeholder="Nama Produk" oninput="updateBarcodePreview()"><input id="p_harga" placeholder="Harga - ketik angka aja, contoh: 50000" inputmode="numeric" oninput="ketikRupiah(this);updateBarcodePreview()"><input id="p_stok" placeholder="Stok" type="number"><input id="p_kategori" placeholder="Kategori"><input id="p_tipe" placeholder="Tipe"><input id="p_ukuran" placeholder="Ukuran">
 <label style="font-size:12px;color:#d8c27a">Barcode Pabrik * (scan dari barangnya)</label>
 <div class="barcodeRow"><input id="p_barcode" placeholder="Scan barcode pabrik..." oninput="updateBarcodePreview()"><button type="button" onclick="bukaScanBarcode()">📷 Scan</button></div>
 <small style="color:#aaa">Klik Scan -> arahkan kamera ke barcode yang udah nempel di barang / dus dari pabrik. Gak usah ketik manual, gak usah tempel ulang.</small>
@@ -51,8 +51,8 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <div id="page-pesanan" class="hidden"><h2>Pesanan</h2><div class="form"><div class="card" style="display:block" id="listOrders"></div></div></div>
 <div id="page-pelanggan" class="hidden"><h2>👥 Pelanggan / Member</h2><div class="form"><div class="card" style="display:block"><input id="m_id" type="hidden"><input id="m_nama" placeholder="Nama Lengkap"><input id="m_wa" placeholder="WhatsApp"><input id="m_email" placeholder="Email">
 <div style="display:flex;gap:8px;align-items:center"><input id="m_password" type="password" placeholder="Password Member - kosongin kalo gak mau ganti" style="flex:1"><button class="btn2" type="button" onclick="lihatPass('m_password',this)">👁️</button></div><small style="color:#aaa">Kosongin aja kalo password member gak mau diganti</small>
-<input id="m_saldo" placeholder="Saldo - contoh 500000" inputmode="numeric">
-<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1" type="button" onclick="topupCepet(50000)">+50rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(100000)">+100rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(200000)">+200rb</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(500000)">+500rb</button></div>
+<input id="m_saldo" placeholder="Saldo - ketik angka aja, contoh: 500000" inputmode="numeric" oninput="ketikRupiah(this)">
+<div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1" type="button" onclick="topupCepet(50000)">+ Rp. 50.000,-</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(100000)">+ Rp. 100.000,-</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(200000)">+ Rp. 200.000,-</button><button class="btn2" style="flex:1" type="button" onclick="topupCepet(500000)">+ Rp. 500.000,-</button></div>
 <div style="display:flex;gap:8px;margin:6px 0"><button class="btn2" style="flex:1;background:#2a1515;border-color:#ff4444" type="button" onclick="adminTarikCepet()">💸 TARIK / POTONG</button><button class="btn2" style="flex:1" type="button" onclick="adminBeliCepet()">🛍️ BELI PAKAI SALDO</button></div>
 <input id="m_points" placeholder="Poin" type="number"><input id="m_diskon" placeholder="Diskon % - discount" type="number"><input id="m_tier" placeholder="Tier - GOLD / VIP"><input id="m_alamat" placeholder="Alamat">
 <input type="file" id="m_fotoFile" accept="image/*" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><input type="file" id="m_fotoCam" accept="image/*" capture="environment" style="display:none" onchange="fotoPilih(this,'m_foto','m_preview','m_info')"><img id="m_preview" class="fotoPreview"><input id="m_foto" type="hidden"><small id="m_info" style="color:#7CFC00"></small><div class="fotoBtns"><button type="button" onclick="document.getElementById('m_fotoCam').click()">📷 Kamera</button><button type="button" onclick="document.getElementById('m_fotoFile').click()">🖼️ Galeri</button></div>
@@ -77,28 +77,42 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <div id="page-profil" class="hidden"><h2>👤 Profil</h2><div class="form"><div class="card" style="display:block;text-align:center"><div style="font-size:50px">👑</div><b>KO CHENG ADMIN</b><p>Admin Panel Luxury</p><button class="btn" onclick="nav('admin')">👑 Kelola Admin</button><br><br><button class="btn" onclick="nav('pegawai')">💼 Kelola Pegawai</button><br><br><button class="btn" onclick="nav('bot')">🤖 Ajari BOT</button><br><br><button class="btn" onclick="nav('antrian')">🔔 Antrian BOT</button><br><br><button class="btn" onclick="nav('pelanggan')">👥 Kelola Member</button></div></div></div>
 </div>
 <div class="bottom" id="bottomMenu"></div>
-
-<!-- MODAL SCAN BARCODE PABRIK -->
 <div id="scanModal" class="scanModal">
   <div style="max-width:480px;margin:0 auto">
     <div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#e8c87a">📷 SCAN BARCODE PABRIK</b><button onclick="tutupScanBarcode()" style="background:#ff4444;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-weight:800;cursor:pointer">✕ Tutup</button></div>
-    <p style="color:#aaa;font-size:13px">Arahkan kamera ke barcode yang udah nempel di barang / dus dari pabrik. Jangan terlalu dekat, agak jauhin dikit biar fokus.</p>
+    <p style="color:#aaa;font-size:13px">Arahkan kamera ke barcode yang udah nempel di barang / dus dari pabrik.</p>
     <div id="reader"></div>
     <p id="scanStatus" style="color:#7CFC00;font-size:13px;text-align:center">📷 Kamera aktif, lagi nyari barcode...</p>
-    <p style="color:#aaa;font-size:12px;text-align:center">Kalo barcode-nya rusak / gak ke-scan, ketik manual aja di bawah:</p>
-    <input id="scanManual" placeholder="Ketik barcode manual di sini..." inputmode="numeric">
+    <input id="scanManual" placeholder="Atau ketik barcode manual..." inputmode="numeric">
     <button class="btn" onclick="pakaiBarcodeManual()" style="margin-top:8px">✅ PAKAI BARCODE INI</button>
     <button class="btn2" onclick="tutupScanBarcode()" style="width:100%;margin-top:8px;padding:12px">Batal</button>
   </div>
 </div>
-
 <script>
 const SUPABASE_URL="https://kkydbnjxbfkzbcxpcpor.supabase.co";
 const SUPABASE_KEY="sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx";
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function rupiah(n){return 'Rp. '+Number(n||0).toLocaleString('id-ID')+',-';}
+// ===== FORMAT RUPIAH SEMUA NOMINAL - BARU =====
+function ketikRupiah(el){
+  let angka = String(el.value||'').replace(/[^0-9]/g,'');
+  if(!angka){ el.value=''; return; }
+  // Buang 0 di depan biar gak jadi Rp. 00050.000,-
+  angka = String(Number(angka));
+  el.value = 'Rp. ' + Number(angka).toLocaleString('id-ID') + ',-';
+}
+function ambilNominal(id){
+  let v = document.getElementById(id).value||'';
+  return Number(String(v).replace(/[^0-9]/g,'')||0);
+}
+function isiNominal(id, angka){
+  let el = document.getElementById(id);
+  if(!angka){ el.value=''; return; }
+  el.value = 'Rp. ' + Number(angka).toLocaleString('id-ID') + ',-';
+}
+// ===== END FORMAT RUPIAH =====
 function lihatPass(id,btn){let i=document.getElementById(id);if(i.type==='password'){i.type='text';btn.innerText='🙈'}else{i.type='password';btn.innerText='👁️'}}
-function topupCepet(n){let inp=document.getElementById('m_saldo');inp.value=Number(inp.value||0)+n}
+function topupCepet(n){let inp=document.getElementById('m_saldo');let skrg=ambilNominal('m_saldo');isiNominal('m_saldo', skrg+n);}
 let filterMemberTier='';
 function filterTier(t){filterMemberTier=t;renderMember()}
 function renderMember(){let q=(document.getElementById('cariMember')?document.getElementById('cariMember').value:'').toLowerCase();let list=D.members.filter(x=>{let cocok=(x.full_name||'').toLowerCase().includes(q)||(x.whatsapp||'').includes(q);let cocokTier=!filterMemberTier||(x.tier||'').toUpperCase().includes(filterMemberTier);return cocok&&cocokTier});document.getElementById('listMember').innerHTML=list.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.full_name||'-'}</b> - ${x.whatsapp||''} <span class="badge">${x.tier||'Reguler'}</span><br>Saldo: <b>${rupiah(x.saldo||0)}</b> • Poin: ${x.points||0} • Diskon: ${x.discount||0}%<br><button class="btn2" onclick="editMember('${x.id}')">✏️ Edit / Tulis Transaksi</button> <button class="btn2" onclick="lihatRiwayatMember('${x.id}')">💰 Riwayat</button> <button class="btn2" onclick="hapus('members','${x.id}')">🗑️</button></div>`).join('')||'Kosong'}
@@ -147,8 +161,6 @@ function sudahTransfer(id){alert('Oke, udah dicatet udah transfer.');}
 function lihatRiwayatMember(id){let m=D.members.find(v=>v.id==id);nav('riwayat');if(m){document.getElementById('cariRiwayat').value=m.full_name||'';renderRiwayat();}}
 async function loadAll(){try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}try{let o=await sb.from('orders').select('*').order('created_at',{ascending:false});D.orders=o.data||[];}catch(e){D.orders=[]}try{let m=await sb.from('members').select('*').order('created_at',{ascending:false});D.members=m.data||[];}catch(e){}try{let a=await sb.from('admins').select('*').order('created_at',{ascending:false});D.admins=a.data||[];}catch(e){}try{let pg=await sb.from('pegawai').select('*').order('created_at',{ascending:false});D.pegawai=pg.data||[];}catch(e){}try{let b=await sb.from('bot_faq').select('*').order('id',{ascending:false});D.bot=b.data||[];}catch(e){D.bot=[]}try{let an=await sb.from('bot_antrian').select('*').order('created_at',{ascending:false});D.antrian=an.data||[];}catch(e){D.antrian=[]}try{let r=await sb.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(200);D.riwayat=r.data||[];}catch(e){D.riwayat=[]}renderAll();}
 function renderAll(){let omset=D.orders.reduce((s,x)=>s+Number(x.total||x.total_amount||0),0);document.getElementById('tOmset').innerText=rupiah(omset);document.getElementById('tOmset2').innerText=rupiah(omset);document.getElementById('tOrders').innerText=D.orders.length;document.getElementById('tProduk').innerText=D.products.filter(x=>x.is_active!==false).length;document.getElementById('tProduk2').innerText=D.products.length;document.getElementById('tMember').innerText=D.members.length;document.getElementById('lastOrders').innerHTML=D.orders.slice(0,3).map(x=>`<div style="padding:8px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'Pelanggan'} - <b>${rupiah(x.total||x.total_amount||0)}</b></div>`).join('')||'Belum ada pesanan';renderProduk();renderMember();renderRiwayat();let ordHtml=D.orders.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333">${x.customer_name||x.nama||'-'} - ${rupiah(x.total||x.total_amount||0)} - ${x.status||''}</div>`).join('')||'Kosong';document.getElementById('listOrders').innerHTML=ordHtml;document.getElementById('listOrders2').innerHTML=ordHtml;document.getElementById('listAdmin').innerHTML=D.admins.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editAdmin('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('admins','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listPegawai').innerHTML=D.pegawai.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>${x.nama||''}</b> - ${x.nomor||''} - ${x.code||''}<br><button class="btn2" onclick="editPegawai('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('pegawai','${x.id}')">🗑️</button></div>`).join('')||'Kosong';document.getElementById('listBot').innerHTML=D.bot.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #333"><b>Q: ${x.question||x.keyword||''}</b><br>A: ${x.answer||''}<br><button class="btn2" onclick="editBot('${x.id}')">✏️ Edit</button> <button class="btn2" onclick="hapus('bot_faq','${x.id}')">🗑️</button></div>`).join('')||'Bot belum diajarin';document.getElementById('listAntrian').innerHTML=D.antrian.map(x=>{let tgl=x.created_at?new Date(x.created_at).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';let isTunggu=x.status!=='DIJAWAB';return `<div style="padding:12px 0;border-bottom:1px solid #333"><b>❓ ${x.pertanyaan||''}</b><br><small style="color:#aaa">Dari: ${x.member_name||'Tamu'} • ${x.whatsapp||''} • ${tgl} • <b style="color:${isTunggu?'#ff6666':'#7CFC00'}">${x.status||'MENUNGGU'}</b></small>${x.jawaban_admin?`<br><small style="color:#7CFC00">Jawaban: ${x.jawaban_admin}</small>`:''}${isTunggu?`<br><textarea id="jawaban_${x.id}" placeholder="Tulis jawaban Admin di sini..."></textarea><button class="btn" onclick="jawabAntrian('${x.id}')">💾 JAWAB & AJARI BOT</button>`:''}<br><button class="btn2" style="margin-top:8px" onclick="hapus('bot_antrian','${x.id}')">🗑️ Hapus Antrian</button></div>`;}).join('')||'Belum ada antrian, aman ko ✨';}
-
-// ===== SCAN BARCODE PABRIK - BUKAN AUTO =====
 let html5Qr = null;
 let sedangScan = false;
 async function bukaScanBarcode(){
@@ -159,9 +171,7 @@ async function bukaScanBarcode(){
   try{
     html5Qr = new Html5Qrcode("reader");
     sedangScan = true;
-    await html5Qr.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 280, height: 140 } },
+    await html5Qr.start({ facingMode: "environment" },{ fps: 10, qrbox: { width: 280, height: 140 } },
       async (decodedText)=>{
         if(!sedangScan) return;
         sedangScan = false;
@@ -169,19 +179,14 @@ async function bukaScanBarcode(){
         updateBarcodePreview();
         if(navigator.vibrate) navigator.vibrate(200);
         document.getElementById('scanStatus').innerText='✅ Ke-scan: ' + decodedText;
-        // Cek apakah barcode pabrik ini udah pernah diinput
         let { data: lama } = await sb.from('products').select('*').eq('barcode', decodedText).maybeSingle();
         await tutupScanBarcode();
         if(lama){
-          if(confirm('Barcode pabrik ' + decodedText + ' udah ada!\nProduk: ' + lama.name + '\nStok lama: ' + (lama.stock||0) + '\n\nIni barang yang sama dateng lagi? Klik OK buat edit / tambah stoknya.')){
-            editProduk(lama.id);
-          }
+          if(confirm('Barcode pabrik ' + decodedText + ' udah ada!\nProduk: ' + lama.name + '\nStok lama: ' + (lama.stock||0) + '\n\nIni barang yang sama dateng lagi? Klik OK buat edit / tambah stoknya.')){ editProduk(lama.id); }
         } else {
           alert('✅ Barcode pabrik ke-scan: ' + decodedText + '\nTinggal isi Nama + Harga + Stok, terus Simpan.');
         }
-      },
-      (err)=>{}
-    );
+      }, (err)=>{});
   }catch(e){
     sedangScan = false;
     alert('Kamera gak bisa dibuka: ' + e.message + '\nCoba izinin kamera di browser dulu, atau ketik manual aja ko.');
@@ -203,7 +208,7 @@ function pakaiBarcodeManual(){
 }
 function updateBarcodePreview(){
   let nama=document.getElementById('p_nama').value||'Nama Produk';
-  let harga=document.getElementById('p_harga').value||0;
+  let harga=ambilNominal('p_harga');
   let barcode=document.getElementById('p_barcode').value||'';
   let pv=document.getElementById('barcodePreview');
   if(!pv) return;
@@ -214,13 +219,11 @@ function updateBarcodePreview(){
   document.getElementById('pvHarga').innerText=rupiah(harga);
   try{ JsBarcode("#barcodeSvg", barcode, {format:"CODE128", width:2, height:50, displayValue:false, margin:0}); }catch(e){ try{ JsBarcode("#barcodeSvg", barcode, {format:"EAN13", width:2, height:50, displayValue:false, margin:0}); }catch(e2){} }
 }
-// ===== END SCAN =====
-
 function renderProduk(){let q=(document.getElementById('cariProduk').value||'').toLowerCase();let list=D.products.filter(x=>(x.name||'').toLowerCase().includes(q)||(x.barcode||'').toLowerCase().includes(q));let html=list.map(x=>`<div class="card"><img src="${x.image_url||'https://via.placeholder.com/90'}"><div style="flex:1"><b>${x.name}</b><p>Stok: ${x.stock||0} • Barcode Pabrik: <b style="color:#e8c87a">${x.barcode||'- belum di-scan -'}</b></p><p>Harga: <b>${rupiah(x.price||0)}</b></p></div><div><span class="badge">${x.is_active===false?'Nonaktif':'Aktif'}</span><br><br><button class="btn2" onclick="editProduk('${x.id}')">✏️</button> <button class="btn2" onclick="hapus('products','${x.id}')">🗑️</button></div></div>`).join('')||'<p style="padding:0 16px">Produk kosong</p>';document.getElementById('listProduk').innerHTML=html;let e2=document.getElementById('listProduk2');if(e2)e2.innerHTML=html;}
 async function saveProduk(){
   let id=document.getElementById('p_id').value;
   let barcode=document.getElementById('p_barcode').value.trim();
-  let data={name:document.getElementById('p_nama').value,price:Number(document.getElementById('p_harga').value||0),stock:Number(document.getElementById('p_stok').value||0),category:document.getElementById('p_kategori').value,tipe:document.getElementById('p_tipe').value,ukuran:document.getElementById('p_ukuran').value,image_url:document.getElementById('p_foto').value,description:document.getElementById('p_desc').value,barcode:barcode||null,is_active:true};
+  let data={name:document.getElementById('p_nama').value,price:ambilNominal('p_harga'),stock:Number(document.getElementById('p_stok').value||0),category:document.getElementById('p_kategori').value,tipe:document.getElementById('p_tipe').value,ukuran:document.getElementById('p_ukuran').value,image_url:document.getElementById('p_foto').value,description:document.getElementById('p_desc').value,barcode:barcode||null,is_active:true};
   if(!data.name)return alert('Nama wajib');
   if(!barcode) return alert('Barcode wajib! Klik tombol 📷 Scan dulu ko, scan barcode pabrik yang nempel di barangnya.');
   let {data:ada}=await sb.from('products').select('id, name').eq('barcode',barcode).maybeSingle();
@@ -234,11 +237,11 @@ async function saveProduk(){
   document.getElementById('barcodePreview').style.display='none';
   setPreview('p_preview','', 'p_info');loadAll();
 }
-function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;nav('produk');document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.name||'';document.getElementById('p_harga').value=x.price||'';document.getElementById('p_stok').value=x.stock||'';document.getElementById('p_kategori').value=x.category||'';document.getElementById('p_tipe').value=x.tipe||'';document.getElementById('p_ukuran').value=x.ukuran||'';document.getElementById('p_foto').value=x.image_url||'';document.getElementById('p_desc').value=x.description||'';document.getElementById('p_barcode').value=x.barcode||'';setPreview('p_preview',x.image_url||'','p_info');updateBarcodePreview();window.scrollTo(0,0);}
+function editProduk(id){let x=D.products.find(v=>v.id==id);if(!x)return;nav('produk');document.getElementById('p_id').value=x.id;document.getElementById('p_nama').value=x.name||'';isiNominal('p_harga', x.price||0);document.getElementById('p_stok').value=x.stock||'';document.getElementById('p_kategori').value=x.category||'';document.getElementById('p_tipe').value=x.tipe||'';document.getElementById('p_ukuran').value=x.ukuran||'';document.getElementById('p_foto').value=x.image_url||'';document.getElementById('p_desc').value=x.description||'';document.getElementById('p_barcode').value=x.barcode||'';setPreview('p_preview',x.image_url||'','p_info');updateBarcodePreview();window.scrollTo(0,0);}
 async function bersihinProduk(){if(!confirm('Hapus produk nama kosong / harga 0?'))return;let k=D.products.filter(x=>!x.name||Number(x.price||0)===0);for(let x of k)await sb.from('products').delete().eq('id',x.id);alert(k.length+' dibersihkan');loadAll();}
 async function saveMember(){
   let id=document.getElementById('m_id').value;
-  let saldoBaru=Number(document.getElementById('m_saldo').value||0);
+  let saldoBaru=ambilNominal('m_saldo');
   let data={full_name:document.getElementById('m_nama').value,whatsapp:document.getElementById('m_wa').value,email:document.getElementById('m_email').value,saldo:saldoBaru,points:Number(document.getElementById('m_points').value||0),discount:Number(document.getElementById('m_diskon').value||0),tier:document.getElementById('m_tier').value,alamat:document.getElementById('m_alamat').value,foto_url:document.getElementById('m_foto').value};
   let pw=document.getElementById('m_password').value;
   if(pw){data.password=pw; data.password_hash=pw;}
@@ -259,9 +262,9 @@ async function saveMember(){
   }
   ['m_id','m_nama','m_wa','m_email','m_saldo','m_points','m_diskon','m_tier','m_alamat','m_foto'].forEach(i=>document.getElementById(i).value='');document.getElementById('m_password').value='';setPreview('m_preview','', 'm_info');loadAll();
 }
-function adminTarikCepet(){let inp=document.getElementById('m_saldo');let nominal=prompt('Mau TULIS TARIK berapa untuk member ini? Contoh: 100000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+'. Klik SIMPAN / TULIS TRANSAKSI, nanti kecatet sebagai DITULIS ADMIN.');}
-function adminBeliCepet(){let inp=document.getElementById('m_saldo');let barang=prompt('Member beli apa?');if(!barang)return;let nominal=prompt('Harganya berapa?');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');inp.value=Math.max(0,Number(inp.value||0)-amt);alert('Saldo di form udah dikurangin '+rupiah(amt)+' buat beli '+barang+'. Klik SIMPAN biar kecatet.');}
-function editMember(id){let x=D.members.find(v=>v.id==id);if(!x)return;nav('pelanggan');document.getElementById('m_id').value=x.id;document.getElementById('m_nama').value=x.full_name||'';document.getElementById('m_wa').value=x.whatsapp||'';document.getElementById('m_email').value=x.email||'';document.getElementById('m_password').value='';document.getElementById('m_saldo').value=x.saldo||0;document.getElementById('m_points').value=x.points||0;document.getElementById('m_diskon').value=x.discount||0;document.getElementById('m_tier').value=x.tier||'';document.getElementById('m_alamat').value=x.alamat||'';document.getElementById('m_foto').value=x.foto_url||'';setPreview('m_preview',x.foto_url||'','m_info');window.scrollTo(0,0);}
+function adminTarikCepet(){let nominal=prompt('Mau TULIS TARIK berapa untuk member ini?\nKetik angka aja, contoh: 100000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');let skrg=ambilNominal('m_saldo');isiNominal('m_saldo', Math.max(0, skrg-amt));alert('Saldo di form udah dikurangin '+rupiah(amt)+'. Klik SIMPAN / TULIS TRANSAKSI, nanti kecatet sebagai DITULIS ADMIN.');}
+function adminBeliCepet(){let barang=prompt('Member beli apa?');if(!barang)return;let nominal=prompt('Harganya berapa?\nKetik angka aja, contoh: 50000');if(!nominal)return;let amt=Number(String(nominal).replace(/[^0-9]/g,''));if(!amt)return alert('Nominal tidak valid');let skrg=ambilNominal('m_saldo');isiNominal('m_saldo', Math.max(0, skrg-amt));alert('Saldo di form udah dikurangin '+rupiah(amt)+' buat beli '+barang+'. Klik SIMPAN biar kecatet.');}
+function editMember(id){let x=D.members.find(v=>v.id==id);if(!x)return;nav('pelanggan');document.getElementById('m_id').value=x.id;document.getElementById('m_nama').value=x.full_name||'';document.getElementById('m_wa').value=x.whatsapp||'';document.getElementById('m_email').value=x.email||'';document.getElementById('m_password').value='';isiNominal('m_saldo', x.saldo||0);document.getElementById('m_points').value=x.points||0;document.getElementById('m_diskon').value=x.discount||0;document.getElementById('m_tier').value=x.tier||'';document.getElementById('m_alamat').value=x.alamat||'';document.getElementById('m_foto').value=x.foto_url||'';setPreview('m_preview',x.foto_url||'','m_info');window.scrollTo(0,0);}
 async function saveAdmin(){let id=document.getElementById('a_id').value;let data={nama:document.getElementById('a_nama').value,nomor:document.getElementById('a_nomor').value,code:document.getElementById('a_code').value,pin:document.getElementById('a_pin').value,email:document.getElementById('a_email').value,alamat:document.getElementById('a_alamat').value,foto_url:document.getElementById('a_foto').value};if(!data.nama)return alert('Nama wajib');let r=id?await sb.from('admins').update(data).eq('id',id):await sb.from('admins').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Admin tersimpan!');['a_id','a_nama','a_nomor','a_code','a_pin','a_email','a_alamat','a_foto'].forEach(i=>document.getElementById(i).value='');setPreview('a_preview','', 'a_info');loadAll();}
 function editAdmin(id){let x=D.admins.find(v=>v.id==id);nav('admin');document.getElementById('a_id').value=x.id;document.getElementById('a_nama').value=x.nama||'';document.getElementById('a_nomor').value=x.nomor||'';document.getElementById('a_code').value=x.code||'';document.getElementById('a_pin').value=x.pin||'';document.getElementById('a_email').value=x.email||'';document.getElementById('a_alamat').value=x.alamat||'';document.getElementById('a_foto').value=x.foto_url||'';setPreview('a_preview',x.foto_url||'','a_info');window.scrollTo(0,0);}
 async function savePegawai(){let id=document.getElementById('pg_id').value;let data={nama:document.getElementById('pg_nama').value,nomor:document.getElementById('pg_nomor').value,code:document.getElementById('pg_code').value,pin:document.getElementById('pg_pin').value,email:document.getElementById('pg_email').value,alamat:document.getElementById('pg_alamat').value,foto_url:document.getElementById('pg_foto').value};if(!data.nama)return alert('Nama wajib');let r=id?await sb.from('pegawai').update(data).eq('id',id):await sb.from('pegawai').insert([data]);if(r.error)return alert('GAGAL: '+r.error.message);alert('Pegawai tersimpan!');['pg_id','pg_nama','pg_nomor','pg_code','pg_pin','pg_email','pg_alamat','pg_foto'].forEach(i=>document.getElementById(i).value='');setPreview('pg_preview','', 'pg_info');loadAll();}
