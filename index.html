@@ -17,6 +17,7 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 .btn{background:#e8c87a;color:#000;border:0;padding:12px;border-radius:10px;font-weight:800;width:100%;cursor:pointer}.btn2{background:#2a261f;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:8px;cursor:pointer}
 .form{padding:0 16px}.hidden{display:none!important}
 .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1a1815;border-top:2px solid #d4af37;display:flex;padding:10px 0 16px;z-index:50}.bottom button{flex:1;background:transparent;border:0;color:#a08c5a;font-size:11px;cursor:pointer}.bottom button.on{color:#e8c87a;font-weight:800}.bottom button div{font-size:24px}
+/* CHAT BOT */
 .chatFab{position:fixed;bottom:90px;right:16px;width:60px;height:60px;border-radius:50%;background:#e8c87a;color:#000;font-size:28px;border:0;cursor:pointer;z-index:60;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 .chatBox{position:fixed;bottom:160px;right:12px;left:12px;max-width:456px;margin:0 auto;background:#1a1815;border:1px solid #d4af37;border-radius:16px;z-index:61;overflow:hidden;display:none}
 .chatBox.open{display:block}
@@ -27,15 +28,13 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 .msg.me{background:#e8c87a;color:#000;align-self:flex-end;font-weight:600}
 .chatInput{display:flex;gap:8px;padding:10px;background:#1a1815;border-top:1px solid #333}.chatInput input{margin:0}.chatInput button{width:80px;background:#e8c87a;color:#000;border:0;border-radius:10px;font-weight:800;cursor:pointer}
 .chipRow{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px;background:#111010}.chipRow button{background:#221f1b;border:1px solid #d4af37;color:#e8c87a;padding:6px 12px;border-radius:99px;font-size:12px;cursor:pointer}
-.vipBox{margin:0 16px 12px;border:1px solid #e8c87a;border-radius:16px;padding:16px;background:linear-gradient(135deg,#2a2210,#171512);text-align:center}
 </style></head><body>
 <div class="phone">
-<div class="header"><div class="logo"><div>👑</div><b>KO CHENG</b><br><span>D LUSSO • LUXURY</span></div><div style="text-align:right"><div id="memberInfo" style="font-size:12px;color:#d8c27a">Tamu</div><button class="btn2" onclick="klikVIP()">👑 VIP</button></div></div>
+<div class="header"><div class="logo"><div>👑</div><b>KO CHENG</b><br><span>D LUSSO • LUXURY</span></div><div style="text-align:right"><div id="memberInfo" style="font-size:12px;color:#d8c27a">Tamu</div><button class="btn2" onclick="nav('member')">👤 Member</button></div></div>
 <div class="tabs" id="topTabs"></div>
 
 <div id="page-beranda">
 <div class="banner"><b>Selamat Datang di<br>D LUSSO Luxury</b><p>Koleksi Premium • Harga Bersahabat • Pelayanan Concierge</p><button class="btn" onclick="nav('produk')">🛍️ LIHAT KOLEKSI</button></div>
-<div id="vipBanner"></div>
 <h2>🔥 Koleksi Terbaru</h2>
 <div class="search"><input id="cariProduk" placeholder="🔍 Cari produk..." oninput="renderProduk()"></div>
 <div id="listProduk"></div>
@@ -49,14 +48,9 @@ input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px soli
 <div id="page-member" class="hidden"><h2>👤 Member</h2>
 <div class="form"><div class="card" style="display:block" id="memberBox">
 <div id="loginForm"><input id="login_wa" placeholder="WhatsApp - contoh 0812..."><input id="login_pw" type="password" placeholder="Password"><button class="btn" onclick="loginMember()">🔐 MASUK MEMBER</button><p style="font-size:12px;color:#aaa;text-align:center">Belum punya akun? Daftar via WhatsApp Admin ya.</p></div>
-<div id="memberDetail" class="hidden"><b id="mdNama">-</b><p id="mdWa">-</p><p>Saldo: <b id="mdSaldo">Rp. 0,-</b></p><p>Poin: <b id="mdPoin">0</b> • Tier: <b id="mdTier">-</b> • Diskon: <b id="mdDiskon">0%</b></p><div id="vipDetail"></div><button class="btn" onclick="nav('riwayat')">💰 LIHAT RIWAYAT SALDO</button><br><br><button class="btn2" style="width:100%" onclick="logoutMember()">🚪 Keluar</button></div>
+<div id="memberDetail" class="hidden"><b id="mdNama">-</b><p id="mdWa">-</p><p>Saldo: <b id="mdSaldo">Rp. 0,-</b></p><p>Poin: <b id="mdPoin">0</b> • Tier: <b id="mdTier">-</b> • Diskon: <b id="mdDiskon">0%</b></p><button class="btn" onclick="nav('riwayat')">💰 LIHAT RIWAYAT SALDO</button><br><br><button class="btn2" style="width:100%" onclick="logoutMember()">🚪 Keluar</button></div>
 </div></div>
 <div class="form"><div class="card" style="display:block"><h3 style="margin:0">💸 Tarik Tunai</h3><p style="font-size:12px;color:#aaa">Minta tarik, Admin akan tulis & proses transfernya.</p><input id="tarik_nominal" placeholder="Nominal - contoh 100000" inputmode="numeric"><input id="tarik_rek" placeholder="No Rekening / e-Wallet + Nama"><button class="btn" onclick="mintaTarik()">💸 AJUKAN TARIK TUNAI</button></div></div>
-</div>
-
-<div id="page-vip" class="hidden"><h2>👑 VIP Lounge</h2>
-<div class="form"><div class="card" style="display:block" id="vipBoxContent">Loading...</div></div>
-<div class="form"><div class="card" style="display:block"><h3 style="margin:0">🎁 Keuntungan VIP</h3><p>✨ Diskon Spesial VIP<br>⚡ Prioritas Concierge<br>🎂 Hadiah Ulang Tahun<br>💰 Tarik Tunai Prioritas</p></div></div>
 </div>
 
 <div id="page-riwayat" class="hidden"><h2>💰 Riwayat Saldo Saya</h2><div class="form"><div class="card" style="display:block" id="listRiwayatSaya">Login dulu ya ko.</div></div></div>
@@ -79,47 +73,19 @@ const SUPABASE_KEY="sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx";
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 function rupiah(n){return 'Rp. '+Number(n||0).toLocaleString('id-ID')+',-';}
 const menus=[['beranda','🏠 Beranda'],['produk','📦 Produk'],['keranjang','🛒 Keranjang'],['member','👤 Member'],['profil','👤 Profil']];
-const topMenus=[['beranda','Beranda'],['produk','Produk'],['keranjang','Keranjang'],['member','Member'],['vip','VIP 👑'],['riwayat','Riwayat Saldo'],['profil','Profil']];
-function nav(m){
-  // Refresh selalu ke Beranda, gak inget halaman terakhir lagi
-  ['beranda','produk','keranjang','member','vip','riwayat','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});
-  document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));
-  document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));
-  window.scrollTo(0,0);
-  if(m==='riwayat')renderRiwayatSaya();
-  if(m==='member')renderMemberBox();
-  if(m==='vip')renderVIP();
-}
+const topMenus=[['beranda','Beranda'],['produk','Produk'],['keranjang','Keranjang'],['member','Member'],['riwayat','Riwayat Saldo'],['profil','Profil']];
+function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','keranjang','member','riwayat','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);if(m==='riwayat')renderRiwayatSaya();if(m==='member')renderMemberBox();}
 document.getElementById('topTabs').innerHTML=topMenus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
 document.getElementById('bottomMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')"><div>${m[1].split(' ')[0]}</div>${m[1].split(' ')[1]||''}</button>`).join('');
 let D={products:[],bot:[],riwayat:[]};
 let cart=JSON.parse(localStorage.getItem('kocheng_cart')||'[]');
-// Login tersimpan di sini, jadi refresh gak perlu login lagi
 let currentMember=JSON.parse(localStorage.getItem('kocheng_member')||'null');
-
-function klikVIP(){
-  // Kalo udah login, langsung masuk VIP tanpa login lagi
-  if(currentMember){ nav('vip'); return; }
-  // Kalo belum login, arahin ke login
-  nav('member');
-  alert('Login Member dulu ya untuk masuk VIP Lounge 👑');
-}
-function renderVIP(){
-  let box=document.getElementById('vipBoxContent');
-  if(!currentMember){
-    box.innerHTML=`<p>Kamu belum login.</p><button class="btn" onclick="nav('member')">🔐 LOGIN MEMBER DULU</button>`;
-    return;
-  }
-  let isVIP=String(currentMember.tier||'').toUpperCase().includes('VIP')||String(currentMember.tier||'').toUpperCase().includes('GOLD');
-  box.innerHTML=`<div style="text-align:center"><div style="font-size:40px">👑</div><b>Selamat Datang, ${currentMember.full_name||'Member'}!</b><br><span class="badge">${currentMember.tier||'Reguler'}</span><p>Saldo: <b>${rupiah(currentMember.saldo||0)}</b><br>Poin: <b>${currentMember.points||0}</b> • Diskon: <b>${currentMember.discount||0}%</b></p>${isVIP?`<p style="color:#7CFC00">✅ Kamu VIP! Semua keuntungan VIP aktif ✨</p>`:`<p style="color:#aaa">Kamu masih ${currentMember.tier||'Reguler'}. Upgrade ke VIP via Admin ya untuk diskon spesial.</p>`}</div>`;
-  document.getElementById('vipBanner').innerHTML=currentMember?`<div class="vipBox">👑 Hai <b>${currentMember.full_name}</b> • ${currentMember.tier||'Reguler'} • Saldo <b>${rupiah(currentMember.saldo||0)}</b><br><button class="btn" style="margin-top:10px" onclick="nav('vip')">MASUK VIP LOUNGE →</button></div>`:'';
-}
 
 async function loadAll(){
   try{let p=await sb.from('products').select('*').order('created_at',{ascending:false});D.products=p.data||[];}catch(e){}
   try{let b=await sb.from('bot_faq').select('*').order('id',{ascending:false});D.bot=b.data||[];}catch(e){D.bot=[]}
   try{if(currentMember){let r=await sb.from('riwayat_saldo').select('*').eq('member_id',currentMember.id).order('created_at',{ascending:false}).limit(50);D.riwayat=r.data||[];}}catch(e){D.riwayat=[]}
-  renderProduk();renderKeranjang();renderMemberBox();renderRiwayatSaya();renderVIP();
+  renderProduk();renderKeranjang();renderMemberBox();renderRiwayatSaya();
 }
 function renderProduk(){
   let q1=(document.getElementById('cariProduk')?document.getElementById('cariProduk').value:'').toLowerCase();
@@ -152,12 +118,12 @@ async function loginMember(){
   currentMember=m; localStorage.setItem('kocheng_member',JSON.stringify(m));
   alert('Selamat datang '+m.full_name+'! ✨'); loadAll(); nav('member');
 }
-function logoutMember(){currentMember=null;localStorage.removeItem('kocheng_member');document.getElementById('vipBanner').innerHTML='';loadAll();nav('member');}
+function logoutMember(){currentMember=null;localStorage.removeItem('kocheng_member');loadAll();nav('member');}
 function renderMemberBox(){
   document.getElementById('memberInfo').innerText=currentMember?('Hi, '+(currentMember.full_name||'Member')):'Tamu';
   let loginForm=document.getElementById('loginForm');
   let det=document.getElementById('memberDetail');
-  if(currentMember){loginForm.classList.add('hidden');det.classList.remove('hidden');document.getElementById('mdNama').innerText=currentMember.full_name||'-';document.getElementById('mdWa').innerText=currentMember.whatsapp||'-';document.getElementById('mdSaldo').innerText=rupiah(currentMember.saldo||0);document.getElementById('mdPoin').innerText=currentMember.points||0;document.getElementById('mdTier').innerText=currentMember.tier||'Reguler';document.getElementById('mdDiskon').innerText=(currentMember.discount||0)+'%';document.getElementById('vipDetail').innerHTML=`<button class="btn" onclick="nav('vip')">👑 MASUK VIP LOUNGE</button><br><br>`;}
+  if(currentMember){loginForm.classList.add('hidden');det.classList.remove('hidden');document.getElementById('mdNama').innerText=currentMember.full_name||'-';document.getElementById('mdWa').innerText=currentMember.whatsapp||'-';document.getElementById('mdSaldo').innerText=rupiah(currentMember.saldo||0);document.getElementById('mdPoin').innerText=currentMember.points||0;document.getElementById('mdTier').innerText=currentMember.tier||'Reguler';document.getElementById('mdDiskon').innerText=(currentMember.discount||0)+'%';}
   else{loginForm.classList.remove('hidden');det.classList.add('hidden');}
 }
 function renderRiwayatSaya(){
@@ -187,13 +153,19 @@ async function mintaTarik(){
   alert('Pengajuan TARIK '+rupiah(nominal)+' udah kami teruskan kepada Admin, mohon tunggu transfernya ya 🙏✨');
   document.getElementById('tarik_nominal').value='';document.getElementById('tarik_rek').value=''; loadAll();
 }
+
+// ===== BOT - CONCIERGE =====
 function toggleChat(){document.getElementById('chatBox').classList.toggle('open');}
 function bukaChat(){toggleChat();document.getElementById('chatInput').focus();}
 function kirimChip(t){document.getElementById('chatInput').value=t;sendChatMsg();}
 function tanyaBotProduk(nama){bukaChat();document.getElementById('chatInput').value='Harga '+nama;sendChatMsg();}
-function tambahPesan(teks,siapa){let body=document.getElementById('chatBody');let div=document.createElement('div');div.className='msg '+(siapa==='me'?'me':'bot');div.innerHTML=teks;body.appendChild(div);body.scrollTop=body.scrollHeight;}
+function tambahPesan(teks,siapa){
+  let body=document.getElementById('chatBody');
+  let div=document.createElement('div');div.className='msg '+(siapa==='me'?'me':'bot');div.innerHTML=teks;body.appendChild(div);body.scrollTop=body.scrollHeight;
+}
 function jawabBot(pesan){
   let kecil=(pesan||'').toLowerCase();
+  // Cek dulu di otak BOT
   let ketemu=D.bot.find(x=>{
     let q=((x.question||x.keyword||'')).toLowerCase().trim();
     if(!q) return false;
@@ -201,6 +173,7 @@ function jawabBot(pesan){
     return q.split(' ').filter(w=>w.length>3).some(w=>kecil.includes(w));
   });
   if(ketemu) return {jawaban:ketemu.answer, ketemu:true};
+  // Kalo belum ada jawabannya: jawab NORMAL aja, jangan bilang belum diajarin
   return {jawaban:`Untuk "${pesan}" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨`, ketemu:false};
 }
 async function sendChatMsg(){
@@ -211,11 +184,13 @@ async function sendChatMsg(){
   tambahPesan(teks,'me');
   let hasil=jawabBot(teks);
   tambahPesan('🤖 '+hasil.jawaban,'bot');
+  // Kalo belum ketemu jawabannya, simpen ke Antrian biar Admin bisa jawab & ajari BOT
   if(!hasil.ketemu){
-    try{ await sb.from('bot_antrian').insert([{pertanyaan:teks, member_name:currentMember?currentMember.full_name:'Tamu', whatsapp:currentMember?currentMember.whatsapp:'-', status:'MENUNGGU', jawaban_admin:null}]); }catch(e){}
+    try{
+      await sb.from('bot_antrian').insert([{pertanyaan:teks, member_name:currentMember?currentMember.full_name:'Tamu', whatsapp:currentMember?currentMember.whatsapp:'-', status:'MENUNGGU', jawaban_admin:null}]);
+    }catch(e){}
   }
 }
-// Refresh selalu ke Beranda, tapi login member tetep keinget
-nav('beranda');
+nav(localStorage.getItem('kocheng_last_page')||'beranda');
 loadAll();
 </script></body></html>
