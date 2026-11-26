@@ -340,7 +340,6 @@ async function loginMember(){
   alert("Selamat datang kembali, "+(data.full_name||'Member')+" ✨");
   showPage('member');
 }
-// SATU FUNGSI UNTUK SEMUA TRANSAKSI - TOP UP / BELI / TARIK SEMUA MASUK KE riwayat_saldo
 async function catatTransaksi(member, tipe, amount, keterangan){
   try{
     var { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
@@ -393,7 +392,6 @@ async function renderRiwayatSaldo(){
   if(!box) return;
   box.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:14px">Memuat riwayat...</p>';
   try{
-    // DI WEB: CARI MEMBERNYA PAKE member_id - JADI CUMA LIAT PUNYA DIA SENDIRI
     var q = supabaseClient.from('riwayat_saldo').select('*').order('created_at',{ascending:false}).limit(30);
     if(m.id) q = q.eq('member_id', m.id);
     else if(m.whatsapp) q = q.eq('whatsapp', m.whatsapp);
