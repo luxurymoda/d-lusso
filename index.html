@@ -457,16 +457,22 @@ async function sendChatMsg(text){
   var body=document.getElementById('chatBody');
   var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight;
   var bot=document.createElement('div'); bot.className='msg bot'; bot.textContent='...'; body.appendChild(bot); body.scrollTop=body.scrollHeight;
-  var low=text.toLowerCase(); var jawaban=null;
+  var low=text.toLowerCase(); var jawaban=null; var ketemuBot=false;
   try{
-    const { data } = await supabaseClient.from('bot_faq').select('keyword,answer');
-    if(data){ var ketemu = data.find(function(r){ return low.includes(r.keyword.toLowerCase()); }); if(ketemu) jawaban = ketemu.answer; }
+    const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,question');
+    if(data){ var ketemu = data.find(function(r){ var q=((r.question||r.keyword||'')).toLowerCase(); return low.includes(q) || q.split(' ').filter(w=>w.length>3).some(w=>low.includes(w)); }); if(ketemu){ jawaban = ketemu.answer; ketemuBot=true; } }
   }catch(e){}
   if(!jawaban){
     if(low.includes('vip')) jawaban="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
     else if(low.includes('lokasi')) jawaban="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎";
     else if(low.includes('harga')||low.includes('ukuran')) jawaban="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛";
-    else jawaban="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas.";
+    else {
+      jawaban="Maaf ko, pertanyaan ini belum diajarin ke saya 🙏 Udah saya terusin ke Admin, nanti Admin yang jawab ya. Tunggu sebentar ya ✨";
+      try{
+        var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+        await supabaseClient.from('bot_antrian').insert([{ pertanyaan: text, member_name: m.full_name || 'Tamu', whatsapp: m.whatsapp || '', status: 'MENUNGGU' }]);
+      }catch(e){ console.log('gagal antri', e); }
+    }
   }
   setTimeout(function(){ bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight; },600);
 }
@@ -474,4 +480,4 @@ renderMember();
 if(localStorage.getItem('dlusso_member')){ showPage('member'); }
 </script>
 </body>
-                                                                                                        </html>
+</html>
