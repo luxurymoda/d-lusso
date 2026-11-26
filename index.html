@@ -309,7 +309,6 @@ body{background:#0a0a0a;color:#fff}
     <div style="padding:0 14px 14px"><button onclick="tandaiSemuaDibaca()" style="width:100%;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer">Tandai Semua Dibaca</button></div>
   </div>
 </div>
-<!-- ===== PIN RAHASIA LUXURY ===== -->
 <div id="pinModal" style="display:none;position:fixed;inset:0;background:#000;z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
   <div style="font-size:50px">🔒</div>
   <div style="color:#E8C97A;font-size:26px;letter-spacing:4px;margin:10px 0">D' LUSSO</div>
@@ -581,7 +580,7 @@ function cekPinRahasia(){
     updateDots('');
   }
 }
-// ===== BOT BARU - SKOR + PRIORITAS =====
+// ===== BOT BARU - SKOR + PRIORITAS + BISA JAWAB 2 PERTANYAAN (DAN / ? / ,) =====
 async function sendChatMsg(text){
   var isRahasia = await cekKodeRahasia(text);
   if(isRahasia){
@@ -596,16 +595,40 @@ async function sendChatMsg(text){
   try{
     const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,intent_name,prioritas,skor');
     if(data){
-      var calon=[];
-      data.forEach(function(r){
-        var kw=(r.keyword||'').toLowerCase().trim();
-        if(!kw) return;
-        if(low.includes(kw)){
-          calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+      var parts = low.split(/\s+dan\s+|\s+&\s+|\s*,\s*|\s*\?\s*|\s+terus\s+|\s+sama\s+|\s*\.\s*|\s+trus\s+/).map(function(p){return p.trim();}).filter(function(p){return p.length>2;});
+      if(parts.length===0) parts=[low];
+      if(parts.length===1) parts=[low];
+      var jawabanList = [];
+      var intentSudah = {};
+      parts.forEach(function(part){
+        var calon=[];
+        data.forEach(function(r){
+          var kw=(r.keyword||'').toLowerCase().trim();
+          if(!kw) return;
+          if(part.includes(kw)){
+            calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+          }
+        });
+        calon.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
+        if(calon.length>0){
+          var menang = calon[0];
+          if(!intentSudah[menang.intent]){
+            intentSudah[menang.intent]=true;
+            jawabanList.push(menang.answer);
+          }
         }
       });
-      calon.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
-      if(calon.length>0) jawaban=calon[0].answer;
+      if(jawabanList.length===0){
+        var calonFull=[];
+        data.forEach(function(r){
+          var kw=(r.keyword||'').toLowerCase().trim();
+          if(kw && low.includes(kw)) calonFull.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+        });
+        calonFull.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
+        if(calonFull.length>0) jawabanList.push(calonFull[0].answer);
+      }
+      if(jawabanList.length===1) jawaban = jawabanList[0];
+      else if(jawabanList.length>1) jawaban = jawabanList.join('<br><br>---<br><br>');
     }
   }catch(e){ console.log('bot gagal',e); }
   if(!jawaban){
