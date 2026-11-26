@@ -128,6 +128,22 @@ body{background:#0a0a0a;color:#fff}
 .riwayat-item b{font-size:14px;display:block}
 .riwayat-item small{color:#888;font-size:12px}
 .riwayat-item .time{color:#aaa;font-size:13px}
+/* ===== NOTIF BARU ===== */
+.bell-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#1a1a1a;border:1px solid #C9A86A;border-radius:50%;cursor:pointer;font-size:22px}
+.bell-badge{position:absolute;top:-4px;right:-4px;background:#e74c3c;color:#fff;font-size:11px;font-weight:900;min-width:20px;height:20px;border-radius:20px;display:none;align-items:center;justify-content:center;padding:0 5px;border:2px solid #0a0a0a}
+.bell-badge.show{display:flex}
+.notif-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-start;justify-content:center;padding:20px;padding-top:70px;z-index:100}
+.notif-modal.show{display:flex}
+.notif-box{background:#151515;border:1px solid #C9A86A;border-radius:16px;width:100%;max-width:380px;max-height:75vh;overflow:hidden;display:flex;flex-direction:column}
+.notif-head{padding:14px 16px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
+.notif-head b{color:#E8C97A;font-size:16px}
+.notif-head span{cursor:pointer;font-size:20px}
+.notif-list{overflow-y:auto;padding:8px 14px 14px}
+.notif-item{padding:12px;border:1px solid #2a2a2a;border-radius:12px;margin-top:10px;background:#1a1a1a;cursor:pointer}
+.notif-item.unread{border-color:#E8C97A;background:#221f10}
+.notif-item b{font-size:14px;color:#fff;display:block}
+.notif-item p{font-size:13px;color:#ccc;margin-top:4px;line-height:1.4}
+.notif-item small{font-size:11px;color:#999}
 </style>
 </head>
 <body>
@@ -245,9 +261,12 @@ body{background:#0a0a0a;color:#fff}
     <button class="btn-vip" style="max-width:300px" onclick="showPage('vip')">LOGIN / DAFTAR VIP →</button>
   </div>
   <div id="memberCard" class="member-luxe" style="display:none">
-    <div style="text-align:center;padding:8px 0 14px">
-      <div style="font-size:28px;letter-spacing:3px;color:#E8C97A;font-weight:bold">D' LUSSO</div>
-      <div style="font-size:11px;letter-spacing:6px;color:#E8C97A">LUXURY BANDUNG</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 14px">
+      <div>
+        <div style="font-size:28px;letter-spacing:3px;color:#E8C97A;font-weight:bold">D' LUSSO</div>
+        <div style="font-size:11px;letter-spacing:6px;color:#E8C97A">LUXURY BANDUNG</div>
+      </div>
+      <div class="bell-wrap" onclick="toggleNotif(true)">🔔<span id="bellBadge" class="bell-badge">0</span></div>
     </div>
     <div class="saldo-card">
       <div class="saldo-top">
@@ -269,6 +288,8 @@ body{background:#0a0a0a;color:#fff}
     <div class="btn-row">
       <button onclick="tarikSaldo()" style="flex:1">💸 TARIK SALDO</button>
     </div>
+    <div class="member-sec"><h3>🔔 Notifikasi Terbaru</h3><span onclick="toggleNotif(true)">Lihat Semua</span></div>
+    <div id="mNotifPreview"></div>
     <div class="member-sec"><h3>Keranjang Lu</h3><span onclick="checkoutCart()">Lihat Semua</span></div>
     <div class="keranjang" id="mKeranjang">
       <div onclick="showPage('collezione')"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"><p>Jaket Kulit Signature<br>- Rp 2.500.000 -</p></div>
@@ -282,6 +303,16 @@ body{background:#0a0a0a;color:#fff}
 </div>
 <div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">CONTATTI</div></div>
 <div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
+
+<!-- MODAL NOTIF -->
+<div id="notifModal" class="notif-modal" onclick="if(event.target===this) toggleNotif(false)">
+  <div class="notif-box">
+    <div class="notif-head"><b>🔔 Notifikasi</b><span onclick="toggleNotif(false)">×</span></div>
+    <div id="notifList" class="notif-list"><p style="color:#888;font-size:13px;text-align:center;padding:20px">Memuat...</p></div>
+    <div style="padding:0 14px 14px"><button onclick="tandaiSemuaDibaca()" style="width:100%;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer">Tandai Semua Dibaca</button></div>
+  </div>
+</div>
+
 <script>
 if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(r){ r.forEach(function(x){ x.unregister(); }); }); }
 if(window.caches){ caches.keys().then(function(k){ k.forEach(function(x){ caches.delete(x); }); }); }
@@ -317,6 +348,56 @@ function togglePass(id, el){
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ===== NOTIFIKASI - BARU =====
+async function loadNotifications(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  var badge = document.getElementById('bellBadge');
+  var preview = document.getElementById('mNotifPreview');
+  var listBox = document.getElementById('notifList');
+  if(!m.id){ if(badge) badge.classList.remove('show'); return; }
+  try{
+    var { data, error } = await supabaseClient.from('member_notifications').select('*').eq('member_id', m.id).order('created_at',{ascending:false}).limit(20);
+    if(error) throw error;
+    if(!data) data = [];
+    var unread = data.filter(x=>!x.is_read).length;
+    if(badge){
+      badge.textContent = unread;
+      if(unread>0) badge.classList.add('show'); else badge.classList.remove('show');
+    }
+    if(preview){
+      if(!data.length) preview.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:14px;background:#151515;border-radius:12px">Belum ada notifikasi ✨<br>Abis belanja di kasir, notifnya muncul di sini</p>';
+      else preview.innerHTML = data.slice(0,3).map(n=>notifItemHtml(n)).join('');
+    }
+    if(listBox){
+      if(!data.length) listBox.innerHTML = '<p style="color:#888;font-size:13px;text-align:center;padding:20px">Belum ada notifikasi ✨</p>';
+      else listBox.innerHTML = data.map(n=>notifItemHtml(n)).join('');
+    }
+  }catch(e){ console.log('load notif gagal', e); }
+}
+function notifItemHtml(n){
+  var d = n.created_at ? new Date(n.created_at) : new Date();
+  var tgl = d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  var cls = n.is_read ? '' : ' unread';
+  var dot = n.is_read ? '' : ' <span style="color:#e74c3c">●</span>';
+  return '<div class="notif-item'+cls+'" onclick="bacaNotif(\''+n.id+'\')"><b>'+(n.title||'Notifikasi')+dot+'</b><p>'+(n.message||'')+'</p><small>'+tgl + (n.invoice_no ? ' • '+n.invoice_no : '') + '</small></div>';
+}
+function toggleNotif(buka){
+  var modal = document.getElementById('notifModal');
+  if(buka){ loadNotifications(); modal.classList.add('show'); }
+  else modal.classList.remove('show');
+}
+async function bacaNotif(id){
+  try{ await supabaseClient.from('member_notifications').update({is_read:true}).eq('id', id); }catch(e){}
+  loadNotifications();
+}
+async function tandaiSemuaDibaca(){
+  var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+  if(!m.id) return;
+  try{ await supabaseClient.from('member_notifications').update({is_read:true}).eq('member_id', m.id).eq('is_read', false); }catch(e){}
+  loadNotifications();
+}
+
 async function daftarVip(){
   var n=document.getElementById('regName').value.trim();
   var w=document.getElementById('regWa').value.trim();
@@ -434,6 +515,7 @@ async function renderMember(){
   document.getElementById('mDiscount').textContent = (m.discount||0) + '%';
   if(m.foto_url) document.getElementById('mFoto').src = m.foto_url;
   renderRiwayatSaldo();
+  loadNotifications();
 }
 function logoutMember(){ localStorage.removeItem('dlusso_member'); localStorage.removeItem('dlusso_login_at'); alert("Anda sudah logout. Arrivederci!"); renderMember(); showPage('home'); }
 document.querySelectorAll('.card').forEach(function(card){
