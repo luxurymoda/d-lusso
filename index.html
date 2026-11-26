@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>D' LUSSO - Il Lusso di Bandung</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=2">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="D' LUSSO">
-<link rel="apple-touch-icon" href="logo.png">
-<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo-icon.png?v=2">
+<link rel="icon" href="logo-icon.png?v=2">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
@@ -231,7 +231,7 @@ function installApp(){
   if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; }); }
   else { alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama / Install App\n\nDi iPhone: klik tombol Share (kotak + panah) di Safari > Tambah ke Layar Utama"); }
 }
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(regs){ regs.forEach(function(r){ r.unregister(); }); }); }
 function showPage(p){ document.querySelectorAll('.page').forEach(e=>e.classList.remove('active')); document.getElementById('page-'+p).classList.add('active'); document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active'); if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active'); document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0); }
 function toggleMenu(e){ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show'); }
 document.addEventListener('click',function(e){ if(!e.target.closest('.menu-drop')) document.getElementById('menuDrop').classList.remove('show') });
@@ -259,4 +259,4 @@ function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value
 function sendChatMsg(text){ var body=document.getElementById('chatBody'); var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight; setTimeout(function(){ var bot=document.createElement('div'); bot.className='msg bot'; var low=text.toLowerCase(); if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨"; else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎"; else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛"; else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas."; body.appendChild(bot); body.scrollTop=body.scrollHeight; },800); }
 </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </html>
