@@ -128,7 +128,6 @@ body{background:#0a0a0a;color:#fff}
 .riwayat-item b{font-size:14px;display:block}
 .riwayat-item small{color:#888;font-size:12px}
 .riwayat-item .time{color:#aaa;font-size:13px}
-/* ===== NOTIF BARU ===== */
 .bell-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#1a1a1a;border:1px solid #C9A86A;border-radius:50%;cursor:pointer;font-size:22px}
 .bell-badge{position:absolute;top:-4px;right:-4px;background:#e74c3c;color:#fff;font-size:11px;font-weight:900;min-width:20px;height:20px;border-radius:20px;display:none;align-items:center;justify-content:center;padding:0 5px;border:2px solid #0a0a0a}
 .bell-badge.show{display:flex}
@@ -303,8 +302,6 @@ body{background:#0a0a0a;color:#fff}
 </div>
 <div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">CONTATTI</div></div>
 <div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
-
-<!-- MODAL NOTIF -->
 <div id="notifModal" class="notif-modal" onclick="if(event.target===this) toggleNotif(false)">
   <div class="notif-box">
     <div class="notif-head"><b>🔔 Notifikasi</b><span onclick="toggleNotif(false)">×</span></div>
@@ -312,7 +309,6 @@ body{background:#0a0a0a;color:#fff}
     <div style="padding:0 14px 14px"><button onclick="tandaiSemuaDibaca()" style="width:100%;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer">Tandai Semua Dibaca</button></div>
   </div>
 </div>
-
 <script>
 if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(r){ r.forEach(function(x){ x.unregister(); }); }); }
 if(window.caches){ caches.keys().then(function(k){ k.forEach(function(x){ caches.delete(x); }); }); }
@@ -348,8 +344,6 @@ function togglePass(id, el){
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ===== NOTIFIKASI - BARU =====
 async function loadNotifications(){
   var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
   var badge = document.getElementById('bellBadge');
@@ -397,7 +391,6 @@ async function tandaiSemuaDibaca(){
   try{ await supabaseClient.from('member_notifications').update({is_read:true}).eq('member_id', m.id).eq('is_read', false); }catch(e){}
   loadNotifications();
 }
-
 async function daftarVip(){
   var n=document.getElementById('regName').value.trim();
   var w=document.getElementById('regWa').value.trim();
@@ -529,26 +522,33 @@ function openChat(){ document.getElementById('chatBox').classList.add('show'); d
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
+// ===== BOT BARU - SKOR + PRIORITAS =====
 async function sendChatMsg(text){
   var body=document.getElementById('chatBody');
   var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight;
   var bot=document.createElement('div'); bot.className='msg bot'; bot.textContent='...'; body.appendChild(bot); body.scrollTop=body.scrollHeight;
-  var low=text.toLowerCase(); var jawaban=null; var ketemuBot=false;
+  var low=text.toLowerCase(); var jawaban=null;
   try{
-    const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,question');
-    if(data){ var ketemu = data.find(function(r){ var q=((r.question||r.keyword||'')).toLowerCase(); return low.includes(q) || q.split(' ').filter(w=>w.length>3).some(w=>low.includes(w)); }); if(ketemu){ jawaban = ketemu.answer; ketemuBot=true; } }
-  }catch(e){}
-  if(!jawaban){
-    if(low.includes('vip')) jawaban="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
-    else if(low.includes('lokasi')) jawaban="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎";
-    else if(low.includes('harga')||low.includes('ukuran')) jawaban="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛";
-    else {
-      jawaban='Untuk "'+text+'" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨';
-      try{
-        var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
-        await supabaseClient.from('bot_antrian').insert([{ pertanyaan: text, member_name: m.full_name || 'Tamu', whatsapp: m.whatsapp || '', status: 'MENUNGGU' }]);
-      }catch(e){ console.log('gagal antri', e); }
+    const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,intent_name,prioritas,skor');
+    if(data){
+      var calon=[];
+      data.forEach(function(r){
+        var kw=(r.keyword||'').toLowerCase().trim();
+        if(!kw) return;
+        if(low.includes(kw)){
+          calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+        }
+      });
+      calon.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
+      if(calon.length>0) jawaban=calon[0].answer;
     }
+  }catch(e){ console.log('bot gagal',e); }
+  if(!jawaban){
+    jawaban='Untuk "'+text+'" akan kami teruskan kepada Admin ya, mohon tunggu sebentar, Admin akan segera menjawab 🙏✨';
+    try{
+      var m = JSON.parse(localStorage.getItem('dlusso_member')||'{}');
+      await supabaseClient.from('bot_antrian').insert([{ pertanyaan: text, member_name: m.full_name || 'Tamu', whatsapp: m.whatsapp || '', status: 'MENUNGGU' }]);
+    }catch(e){ console.log('gagal antri', e); }
   }
   setTimeout(function(){ bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight; },600);
 }
