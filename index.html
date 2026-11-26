@@ -287,17 +287,10 @@ body{background:#0a0a0a;color:#fff}
 var cart=[]; var deferredPrompt=null;
 function installApp(){ alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama\n\nDi iPhone: klik tombol Share di Safari > Tambah ke Layar Utama"); }
 function showPage(p){
-  if(p==='vip'){
-    try{
-      var sudahLogin = localStorage.getItem('dlusso_member');
-      if(sudahLogin && JSON.parse(sudahLogin).id){ p='member'; }
-    }catch(e){}
-  }
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active');
   if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
-  if(p==='member') document.getElementById('nav-vip').classList.add('active');
   document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0);
   if(p==='member') renderMember();
 }
@@ -464,10 +457,10 @@ async function sendChatMsg(text){
   var body=document.getElementById('chatBody');
   var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight;
   var bot=document.createElement('div'); bot.className='msg bot'; bot.textContent='...'; body.appendChild(bot); body.scrollTop=body.scrollHeight;
-  var low=text.toLowerCase(); var jawaban=null;
+  var low=text.toLowerCase(); var jawaban=null; var ketemuBot=false;
   try{
     const { data } = await supabaseClient.from('bot_faq').select('keyword,answer,question');
-    if(data){ var ketemu = data.find(function(r){ var q=((r.question||r.keyword||'')).toLowerCase(); return low.includes(q) || q.split(' ').filter(w=>w.length>3).some(w=>low.includes(w)); }); if(ketemu) jawaban = ketemu.answer; }
+    if(data){ var ketemu = data.find(function(r){ var q=((r.question||r.keyword||'')).toLowerCase(); return low.includes(q) || q.split(' ').filter(w=>w.length>3).some(w=>low.includes(w)); }); if(ketemu){ jawaban = ketemu.answer; ketemuBot=true; } }
   }catch(e){}
   if(!jawaban){
     if(low.includes('vip')) jawaban="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
