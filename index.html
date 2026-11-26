@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
-.top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
+.top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:28px 18px 16px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
 .logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold;text-shadow:0 2px 10px rgba(0,0,0,.8)}
 .top-icons{font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
 .hero{position:relative;height:580px;overflow:hidden}
@@ -20,6 +20,22 @@ body{background:#0a0a0a;color:#fff}
 .boutique{position:relative;margin-top:-18px;padding:20px;padding-top:16px;text-align:center;background:#0a0a0a;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
+.cats{display:flex;gap:12px;padding:16px;justify-content:space-between}
+.cat{flex:1;text-align:center}
+.cat img{width:100%;height:95px;object-fit:cover;border-radius:12px}
+.cat span{display:block;font-size:11px;letter-spacing:1px;margin-top:8px;color:#ddd}
+.section{padding:20px}
+.section h2{font-size:22px;text-align:center}
+.section h2 i{color:#E8C97A}
+.cat-title{font-size:18px;color:#E8C97A;letter-spacing:1px;margin:22px 0 10px;text-align:left}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:#151515;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a}
+.card img{width:100%;height:170px;object-fit:cover}
+.card-body{padding:12px}
+.card-body small{color:#E8C97A;font-size:10px;letter-spacing:1px}
+.card-body h3{font-size:15px;margin:5px 0}
+.price{color:#E8C97A;font-weight:bold}
+.add{width:100%;background:#E8C97A;border:none;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px}
 .vip{background:#111;padding:24px 20px 30px;text-align:center;min-height:80vh}
 .vip .crown{font-size:36px}
 .vip h2{font-size:30px;color:#E8C97A;margin:8px 0 4px}
@@ -39,6 +55,9 @@ body{background:#0a0a0a;color:#fff}
 .footer{text-align:center;padding:24px;color:#888;font-size:12px;padding-bottom:90px}
 .page{display:none}
 .page.active{display:block}
+.page-head{padding:28px 20px 10px;text-align:center}
+.page-head h2{font-size:28px;color:#E8C97A}
+.page-head p{font-size:13px;color:#aaa;margin-top:6px}
 </style>
 </head>
 <body>
@@ -55,19 +74,48 @@ body{background:#0a0a0a;color:#fff}
       <h1>D' LUSSO</h1>
       <h2>IL LUSSO DI BANDUNG</h2>
       <p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p>
-      <button class="btn-gold" onclick="showPage('vip')">SCOPRI LA COLLEZIONE →</button>
+      <button class="btn-gold" onclick="showPage('collezione')">SCOPRI LA COLLEZIONE →</button>
     </div>
   </div>
-
   <div class="boutique">
     <h3>— BOUTIQUE BANDUNG —</h3>
     <p>APERTO ORA • Jl. Braga No.88, Bandung</p>
   </div>
-
   <div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung<br>Jl. Braga No.88, Bandung • Instagram @d.lusso</div>
 </div>
 
-<!-- HALAMAN DAFTAR VIP - TERPISAH -->
+<!-- HALAMAN COLLEZIONE -->
+<div id="page-collezione" class="page">
+  <div class="page-head">
+    <h2>La Collezione</h2>
+    <p>Kemeja • Gaun • Tas • Accessories</p>
+  </div>
+  <div class="section">
+    <div class="cat-title">👔 KEMEJA</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500"><div class="card-body"><small>KEMEJA • PREMIUM</small><h3>Midnight Blazer</h3><div class="price">Rp 2.499.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500"><div class="card-body"><small>KEMEJA • LUXURY</small><h3>White Italian Shirt</h3><div class="price">Rp 1.299.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+    <div class="cat-title">👗 GAUN</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"><div class="card-body"><small>GAUN • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500"><div class="card-body"><small>GAUN • ELEGANT</small><h3>Black Evening Dress</h3><div class="price">Rp 2.899.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+    <div class="cat-title">👜 TAS</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"><div class="card-body"><small>TAS • PREMIUM</small><h3>Milano Handbag</h3><div class="price">Rp 4.499.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500"><div class="card-body"><small>TAS • LUXURY</small><h3>Roma Leather Tote</h3><div class="price">Rp 3.299.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+    <div class="cat-title">✨ ACCESSORIES</div>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500"><div class="card-body"><small>ACCESSORIES</small><h3>Gold Sunglasses</h3><div class="price">Rp 899.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500"><div class="card-body"><small>ACCESSORIES</small><h3>Classic Outerwear</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+  </div>
+  <div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung</div>
+</div>
+
+<!-- HALAMAN DAFTAR VIP -->
 <div id="page-vip" class="page">
   <div class="vip">
     <div class="crown">👑</div>
@@ -92,20 +140,19 @@ body{background:#0a0a0a;color:#fff}
 
 <div class="bottom">
   <div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div>
-  <div onclick="showPage('vip')">COLLEZIONE</div>
+  <div id="nav-collezione" onclick="showPage('collezione')">COLLEZIONE</div>
   <div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div>
   <div onclick="showPage('home');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">CONTATTI</div>
 </div>
 
 <script>
 function showPage(p){
-  document.getElementById('page-home').classList.remove('active');
-  document.getElementById('page-vip').classList.remove('active');
-  document.getElementById('nav-home').classList.remove('active');
-  document.getElementById('nav-vip').classList.remove('active');
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
-  if(p==='home') document.getElementById('nav-home').classList.add('active');
-  if(p==='vip') document.getElementById('nav-vip').classList.add('active');
+  document.getElementById('nav-home').classList.remove('active');
+  document.getElementById('nav-collezione').classList.remove('active');
+  document.getElementById('nav-vip').classList.remove('active');
+  if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
   window.scrollTo(0,0);
 }
 </script>
