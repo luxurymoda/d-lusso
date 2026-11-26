@@ -585,7 +585,7 @@ function cekPinRahasia(){
     updateDots('');
   }
 }
-// ===== BOT BARU - SKOR + PRIORITAS + BISA JAWAB 2 PERTANYAAN (DAN / ? / ,) =====
+// ===== BOT BARU - SKOR + PRIORITAS + BISA JAWAB 2 PERTANYAAN + SUPPORT | UNTUK FRASA PANJANG =====
 async function sendChatMsg(text){
   var isRahasia = await cekKodeRahasia(text);
   if(isRahasia){
@@ -608,10 +608,17 @@ async function sendChatMsg(text){
       parts.forEach(function(part){
         var calon=[];
         data.forEach(function(r){
-          var kw=(r.keyword||'').toLowerCase().trim();
-          if(!kw) return;
-          if(part.includes(kw)){
-            calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+          var rawKw=(r.keyword||'').toLowerCase().trim();
+          if(!rawKw) return;
+          var listKw = rawKw.split('|').map(function(k){return k.trim();}).filter(function(k){return k.length>0;});
+          var ketemu = null;
+          listKw.forEach(function(kw){
+            if(part.includes(kw)){
+              if(!ketemu || kw.length > ketemu.length) ketemu = kw;
+            }
+          });
+          if(ketemu){
+            calon.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || ketemu.length), prioritas:Number(r.prioritas || 99) });
           }
         });
         calon.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
@@ -626,8 +633,16 @@ async function sendChatMsg(text){
       if(jawabanList.length===0){
         var calonFull=[];
         data.forEach(function(r){
-          var kw=(r.keyword||'').toLowerCase().trim();
-          if(kw && low.includes(kw)) calonFull.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || kw.length), prioritas:Number(r.prioritas || 99) });
+          var rawKw=(r.keyword||'').toLowerCase().trim();
+          if(!rawKw) return;
+          var listKw = rawKw.split('|').map(function(k){return k.trim();}).filter(function(k){return k.length>0;});
+          var ketemu = null;
+          listKw.forEach(function(kw){
+            if(low.includes(kw)){
+              if(!ketemu || kw.length > ketemu.length) ketemu = kw;
+            }
+          });
+          if(ketemu) calonFull.push({ answer:r.answer, intent:r.intent_name, skor:Number(r.skor || ketemu.length), prioritas:Number(r.prioritas || 99) });
         });
         calonFull.sort(function(a,b){ if(b.skor!==a.skor) return b.skor-a.skor; return a.prioritas-b.prioritas; });
         if(calonFull.length>0) jawabanList.push(calonFull[0].answer);
