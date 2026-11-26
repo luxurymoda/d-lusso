@@ -48,9 +48,9 @@ body{background:#0a0a0a;color:#fff}
 .h-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #222;font-size:13px}
 .modal{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:99}
 .modal.show{display:flex}
-.modal-top{padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
-.modal-top b{color:#d4af37}
-.modal-top button{background:#222;border:1px solid #d4af37;color:#fff;padding:8px 14px;border-radius:10px}
+.modal-top{padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;gap:8px}
+.modal-top b{color:#d4af37;flex:1}
+.modal-top button{background:#222;border:1px solid #d4af37;color:#fff;padding:8px 14px;border-radius:10px;white-space:nowrap}
 #reader{width:100%;flex:1;background:#000}
 #reader video{object-fit:cover !important}
 .scan-hint{text-align:center;padding:14px;color:#d4af37;font-size:13px}
@@ -104,22 +104,32 @@ body{background:#0a0a0a;color:#fff}
     <div class="history"><h3>🧾 Riwayat Hari Ini (Supabase)</h3><div id="historyList">Memuat...</div></div>
   </div>
 </div>
+
+<!-- MODAL KAMERA SCANNER -->
 <div class="modal" id="scanModal">
-  <div class="modal-top"><b>📷 SCAN BARCODE PRODUK</b><button onclick="tutupScanner()">✕ Tutup</button></div>
+  <div class="modal-top">
+    <b>📷 SCAN BARCODE</b>
+    <span id="cartBadge" style="background:#d4af37;color:#000;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:900;white-space:nowrap">🛒 0 item</span>
+    <button onclick="tutupScanner()">✕ Tutup</button>
+  </div>
   <div id="reader"></div>
-  <div class="scan-hint">Arahkan barcode ke dalam kotak kamera<br>Kalo gagal, pastikan izinkan kamera di HP & pakai HTTPS / localhost</div>
-  <div style="padding:0 14px 16px"><button class="btn-scan2" onclick="tambahManual()">⌨️ Gagal Scan? Input Kode Manual</button></div>
+  <div id="scanResult" style="display:none;background:#1a8a2a;color:#fff;text-align:center;padding:16px;font-weight:800;font-size:16px;line-height:1.4"></div>
+  <div id="scanError" style="display:none;background:#c0392b;color:#fff;text-align:center;padding:14px;font-size:14px;font-weight:700"></div>
+  <div class="scan-hint">Arahkan barcode ke dalam kotak kamera<br>Produk langsung masuk keranjang, kamera tetap nyala buat scan berikutnya</div>
+  <div style="padding:0 14px 16px"><button class="btn-scan2" onclick="tutupScanner()">✅ Selesai Scan - Lihat Keranjang</button></div>
 </div>
+
+<!-- MODAL STRUK -->
 <div class="struk-modal" id="modal">
   <div class="struk"><h2>D' LUSSO</h2><p>Boutique Bandung<br>Jl. Braga No.88</p><hr><div id="strukIsi"></div><hr><p>Terima kasih sudah belanja ✨</p><button class="close" onclick="tutup()">Tutup & Transaksi Baru</button></div>
 </div>
+
 <script>
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ===== FIX: SESUAI TABEL products LU =====
-// id | name | category | tipe | ukuran | price | stock | image_url | description | is_active | created_at | barcode
+// ===== SESUAI TABEL products: id | name | category | tipe | ukuran | price | stock | image_url | description | is_active | created_at | barcode =====
 let produkDB = [];
 let cart={}, payMethod="Tunai", member=null, html5Qr=null, lastScan="", lastScanTime=0;
 const rupiah = n => "Rp "+Number(n||0).toLocaleString("id-ID");
@@ -143,7 +153,6 @@ function mappingProduk(p){
     is_active: p.is_active
   };
 }
-
 async function loadProduk(){
   try{
     let { data, error } = await supabaseClient.from('products').select('*').eq('is_active', true).limit(1000);
@@ -161,9 +170,38 @@ async function loadProduk(){
   }
 }
 
+// ===== BUNYI + NOTIF SCAN =====
+function bunyiBeep(sukses){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = sukses ? 880 : 200;
+    o.type = 'sine';
+    g.gain.value = 0.3;
+    o.start();
+    o.stop(ctx.currentTime + (sukses ? 0.15 : 0.4));
+  }catch(e){}
+}
+function tampilHasilScan(text, sukses){
+  const el = sukses ? document.getElementById("scanResult") : document.getElementById("scanError");
+  const elLain = sukses ? document.getElementById("scanError") : document.getElementById("scanResult");
+  elLain.style.display = "none";
+  el.style.display = "block";
+  el.innerText = text;
+  setTimeout(()=>{ el.style.display = "none"; }, 2500);
+}
+function updateBadge(){
+  const totalItem = Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  const badge = document.getElementById("cartBadge");
+  if(badge) badge.innerText = "🛒 " + totalItem + " item";
+}
+
 // ===== SCANNER KAMERA =====
 async function bukaScanner(){
   document.getElementById("scanModal").classList.add("show");
+  updateBadge();
   try{
     html5Qr = new Html5Qrcode("reader");
     await html5Qr.start(
@@ -185,8 +223,6 @@ function onScan(code){
   const now=Date.now();
   if(code==lastScan && now-lastScanTime<2000) return;
   lastScan=code; lastScanTime=now;
-  document.getElementById("scanInfo").innerText="✅ Terbaca: "+code;
-  if(navigator.vibrate) navigator.vibrate(120);
   cariByBarcode(code, true);
 }
 function tambahManual(){
@@ -196,15 +232,10 @@ function tambahManual(){
 async function cariByBarcode(code, dariScan){
   code = normalisasiKode(code);
   console.log("Scan:", code, "DB:", produkDB.length);
-
-  // 1. Cari di memory - persis + tanpa nol depan
   let p = produkDB.find(x => {
     const a = normalisasiKode(x.barcode);
-    const b = code;
-    return a == b || a.replace(/^0+/,"") == b.replace(/^0+/,"");
+    return a == code || a.replace(/^0+/,"") == code.replace(/^0+/,"");
   });
-
-  // 2. Kalo belum ada, query langsung ke Supabase (buat jaga-jaga produk baru)
   if(!p){
     try{
       let { data } = await supabaseClient.from('products').select('*').eq('barcode', code).maybeSingle();
@@ -212,24 +243,32 @@ async function cariByBarcode(code, dariScan){
         let r = await supabaseClient.from('products').select('*').eq('barcode', code.replace(/^0+/,"")).maybeSingle();
         data = r.data;
       }
-      if(data) {
-        p = mappingProduk(data);
-        produkDB.push(p);
-      }
+      if(data){ p = mappingProduk(data); produkDB.push(p); }
     }catch(e){ console.log("Query langsung gagal", e); }
   }
-
   if(!p){
-    if(dariScan) document.getElementById("scanInfo").innerText="❌ Barcode "+code+" tidak ditemukan di tabel products. Cek kolom barcode di Supabase!";
-    else alert("Barcode "+code+" tidak ditemukan. Cek kolom barcode di Supabase atau tambahkan produk dulu.");
+    bunyiBeep(false);
+    if(navigator.vibrate) navigator.vibrate([100,100,100]);
+    if(dariScan){
+      tampilHasilScan("❌ Barcode " + code + " TIDAK DITEMUKAN", false);
+      document.getElementById("scanInfo").innerText = "❌ Barcode " + code + " tidak ditemukan";
+    } else alert("Barcode " + code + " tidak ditemukan. Cek kolom barcode di Supabase atau tambahkan produk dulu.");
     return;
   }
   if(p.stock <= 0){
-    alert("Stok "+p.nama+" habis!");
+    bunyiBeep(false);
+    if(navigator.vibrate) navigator.vibrate([100,100,100]);
+    tampilHasilScan("❌ Stok " + p.nama + " HABIS", false);
     return;
   }
   tambahKeCart(p);
-  if(dariScan) document.getElementById("scanInfo").innerText="✅ "+p.nama+" masuk keranjang!";
+  updateBadge();
+  bunyiBeep(true);
+  if(navigator.vibrate) navigator.vibrate(200);
+  document.getElementById("scanInfo").innerText = "✅ " + p.nama + " masuk keranjang!";
+  if(dariScan){
+    tampilHasilScan("✅ " + p.nama + " • " + rupiah(p.harga) + " • MASUK KERANJANG!", true);
+  }
 }
 function cariProduk(){
   const q=document.getElementById("search").value.toLowerCase().trim();
@@ -260,6 +299,7 @@ async function cekMember(){
 function setPay(el,m){ document.querySelectorAll(".pay button").forEach(b=>b.classList.remove("active")); el.classList.add("active"); payMethod=m; }
 function hitung(){ let sub=Object.values(cart).reduce((s,i)=>s+i.produk.harga*i.qty,0); let disc=member?sub*((member.discount||5)/100):0; return {sub,disc,total:sub-disc}; }
 function renderCart(){
+  updateBadge();
   const keys=Object.keys(cart);
   const list=document.getElementById("cartList");
   if(!keys.length) list.innerHTML=`<div class="empty">Keranjang masih kosong<br>Scan barcode produk dulu</div>`;
