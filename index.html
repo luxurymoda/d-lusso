@@ -9,9 +9,14 @@
 body{background:#0a0a0a;color:#fff}
 .top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
 .logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold;text-shadow:0 2px 10px rgba(0,0,0,.8)}
-.top-icons{font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.top-icons{font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8);cursor:pointer;padding:4px 8px}
+.menu-drop{display:none;position:absolute;top:58px;right:12px;z-index:50;background:#151515;border:1px solid #C9A86A;border-radius:14px;overflow:hidden;width:230px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.menu-drop.show{display:block}
+.menu-drop div{padding:14px 16px;font-size:14px;letter-spacing:1px;border-bottom:1px solid #2a2a2a;cursor:pointer}
+.menu-drop div:last-child{border:none}
+.menu-drop div:hover{background:#222}
 .hero{position:relative;height:600px;overflow:hidden}
-.hero img{width:100%;height:100%;object-fit:cover;object-position:center top;margin-top:-55px}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center top;margin-top:-35px}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.85) 92%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:20px;padding-bottom:18px}
 .hero-overlay h1{font-size:52px;letter-spacing:3px;color:#F5D98A;line-height:1}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
@@ -21,8 +26,6 @@ body{background:#0a0a0a;color:#fff}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
 .section{padding:20px}
-.section h2{font-size:22px;text-align:center}
-.section h2 i{color:#E8C97A}
 .cat-title{font-size:18px;color:#E8C97A;letter-spacing:1px;margin:22px 0 10px;text-align:left}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .card{background:#151515;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a}
@@ -48,12 +51,30 @@ body{background:#0a0a0a;color:#fff}
 .bottom div{flex:1;text-align:center;padding:14px 0;font-size:12px;letter-spacing:1px;cursor:pointer}
 .bottom .active{color:#E8C97A;border-bottom:2px solid #E8C97A}
 .bottom .gold{background:#C9A86A;color:#000;font-weight:bold}
-.footer{text-align:center;padding:24px;color:#888;font-size:12px;padding-bottom:90px}
+.footer{text-align:center;padding:16px 20px 75px;color:#888;font-size:12px;line-height:1.6}
+.footer b{color:#E8C97A}
 .page{display:none}
 .page.active{display:block}
 .page-head{padding:28px 20px 10px;text-align:center}
 .page-head h2{font-size:28px;color:#E8C97A}
 .page-head p{font-size:13px;color:#aaa;margin-top:6px}
+/* CHAT MEWAH */
+.chat-btn{position:fixed;right:16px;bottom:70px;z-index:60;width:56px;height:56px;border-radius:50%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;font-size:26px;box-shadow:0 8px 20px rgba(0,0,0,.5);cursor:pointer}
+.chat-box{display:none;position:fixed;right:12px;left:12px;bottom:70px;z-index:70;background:#151515;border:1px solid #C9A86A;border-radius:18px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.7)}
+.chat-box.show{display:block}
+.chat-head{background:linear-gradient(90deg,#1a1a1a,#2a2110);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #C9A86A}
+.chat-head b{color:#E8C97A;letter-spacing:1px}
+.chat-head span{font-size:11px;color:#aaa}
+.chat-close{font-size:22px;cursor:pointer;color:#fff}
+.chat-body{padding:14px;height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.4}
+.msg.bot{background:#222;color:#eee;align-self:flex-start;border:1px solid #333}
+.msg.me{background:#C9A86A;color:#000;align-self:flex-end;font-weight:bold}
+.chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid #333;background:#111}
+.chat-input input{flex:1;background:#0a0a0a;border:1px solid #C9A86A;color:#fff;padding:11px;border-radius:10px;outline:none}
+.chat-input button{background:#C9A86A;border:none;padding:11px 16px;border-radius:10px;font-weight:bold}
+.quick{display:flex;gap:8px;padding:0 10px 10px;background:#111;flex-wrap:wrap}
+.quick button{background:#222;border:1px solid #444;color:#E8C97A;padding:7px 10px;border-radius:20px;font-size:11px}
 </style>
 </head>
 <body>
@@ -63,7 +84,15 @@ body{background:#0a0a0a;color:#fff}
   <div class="hero">
     <div class="top">
       <div class="logo">D' LUSSO</div>
-      <div class="top-icons">☰</div>
+      <div class="top-icons" onclick="toggleMenu(event)">☰</div>
+      <div id="menuDrop" class="menu-drop">
+        <div onclick="showPage('home')">🏠 HOME</div>
+        <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
+        <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
+        <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
+        <div onclick="openChat()">💬 CHAT CUSTOMER</div>
+        <div onclick="showPage('home');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">📍 LOKASI BOUTIQUE</div>
+      </div>
     </div>
     <img src="hero.png">
     <div class="hero-overlay">
@@ -77,15 +106,19 @@ body{background:#0a0a0a;color:#fff}
     <h3>— BOUTIQUE BANDUNG —</h3>
     <p>APERTO ORA • Jl. Braga No.88, Bandung</p>
   </div>
-  <div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung<br>Jl. Braga No.88, Bandung • Instagram @d.lusso</div>
+  <div class="footer">
+    <b>📍 D' LUSSO BOUTIQUE BANDUNG</b><br>
+    Jl. Braga No.88, Braga, Kec. Sumur Bandung<br>
+    Kota Bandung, Jawa Barat 40111<br>
+    🕙 Setiap Hari 10.00 - 21.00 WIB<br>
+    📱 WA: +62 812-3456-7890 • IG: @d.lusso<br>
+    © 2026 D' LUSSO • Il Lusso di Bandung
+  </div>
 </div>
 
 <!-- HALAMAN COLLEZIONE -->
 <div id="page-collezione" class="page">
-  <div class="page-head">
-    <h2>La Collezione</h2>
-    <p>Kemeja • Gaun • Tas • Accessories</p>
-  </div>
+  <div class="page-head"><h2>La Collezione</h2><p>Kemeja • Gaun • Tas • Accessories</p></div>
   <div class="section">
     <div class="cat-title">👔 KEMEJA</div>
     <div class="grid">
@@ -108,7 +141,7 @@ body{background:#0a0a0a;color:#fff}
       <div class="card"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500"><div class="card-body"><small>ACCESSORIES</small><h3>Classic Outerwear</h3><div class="price">Rp 1.899.000</div><button class="add">+ Add to Cart</button></div></div>
     </div>
   </div>
-  <div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung</div>
+  <div class="footer">📍 Jl. Braga No.88, Bandung • 🕙 10.00 - 21.00 WIB<br>© 2026 D' LUSSO</div>
 </div>
 
 <!-- HALAMAN DAFTAR VIP -->
@@ -131,14 +164,39 @@ body{background:#0a0a0a;color:#fff}
       <div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div>
     </div>
   </div>
-  <div class="footer">© 2026 D' LUSSO • Jl. Braga No.88, Bandung</div>
+  <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
+<!-- BOTTOM NAV -->
 <div class="bottom">
   <div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div>
   <div id="nav-collezione" onclick="showPage('collezione')">COLLEZIONE</div>
   <div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div>
-  <div onclick="showPage('home');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">CONTATTI</div>
+  <div onclick="openChat()">CONTATTI</div>
+</div>
+
+<!-- TOMBOL CHAT MEWAH -->
+<button class="chat-btn" onclick="openChat()">💬</button>
+
+<!-- BOX CHAT MEWAH -->
+<div id="chatBox" class="chat-box">
+  <div class="chat-head">
+    <div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div>
+    <div class="chat-close" onclick="closeChat()">×</div>
+  </div>
+  <div id="chatBody" class="chat-body">
+    <div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div>
+  </div>
+  <div class="quick">
+    <button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button>
+    <button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button>
+    <button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button>
+    <button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()">
+    <button onclick="sendChat()">Kirim →</button>
+  </div>
 </div>
 
 <script>
@@ -149,7 +207,36 @@ function showPage(p){
   document.getElementById('nav-collezione').classList.remove('active');
   document.getElementById('nav-vip').classList.remove('active');
   if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
+  document.getElementById('menuDrop').classList.remove('show');
   window.scrollTo(0,0);
+}
+function toggleMenu(e){ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show'); }
+document.addEventListener('click',function(e){ if(!e.target.closest('.menu-drop')) document.getElementById('menuDrop').classList.remove('show') });
+function openWA(){
+  var msg = encodeURIComponent("Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung.");
+  window.open("https://wa.me/6281234567890?text="+msg,"_blank");
+}
+function openChat(){ document.getElementById('chatBox').classList.add('show'); }
+function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
+function quickChat(t){ sendChatMsg(t); }
+function sendChat(){
+  var inp=document.getElementById('chatInput');
+  if(!inp.value.trim()) return;
+  sendChatMsg(inp.value); inp.value='';
+}
+function sendChatMsg(text){
+  var body=document.getElementById('chatBody');
+  var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me);
+  body.scrollTop=body.scrollHeight;
+  setTimeout(function(){
+    var bot=document.createElement('div'); bot.className='msg bot';
+    var low=text.toLowerCase();
+    if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
+    else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Buka setiap hari 10.00 - 21.00 WIB. Ditunggu kedatangannya! 💎";
+    else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Kemeja, Gaun, Tas atau Accessories? Saya cekkan stoknya untuk Anda 💛";
+    else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas. Sementara itu, mau lihat Collezione terbaru kami?";
+    body.appendChild(bot); body.scrollTop=body.scrollHeight;
+  },800);
 }
 </script>
 
