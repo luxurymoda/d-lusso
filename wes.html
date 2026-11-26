@@ -78,7 +78,7 @@ function fotoPilih(input,targetId,previewId,infoId){let file=input.files[0];if(!
 function setPreview(previewId,url,infoId){let pv=document.getElementById(previewId);if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}if(infoId)document.getElementById(infoId).innerText='';}
 const menus=[['beranda','🏠 Beranda'],['produk','📦 Produk'],['pesanan','🧾 Pesanan'],['riwayat','💰 Riwayat'],['profil','👤 Profil']];
 const topMenus=[['beranda','Dashboard'],['produk','Produk'],['pesanan','Pesanan'],['pelanggan','Member'],['riwayat','Riwayat Saldo'],['admin','Admin'],['pegawai','Pegawai'],['bot','BOT'],['antrian','Antrian BOT 🔔'],['laporan','Laporan']];
-function nav(m){['beranda','produk','pesanan','pelanggan','riwayat','laporan','admin','pegawai','bot','antrian','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);loadAll();}
+function nav(m){localStorage.setItem('kocheng_last_page',m);['beranda','produk','pesanan','pelanggan','riwayat','laporan','admin','pegawai','bot','antrian','profil'].forEach(x=>{let e=document.getElementById('page-'+x);if(e)e.classList.toggle('hidden',x!==m)});document.querySelectorAll('#topTabs button').forEach((b,i)=>b.classList.toggle('on',topMenus[i][0]===m));document.querySelectorAll('#bottomMenu button').forEach((b,i)=>b.classList.toggle('on',menus[i][0]===m));window.scrollTo(0,0);loadAll();}
 document.getElementById('topTabs').innerHTML=topMenus.map(m=>`<button onclick="nav('${m[0]}')">${m[1]}</button>`).join('');
 document.getElementById('bottomMenu').innerHTML=menus.map(m=>`<button onclick="nav('${m[0]}')"><div>${m[1].split(' ')[0]}</div>${m[1].split(' ')[1]||''}</button>`).join('');
 let D={products:[],orders:[],members:[],admins:[],pegawai:[],bot:[],riwayat:[],antrian:[]};
@@ -195,5 +195,5 @@ async function jawabAntrian(id){
   loadAll();
 }
 async function hapus(t,id){if(!confirm('Yakin hapus?'))return;let r=await sb.from(t).delete().eq('id',id);if(r.error)return alert('GAGAL: '+r.error.message);loadAll();}
-nav('beranda');
+nav(localStorage.getItem('kocheng_last_page')||'beranda');
 </script></body></html>
