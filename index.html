@@ -309,15 +309,16 @@ body{background:#0a0a0a;color:#fff}
     <div style="padding:0 14px 14px"><button onclick="tandaiSemuaDibaca()" style="width:100%;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer">Tandai Semua Dibaca</button></div>
   </div>
 </div>
-<div id="pinModal" style="display:none;position:fixed;inset:0;background:#000;z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
-  <div style="font-size:50px">🔒</div>
-  <div style="color:#E8C97A;font-size:26px;letter-spacing:4px;margin:10px 0">D' LUSSO</div>
-  <div id="pinNama" style="color:#fff;font-size:14px">Halo, Staff</div>
-  <div style="color:#aaa;font-size:12px;margin:4px 0 18px">Masukkan PIN untuk melanjutkan</div>
-  <div id="pinDots" style="font-size:28px;letter-spacing:12px;color:#E8C97A;margin-bottom:16px">○ ○ ○ ○</div>
-  <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••" style="width:200px;background:#111;border:1px solid #C9A86A;color:#fff;padding:14px;border-radius:12px;text-align:center;font-size:22px;letter-spacing:8px;outline:none" onkeypress="if(event.key==='Enter') cekPinRahasia()">
-  <button onclick="cekPinRahasia()" style="width:200px;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:14px;border-radius:12px;font-weight:900;margin-top:12px;cursor:pointer">BUKA 🔓</button>
-  <div onclick="tutupPin()" style="color:#888;font-size:12px;margin-top:14px;cursor:pointer">Batal</div>
+<div id="pinModal" style="display:none;position:fixed;inset:0;background:radial-gradient(circle at top,#2a2110 0%,#000 70%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
+  <div style="font-size:50px">👑</div>
+  <div style="color:#E8C97A;font-size:28px;letter-spacing:6px;margin:10px 0;font-weight:bold">D' LUSSO</div>
+  <div style="color:#C9A86A;font-size:11px;letter-spacing:4px;margin-bottom:14px">IL LUSSO DI BANDUNG • STAFF ONLY</div>
+  <div id="pinNama" style="color:#fff;font-size:15px">Halo, Staff</div>
+  <div style="color:#aaa;font-size:12px;margin:4px 0 18px">Masukkan PIN 6 Digit untuk melanjutkan</div>
+  <div id="pinDots" style="font-size:30px;letter-spacing:10px;color:#E8C97A;margin-bottom:18px">○ ○ ○ ○ ○ ○</div>
+  <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" style="width:230px;background:#111;border:1px solid #C9A86A;color:#fff;padding:16px;border-radius:14px;text-align:center;font-size:24px;letter-spacing:10px;outline:none;box-shadow:0 0 20px rgba(201,168,106,.2)" onkeypress="if(event.key==='Enter') cekPinRahasia()">
+  <button onclick="cekPinRahasia()" style="width:230px;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:16px;border-radius:14px;font-weight:900;margin-top:14px;cursor:pointer;font-size:15px;letter-spacing:1px;color:#000;box-shadow:0 6px 20px rgba(201,168,106,.4)">BUKA 🔓</button>
+  <div onclick="tutupPin()" style="color:#888;font-size:12px;margin-top:16px;cursor:pointer">Batal</div>
   <div id="pinError" style="color:#ff6b6b;font-size:12px;margin-top:10px;display:none">PIN salah, coba lagi!</div>
 </div>
 <script>
@@ -533,7 +534,7 @@ function openChat(){ document.getElementById('chatBox').classList.add('show'); d
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
-// ===== PINTU RAHASIA @ # $ & - FIX: admins (pake S) - FIX ILIKE biar @phus = @PHUS = @Phus =====
+// ===== PINTU RAHASIA @ # $ & - FIX: @phus cari phus, ILIKE biar gede/kecil sama =====
 var rahasiaData = null;
 var rahasiaTujuan = '';
 async function cekKodeRahasia(text){
@@ -558,9 +559,11 @@ function bukaPin(user){
   setTimeout(function(){ document.getElementById('pinInput').focus(); },100);
 }
 function updateDots(val){
-  var dots = '○ ○ ○ ○';
-  if(val && val.length>0) dots = '● '.repeat(val.length).trim() + ' ' + '○ '.repeat(Math.max(0,4-val.length)).trim();
-  document.getElementById('pinDots').textContent = dots;
+  var total = 6;
+  var isi = val ? val.length : 0;
+  var dots = '';
+  for(var i=0;i<total;i++){ dots += (i < isi ? '●' : '○') + ' '; }
+  document.getElementById('pinDots').textContent = dots.trim();
 }
 document.addEventListener('input', function(e){ if(e.target.id === 'pinInput') updateDots(e.target.value); });
 function tutupPin(){ document.getElementById('pinModal').style.display = 'none'; rahasiaData = null; }
