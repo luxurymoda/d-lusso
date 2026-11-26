@@ -2,8 +2,17 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>D' LUSSO - Il Lusso di Bandung</title>
+<!-- PWA - BISA DI INSTALL -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="D' LUSSO">
+<link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=512">
+<link rel="icon" href="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=192">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
 body{background:#0a0a0a;color:#fff}
@@ -22,6 +31,8 @@ body{background:#0a0a0a;color:#fff}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
 .hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
 .btn-gold{margin-top:12px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.45);padding:12px 20px;letter-spacing:1px;font-size:13px;cursor:pointer}
+.install-bar{display:none;background:linear-gradient(90deg,#F5D98A,#C9A86A);color:#000;padding:12px 14px;text-align:center;font-weight:bold;font-size:13px;cursor:pointer;position:fixed;top:0;left:0;right:0;z-index:100}
+.install-bar.show{display:block}
 .boutique{position:relative;margin-top:-18px;padding:20px;padding-top:16px;text-align:center;background:#0a0a0a;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
@@ -84,13 +95,12 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
+<div id="installBar" class="install-bar" onclick="installApp()">📱 INSTALL APLIKASI D' LUSSO → KLIK DISINI</div>
 <div id="cartBadge" class="cart-badge" onclick="checkoutCart()">🛒 0 • Checkout</div>
 
 <div id="page-home" class="page active">
   <div class="hero">
-    <div class="top">
-      <div class="logo">D' LUSSO</div>
-      <div class="top-icons" onclick="toggleMenu(event)">☰</div>
+    <div class="top"><div class="logo">D' LUSSO</div><div class="top-icons" onclick="toggleMenu(event)">☰</div>
       <div id="menuDrop" class="menu-drop">
         <div onclick="showPage('home')">🏠 HOME</div>
         <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
@@ -99,6 +109,7 @@ body{background:#0a0a0a;color:#fff}
         <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
         <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
         <div onclick="showPage('lokasi')">📍 LOKASI BOUTIQUE</div>
+        <div onclick="installApp()">📱 INSTALL APLIKASI</div>
       </div>
     </div>
     <img src="hero.png" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'">
@@ -114,7 +125,7 @@ body{background:#0a0a0a;color:#fff}
 </div>
 
 <div id="page-collezione" class="page">
-  <div class="page-head"><h2>La Collezione</h2><p>Jas • Pakaian • Dress Mewah • Eleganza Italiana</p></div>
+  <div class="page-head"><h2>La Collezione</h2><p>Jas • Pakaian • Dress Mewah</p></div>
   <div class="section">
     <div class="cat-title">🤵 JAS / SUIT</div>
     <div class="grid">
@@ -142,7 +153,7 @@ body{background:#0a0a0a;color:#fff}
 </div>
 
 <div id="page-scarpe" class="page">
-  <div class="page-head"><h2>👠 Scarpe Lusso</h2><p>Sepatu Mewah Pria & Wanita • Eleganza Italiana</p></div>
+  <div class="page-head"><h2>👠 Scarpe Lusso</h2><p>Sepatu Mewah Pria & Wanita</p></div>
   <div class="section">
     <div class="cat-title">👠 HIGH HEELS - WANITA</div>
     <div class="grid">
@@ -201,85 +212,36 @@ body{background:#0a0a0a;color:#fff}
   <div class="footer">📍 Jl. Braga No.88, Bandung<br>© 2026 D' LUSSO</div>
 </div>
 
-<div class="bottom">
-  <div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div>
-  <div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div>
-  <div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div>
-  <div onclick="openChat()">CONTATTI</div>
-</div>
+<div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div><div onclick="openChat()">CONTATTI</div></div>
 
-<div id="chatBox" class="chat-box">
-  <div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div>
-  <div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div>
-  <div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div>
-  <div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div>
-</div>
+<div id="chatBox" class="chat-box"><div class="chat-head"><div><b>💎 D' LUSSO Concierge</b><br><span>● Online • Balas dalam 1 menit</span></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg bot">Ciao! Selamat datang di D' LUSSO ✨<br>Saya Sofia, concierge pribadi Anda. Mau cari Kemeja, Gaun, Tas atau Accessories?</div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 
 <script>
-var cart=[];
-function showPage(p){
-  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  document.getElementById('nav-home').classList.remove('active');
-  document.getElementById('nav-accessorio').classList.remove('active');
-  document.getElementById('nav-vip').classList.remove('active');
-  if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
-  document.getElementById('menuDrop').classList.remove('show');
-  window.scrollTo(0,0);
+var cart=[]; var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; document.getElementById('installBar').classList.add('show'); });
+function installApp(){
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(){ deferredPrompt=null; document.getElementById('installBar').classList.remove('show'); }); }
+  else { alert("Di HP Android: klik titik 3 di Chrome > Tambah ke Layar Utama / Install App\n\nDi iPhone: klik tombol Share (kotak + panah) di Safari > Tambah ke Layar Utama"); }
 }
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+function showPage(p){ document.querySelectorAll('.page').forEach(e=>e.classList.remove('active')); document.getElementById('page-'+p).classList.add('active'); document.getElementById('nav-home').classList.remove('active'); document.getElementById('nav-accessorio').classList.remove('active'); document.getElementById('nav-vip').classList.remove('active'); if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active'); document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0); }
 function toggleMenu(e){ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show'); }
 document.addEventListener('click',function(e){ if(!e.target.closest('.menu-drop')) document.getElementById('menuDrop').classList.remove('show') });
-function openWA(msg){
-  var m = msg || "Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung.";
-  window.open("https://wa.me/6281234567890?text="+encodeURIComponent(m),"_blank");
-}
-function buyNow(name,price){
-  openWA("Ciao D' LUSSO! Saya mau BELI SEKARANG:\n\n• "+name+"\n• Harga: "+price+"\n\nApakah masih ready? Saya mau checkout sekarang. Grazie!");
-}
-function checkoutCart(){
-  if(cart.length==0){ alert("Keranjang masih kosong"); return; }
-  var txt="Ciao D' LUSSO! Saya mau CHECKOUT keranjang:\n\n"+cart.map((c,i)=>(i+1)+". "+c).join("\n")+"\n\nTotal "+cart.length+" produk. Mohon info pembayaran ya!";
-  openWA(txt);
-}
-// AUTO TAMBAH TOMBOL BELI DI SEMUA PRODUK + FUNGSI KERANJANG
+function openWA(msg){ var m = msg || "Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung."; window.open("https://wa.me/6281234567890?text="+encodeURIComponent(m),"_blank"); }
+function buyNow(name,price){ openWA("Ciao D' LUSSO! Saya mau BELI SEKARANG:\n\n• "+name+"\n• Harga: "+price+"\n\nApakah masih ready? Saya mau checkout sekarang. Grazie!"); }
+function checkoutCart(){ if(cart.length==0){ alert("Keranjang masih kosong"); return; } var txt="Ciao D' LUSSO! Saya mau CHECKOUT keranjang:\n\n"+cart.map((c,i)=>(i+1)+". "+c).join("\n")+"\n\nTotal "+cart.length+" produk. Mohon info pembayaran ya!"; openWA(txt); }
 document.querySelectorAll('.card').forEach(function(card){
   var name = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Produk D LUSSO';
   var price = card.querySelector('.price') ? card.querySelector('.price').textContent : '';
   var addBtn = card.querySelector('.add');
-  if(addBtn){
-    addBtn.onclick = function(){
-      cart.push(name+" - "+price);
-      var badge=document.getElementById('cartBadge');
-      badge.style.display='block';
-      badge.textContent="🛒 "+cart.length+" • Checkout";
-      addBtn.textContent="✓ Ditambahkan!";
-      setTimeout(function(){ addBtn.textContent="+ Add to Cart"; },1200);
-    };
-  }
-  var buy=document.createElement('button');
-  buy.className='buy';
-  buy.textContent='🛒 BELI SEKARANG';
-  buy.onclick=function(){ buyNow(name,price); };
-  card.querySelector('.card-body').appendChild(buy);
+  if(addBtn){ addBtn.onclick = function(){ cart.push(name+" - "+price); var badge=document.getElementById('cartBadge'); badge.style.display='block'; badge.textContent="🛒 "+cart.length+" • Checkout"; addBtn.textContent="✓ Ditambahkan!"; setTimeout(function(){ addBtn.textContent="+ Add to Cart"; },1200); }; }
+  var buy=document.createElement('button'); buy.className='buy'; buy.textContent='🛒 BELI SEKARANG'; buy.onclick=function(){ buyNow(name,price); }; card.querySelector('.card-body').appendChild(buy);
 });
 function openChat(){ document.getElementById('chatBox').classList.add('show'); }
 function closeChat(){ document.getElementById('chatBox').classList.remove('show'); }
 function quickChat(t){ sendChatMsg(t); }
 function sendChat(){ var inp=document.getElementById('chatInput'); if(!inp.value.trim()) return; sendChatMsg(inp.value); inp.value=''; }
-function sendChatMsg(text){
-  var body=document.getElementById('chatBody');
-  var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me);
-  body.scrollTop=body.scrollHeight;
-  setTimeout(function(){
-    var bot=document.createElement('div'); bot.className='msg bot';
-    var low=text.toLowerCase();
-    if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨";
-    else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎";
-    else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛";
-    else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas.";
-    body.appendChild(bot); body.scrollTop=body.scrollHeight;
-  },800);
-}
+function sendChatMsg(text){ var body=document.getElementById('chatBody'); var me=document.createElement('div'); me.className='msg me'; me.textContent=text; body.appendChild(me); body.scrollTop=body.scrollHeight; setTimeout(function(){ var bot=document.createElement('div'); bot.className='msg bot'; var low=text.toLowerCase(); if(low.includes('vip')) bot.innerHTML="Untuk VIP, silakan klik menu 👑 VIP di bawah ya! Daftar gratis, langsung dapat akses koleksi eksklusif ✨"; else if(low.includes('lokasi')) bot.innerHTML="Boutique kami di 📍 Jl. Braga No.88, Bandung. Ditunggu kedatangannya! 💎"; else if(low.includes('harga')||low.includes('ukuran')) bot.innerHTML="Untuk harga & ukuran, boleh sebutkan produknya? Saya cekkan stoknya untuk Anda 💛"; else bot.innerHTML="Grazie! Pesan Anda sudah kami terima ✨ Concierge kami akan segera membalas."; body.appendChild(bot); body.scrollTop=body.scrollHeight; },800); }
 </script>
 </body>
 </html>
