@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WES</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:sans-serif;padding:12px;background:#111;color:#fff;margin:0}
+input,select,button,textarea{width:100%;padding:12px;margin:5px 0;border-radius:10px;border:none;box-sizing:border-box}
+button{background:#d4af37;font-weight:bold;color:#000}
+.tab{display:flex;gap:5px;overflow-x:auto} .tab button{background:#333;color:#fff;white-space:nowrap}
+.tab button.on{background:#d4af37;color:#000}
+.card{background:#222;padding:12px;border-radius:12px;margin:10px 0}
+img{width:100%;border-radius:10px}
+h2{margin:5px 0} small{color:#aaa}
+</style></head><body>
+<h2>👑 WES - D' LUSSO FULL</h2><small>Tanpa keamanan - buat tes</small>
+<div class="tab">
+<button class="on" onclick="show('produk',this)">Produk</button>
+<button onclick="show('member',this)">Member</button>
+<button onclick="show('order',this)">Pesanan</button>
+<button onclick="show('admin',this)">Admin</button>
+<button onclick="show('pegawai',this)">Pegawai</button>
+</div>
+
+<!-- PRODUK -->
+<div id="produk">
+<h3>Tambah Produk</h3>
+<input id="p_name" placeholder="Nama Produk">
+<input id="p_category" placeholder="Kategori - ketik baru = otomatis kebikin" list="listKat"><datalist id="listKat"></datalist>
+<input id="p_tipe" placeholder="Tipe, misal Kulit / Canvas">
+<input id="p_ukuran" placeholder="Ukuran, misal M / 42">
+<input id="p_price" type="number" placeholder="Harga">
+<input id="p_stock" type="number" placeholder="Stok">
+<input id="p_image" placeholder="Link Foto">
+<textarea id="p_desc" placeholder="Atribut Tambahan / Deskripsi, misal Warna: Merah, Bahan: Kulit Asli"></textarea>
+<button onclick="tambahProduk()">+ SIMPAN PRODUK</button>
+<button onclick="bersihkan()" style="background:#ff4444;color:#fff">🗑️ BERSIHKAN PRODUK KOSONG (Stok 0)</button>
+<div id="listProduk"></div>
+</div>
+
+<!-- MEMBER -->
+<div id="member" style="display:none">
+<h3>Tambah Member</h3>
+<input id="m_name" placeholder="Nama Member">
+<input id="m_wa" placeholder="WhatsApp">
+<input id="m_email" placeholder="Email">
+<input id="m_pass" placeholder="Password">
+<input id="m_foto" placeholder="Link Foto">
+<input id="m_alamat" placeholder="Alamat">
+<select id="m_tier"><option>VIP</option><option>VVIP</option><option>ELITE</option></select>
+<input id="m_saldo" type="number" placeholder="Saldo" value="0">
+<input id="m_disc" type="number" placeholder="Discount %" value="0">
+<input id="m_points" type="number" placeholder="Points" value="0">
+<button onclick="tambahMember()">+ SIMPAN MEMBER</button>
+<div id="listMember"></div>
+</div>
+
+<!-- ORDER -->
+<div id="order" style="display:none">
+<h3>Daftar Pesanan</h3>
+<div id="listOrder"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" style="display:none">
+<h3>Tambah Admin</h3>
+<input id="a_nama" placeholder="Nama Admin"><input id="a_nomor" placeholder="Nomor WA"><input id="a_code" placeholder="Code, misal ADM001"><input id="a_pin" placeholder="PIN"><input id="a_foto" placeholder="Link Foto"><input id="a_alamat" placeholder="Alamat"><input id="a_email" placeholder="Email">
+<button onclick="tambahAdmin()">+ SIMPAN ADMIN</button>
+<div id="listAdmin"></div>
+</div>
+
+<!-- PEGAWAI -->
+<div id="pegawai" style="display:none">
+<h3>Tambah Pegawai</h3>
+<input id="pg_nama" placeholder="Nama Pegawai"><input id="pg_nomor" placeholder="Nomor WA"><input id="pg_code" placeholder="Code, misal PGW001"><input id="pg_pin" placeholder="PIN"><input id="pg_foto" placeholder="Link Foto"><input id="pg_alamat" placeholder="Alamat"><input id="pg_email" placeholder="Email">
+<button onclick="tambahPegawai()">+ SIMPAN PEGAWAI</button>
+<div id="listPegawai"></div>
+</div>
+
+<script>
+const supabase = window.supabase.createClient("https://kkydbnjxbfkzbcxpcpor.supabase.co","sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx");
+function show(id,btn){ ['produk','member','order','admin','pegawai'].forEach(x=>document.getElementById(x).style.display=x==id?'block':'none'); document.querySelectorAll('.tab button').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); load(); }
+async function load(){
+  let {data:p}=await supabase.from('products').select('*').order('created_at',{ascending:false});
+  let cats=[...new Set((p||[]).map(x=>x.category).filter(Boolean))];
+  document.getElementById('listKat').innerHTML=cats.map(c=>`<option value="${c}">`).join('');
+  document.getElementById('listProduk').innerHTML=(p||[]).map(x=>`<div class="card">${x.image_url?`<img src="${x.image_url}">`:''}<b>${x.name}</b><br>${x.category||''} | ${x.tipe||''} | ${x.ukuran||''}<br>Harga ${x.price} | Stok ${x.stock}<br><small>${x.description||''}</small><br><button onclick="hapus('products','${x.id}')">Hapus</button></div>`).join('')||'Belum ada produk';
+  let {data:m}=await supabase.from('members').select('*').order('created_at',{ascending:false});
+  document.getElementById('listMember').innerHTML=(m||[]).map(x=>`<div class="card"><b>${x.full_name}</b> - ${x.tier}<br>WA: ${x.whatsapp} | Email: ${x.email||''}<br>Saldo: ${x.saldo} | Disc: ${x.discount}% | Poin: ${x.points}<br>${x.alamat||''}<br><button onclick="hapus('members','${x.id}')">Hapus</button></div>`).join('')||'Belum ada member';
+  let {data:o}=await supabase.from('orders').select('*').order('created_at',{ascending:false});
+  document.getElementById('listOrder').innerHTML=(o||[]).map(x=>`<div class="card"><b>${x.customer_name||''}</b> - ${x.status}<br>Total: ${x.total_amount} | ${x.payment_method||''}<br>${x.whatsapp||''}<br><button onclick="hapus('orders','${x.id}')">Hapus</button></div>`).join('')||'Belum ada pesanan';
+  let {data:a}=await supabase.from('admins').select('*').order('created_at',{ascending:false});
+  document.getElementById('listAdmin').innerHTML=(a||[]).map(x=>`<div class="card"><b>${x.nama}</b> - ${x.code||''}<br>${x.nomor} | ${x.email||''}<br>${x.alamat||''}<br><button onclick="hapus('admins','${x.id}')">Hapus</button></div>`).join('')||'Belum ada admin';
+  let {data:pg}=await supabase.from('pegawai').select('*').order('created_at',{ascending:false});
+  document.getElementById('listPegawai').innerHTML=(pg||[]).map(x=>`<div class="card"><b>${x.nama}</b> - ${x.code||''}<br>${x.nomor} | ${x.email||''}<br>${x.alamat||''}<br><button onclick="hapus('pegawai','${x.id}')">Hapus</button></div>`).join('')||'Belum ada pegawai';
+}
+async function tambahProduk(){ let {error}=await supabase.from('products').insert([{name:p_name.value,category:p_category.value,tipe:p_tipe.value,ukuran:p_ukuran.value,price:Number(p_price.value||0),stock:Number(p_stock.value||0),image_url:p_image.value,description:p_desc.value}]); if(error) alert(error.message); else {alert('Produk tersimpan! Kategori baru otomatis kebikin'); load();} }
+async function tambahMember(){ let {error}=await supabase.from('members').insert([{full_name:m_name.value,whatsapp:m_wa.value,email:m_email.value,password_hash:m_pass.value,foto_url:m_foto.value,alamat:m_alamat.value,tier:m_tier.value,saldo:Number(m_saldo.value||0),discount:Number(m_disc.value||0),points:Number(m_points.value||0)}]); if(error) alert(error.message); else {alert('Member tersimpan!'); load();} }
+async function tambahAdmin(){ let {error}=await supabase.from('admins').insert([{nama:a_nama.value,nomor:a_nomor.value,code:a_code.value,pin:a_pin.value,foto_url:a_foto.value,alamat:a_alamat.value,email:a_email.value}]); if(error) alert(error.message); else {alert('Admin tersimpan!'); load();} }
+async function tambahPegawai(){ let {error}=await supabase.from('pegawai').insert([{nama:pg_nama.value,nomor:pg_nomor.value,code:pg_code.value,pin:pg_pin.value,foto_url:pg_foto.value,alamat:pg_alamat.value,email:pg_email.value}]); if(error) alert(error.message); else {alert('Pegawai tersimpan!'); load();} }
+async function hapus(tabel,id){ if(confirm('Hapus?')){ await supabase.from(tabel).delete().eq('id',id); load(); } }
+async function bersihkan(){ if(!confirm('Hapus SEMUA produk stok 0?')) return; let {error}=await supabase.from('products').delete().eq('stock',0); if(error) alert(error.message); else {alert('Beres! Produk kosong udah kehapus semua'); load();} }
+load();
+</script></body></html>
