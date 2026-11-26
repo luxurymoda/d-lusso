@@ -3,285 +3,272 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D' LUSSO - KASIR</title>
+<title>D' LUSSO - KASIR SCAN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#0a0a0a;color:#fff;min-height:100vh}
+body{background:#0a0a0a;color:#fff}
 .header{background:#111;border-bottom:1px solid #c9a227;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
 .logo{font-size:22px;font-weight:900;letter-spacing:3px;color:#d4af37}
-.logo span{font-size:11px;display:block;letter-spacing:2px;color:#aaa;font-weight:400}
-.clock{font-size:13px;color:#d4af37;text-align:right}.clock b{color:#fff;font-size:15px}
-.wrap{display:flex;gap:16px;padding:16px;max-width:1200px;margin:auto}
+.logo span{font-size:11px;display:block;color:#aaa;font-weight:400}
+.clock{color:#d4af37;font-size:13px;text-align:right}.clock b{color:#fff}
+.wrap{display:flex;gap:16px;padding:16px;max-width:1100px;margin:auto}
 .left{flex:1.2}.right{flex:1}
-.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #333;background:#1a1a1a;color:#fff;outline:none;margin-bottom:12px}
-.search:focus{border-color:#d4af37}
-.cat{display:flex;gap:8px;overflow:auto;padding-bottom:8px;margin-bottom:8px}
-.cat button{white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid #333;background:#1a1a1a;color:#ccc;cursor:pointer}
-.cat button.active{background:#d4af37;color:#000;font-weight:700;border-color:#d4af37}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:#141414;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden}
-.card img{width:100%;height:110px;object-fit:cover}
-.card-body{padding:10px}.card-body h3{font-size:14px;line-height:1.3}
-.card-body p{font-size:11px;color:#999;margin:3px 0}
-.price{color:#d4af37;font-weight:800;margin:6px 0}
-.add{width:100%;padding:9px;background:#d4af37;border:none;border-radius:10px;font-weight:800;cursor:pointer}
+.scan-box{background:#141414;border:1px solid #c9a227;border-radius:16px;padding:16px;text-align:center}
+.scan-box h2{color:#d4af37;font-size:16px}
+.scan-box p{font-size:12px;color:#999;margin:6px 0 12px}
+.btn-scan{width:100%;padding:16px;background:linear-gradient(135deg,#f5d76e,#c9a227);border:none;border-radius:14px;font-size:16px;font-weight:900;cursor:pointer}
+.btn-scan2{width:100%;padding:12px;background:#1a1a1a;border:1px solid #d4af37;color:#d4af37;border-radius:12px;margin-top:8px;font-weight:700;cursor:pointer}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #333;background:#1a1a1a;color:#fff;outline:none;margin-top:12px}
+.hasil{margin-top:12px;display:grid;gap:10px}
+.card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center}
+.card img{width:60px;height:60px;object-fit:cover;border-radius:10px}
+.card b{font-size:14px}.card span{font-size:12px;color:#999}
+.card .price{color:#d4af37;font-weight:800}
+.add{margin-left:auto;padding:10px 16px;background:#d4af37;border:none;border-radius:10px;font-weight:800;cursor:pointer}
 .cart{background:#141414;border:1px solid #c9a227;border-radius:16px;padding:16px;position:sticky;top:78px}
-.cart h2{font-size:16px;color:#d4af37}.cart small{color:#999}
+.cart h2{color:#d4af37;font-size:16px}
 .member{margin:12px 0;background:#1a1a1a;border:1px dashed #444;border-radius:12px;padding:10px;display:flex;gap:8px}
 .member input{flex:1;background:#000;border:1px solid #333;border-radius:8px;padding:9px;color:#fff;outline:none}
 .member button{background:#222;border:1px solid #d4af37;color:#d4af37;border-radius:8px;padding:0 12px;cursor:pointer}
 .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #2a2a2a}
-.item b{font-size:13px}.item span{font-size:11px;color:#999}
-.qty{display:flex;align-items:center;gap:8px}
-.qty button{width:26px;height:26px;border-radius:50%;border:1px solid #444;background:#000;color:#fff;cursor:pointer}
+.qty{display:flex;gap:8px;align-items:center}.qty button{width:26px;height:26px;border-radius:50%;border:1px solid #444;background:#000;color:#fff;cursor:pointer}
 .empty{text-align:center;color:#777;padding:20px 0;font-size:13px}
 .total-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:#ccc}
-.total-row.big{font-size:18px;color:#fff;font-weight:900;border-top:1px solid #333;margin-top:8px;padding-top:10px}
+.total-row.big{font-size:18px;font-weight:900;border-top:1px solid #333;margin-top:8px;padding-top:10px}
 .total-row.big b{color:#d4af37}
-.pay-label{margin:14px 0 8px;font-size:12px;color:#999;letter-spacing:1px}
-.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .pay button{padding:11px;border-radius:10px;border:1px solid #333;background:#1a1a1a;color:#fff;cursor:pointer}
-.pay button.active{background:#d4af37;color:#000;font-weight:800;border-color:#d4af37}
+.pay button.active{background:#d4af37;color:#000;font-weight:800}
 .bayar{width:100%;margin-top:14px;padding:15px;background:linear-gradient(135deg,#f5d76e,#c9a227);border:none;border-radius:14px;font-size:16px;font-weight:900;cursor:pointer}
 .bayar:disabled{opacity:.4}
 .history{margin-top:16px;background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:16px}
-.history h3{color:#d4af37;font-size:14px;margin-bottom:10px}
+.history h3{color:#d4af37;font-size:14px}
 .h-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #222;font-size:13px}
-.h-item span{color:#999;font-size:11px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+/* SCANNER MODAL */
+.modal{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:99}
 .modal.show{display:flex}
+.modal-top{padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333}
+.modal-top b{color:#d4af37}
+.modal-top button{background:#222;border:1px solid #d4af37;color:#fff;padding:8px 14px;border-radius:10px}
+#reader{width:100%;flex:1;background:#000}
+#reader video{object-fit:cover !important}
+.scan-hint{text-align:center;padding:14px;color:#d4af37;font-size:13px}
+.struk-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.struk-modal.show{display:flex}
 .struk{background:#fff;color:#000;width:100%;max-width:340px;border-radius:12px;padding:20px;text-align:center}
-.struk h2{letter-spacing:3px}.struk p{font-size:12px;color:#555}
-.struk hr{margin:12px 0;border-style:dashed}
 .struk .row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;text-align:left}
 .struk .total{font-weight:900;font-size:16px}
 .close{width:100%;margin-top:14px;padding:11px;background:#111;color:#d4af37;border:none;border-radius:10px;font-weight:800}
-.status{font-size:12px;color:#d4af37;margin:8px 0}
 @media(max-width:800px){.wrap{flex-direction:column}.cart{position:static}}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">D' LUSSO<span>BOUTIQUE BANDUNG • KASIR</span></div>
-  <div class="clock"><b id="jam">--:--:--</b><br><span id="tgl"></span><br><span id="dbStatus" style="font-size:11px;color:#2ecc71">● Terhubung ke Supabase</span></div>
+  <div class="logo">D' LUSSO<span>BOUTIQUE BANDUNG • KASIR SCAN</span></div>
+  <div class="clock"><b id="jam">--:--:--</b><br><span id="tgl"></span></div>
 </div>
 
 <div class="wrap">
+  <!-- KIRI : SCAN / CARI -->
   <div class="left">
-    <input class="search" id="search" placeholder="🔍 Cari produk..." oninput="renderProduk()">
-    <div class="cat" id="cat"></div>
-    <div class="grid" id="produkGrid"></div>
-    <p style="font-size:11px;color:#777;margin-top:10px">* Produk masih dari daftar di script. Nanti kalo lu udah bikin tabel <b>produk</b> di Supabase, gw tinggal ganti ambil dari sana.</p>
+    <div class="scan-box">
+      <h2>📷 SCAN PRODUK</h2>
+      <p>Arahkan kamera ke barcode produk<br>Produk langsung masuk keranjang</p>
+      <button class="btn-scan" onclick="bukaScanner()">📷 BUKA KAMERA & SCAN</button>
+      <button class="btn-scan2" onclick="tambahManual()">⌨️ Input Kode Manual</button>
+      <input class="search" id="search" placeholder="🔍 Atau cari nama / kode barcode... (contoh: MILANO / 899001)" oninput="cariProduk()">
+      <div id="scanInfo" style="font-size:12px;color:#2ecc71;margin-top:8px"></div>
+    </div>
+    <div class="hasil" id="hasilCari">
+      <p style="color:#777;font-size:13px;text-align:center;padding:20px">Belum ada produk yang di-scan.<br>Scan barcode atau cari produk di atas 👆</p>
+    </div>
   </div>
 
+  <!-- KANAN : KERANJANG -->
   <div class="right">
     <div class="cart">
-      <h2>🛒 Keranjang Belanja</h2>
-      <small id="cartInfo">0 item • Kasir: Admin</small>
-
-      <div class="member">
-        <input id="memberInput" placeholder="Cari WA / Nama Member...">
-        <button onclick="cekMember()">Cek</button>
-      </div>
-      <div id="memberInfo" style="font-size:12px;color:#d4af37;margin:-4px 0 8px"></div>
-      <div id="memberHasil"></div>
-
+      <h2>🛒 Keranjang Belanja</h2><small id="cartInfo">0 item</small>
+      <div class="member"><input id="memberInput" placeholder="WA / Nama Member..."><button onclick="cekMember()">Cek</button></div>
+      <div id="memberInfo" style="font-size:12px;color:#d4af37"></div>
       <div id="cartList"></div>
-
       <div class="total-row"><span>Subtotal</span><span id="subtotal">Rp 0</span></div>
-      <div class="total-row"><span>Diskon Member</span><span id="diskon">- Rp 0</span></div>
+      <div class="total-row"><span>Diskon Member (<span id="diskonPersen">0</span>%)</span><span id="diskon">- Rp 0</span></div>
       <div class="total-row big"><span>TOTAL BAYAR</span><b id="total">Rp 0</b></div>
-
-      <div class="pay-label">METODE PEMBAYARAN</div>
+      <div style="font-size:12px;color:#999;margin:14px 0 0">METODE PEMBAYARAN</div>
       <div class="pay">
         <button class="active" onclick="setPay(this,'Tunai')">💵 Tunai</button>
         <button onclick="setPay(this,'QRIS')">📱 QRIS</button>
         <button onclick="setPay(this,'Transfer')">🏦 Transfer</button>
         <button onclick="setPay(this,'Saldo Member')">⭐ Saldo Member</button>
       </div>
-
       <button class="bayar" id="btnBayar" onclick="bayar()" disabled>BAYAR • Rp 0</button>
-      <div class="status" id="statusBayar"></div>
+      <div id="statusBayar" style="font-size:12px;color:#d4af37;margin-top:8px"></div>
     </div>
-
-    <div class="history">
-      <h3>🧾 Riwayat Hari Ini (dari Supabase)</h3>
-      <div id="historyList"><p style="color:#777;font-size:13px">Memuat riwayat...</p></div>
-    </div>
+    <div class="history"><h3>🧾 Riwayat Hari Ini (Supabase)</h3><div id="historyList">Memuat...</div></div>
   </div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="struk">
-    <h2>D' LUSSO</h2><p>Boutique Bandung<br>Jl. Braga No.88 • Bandung</p><hr>
-    <div id="strukIsi"></div><hr>
-    <p>Terima kasih sudah belanja di D' LUSSO ✨</p>
-    <button class="close" onclick="tutup()">Tutup & Transaksi Baru</button>
-  </div>
+<!-- MODAL KAMERA SCANNER -->
+<div class="modal" id="scanModal">
+  <div class="modal-top"><b>📷 SCAN BARCODE PRODUK</b><button onclick="tutupScanner()">✕ Tutup</button></div>
+  <div id="reader"></div>
+  <div class="scan-hint">Arahkan barcode ke dalam kotak kamera<br>Kalo gagal, pastikan izinkan kamera di HP & pakai HTTPS / localhost</div>
+  <div style="padding:0 14px 16px"><button class="btn-scan2" onclick="tambahManual()">⌨️ Gagal Scan? Input Kode Manual</button></div>
+</div>
+
+<!-- MODAL STRUK -->
+<div class="struk-modal" id="modal">
+  <div class="struk"><h2>D' LUSSO</h2><p>Boutique Bandung<br>Jl. Braga No.88</p><hr><div id="strukIsi"></div><hr><p>Terima kasih sudah belanja ✨</p><button class="close" onclick="tutup()">Tutup & Transaksi Baru</button></div>
 </div>
 
 <script>
-// ===== SAMA PERSIS KAYAK WEB MEMBER LU =====
 const SUPABASE_URL = 'https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Produk - untuk sekarang masih di sini, transaksi-nya yang ke Supabase
-const produk = [
-  {id:1,nama:"Tas Milano Handbag",harga:4499000,stok:3,kat:"Tas",img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"},
-  {id:2,nama:"Sneaker Gold Edition",harga:1800000,stok:5,kat:"Sepatu",img:"https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"},
-  {id:3,nama:"Milano Black Suit",harga:4999000,stok:2,kat:"Jas",img:"https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500"},
-  {id:4,nama:"Gold Stiletto",harga:2899000,stok:4,kat:"Sepatu",img:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400"},
-  {id:5,nama:"Golden Satin Gown",harga:3899000,stok:2,kat:"Dress",img:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400"},
-  {id:6,nama:"Jaket Kulit Signature",harga:2500000,stok:6,kat:"Pakaian",img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"},
+// ===== DATABASE PRODUK SEMENTARA - NANTI PINDAH KE SUPABASE =====
+// Ko, ini contohnya. Nanti tiap produk lu punya barcode sendiri.
+// Barcode ini yang ditempel di label produk / hangtag.
+const produkDB = [
+  {barcode:"899001", nama:"Tas Milano Handbag", harga:4499000, kat:"Tas", img:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"},
+  {barcode:"899002", nama:"Sneaker Gold Edition", harga:1800000, kat:"Sepatu", img:"https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"},
+  {barcode:"899003", nama:"Milano Black Suit", harga:4999000, kat:"Jas", img:"https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500"},
+  {barcode:"899004", nama:"Gold Stiletto", harga:2899000, kat:"Sepatu", img:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400"},
+  {barcode:"899005", nama:"Golden Satin Gown", harga:3899000, kat:"Dress", img:"https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400"},
+  {barcode:"899006", nama:"Jaket Kulit Signature", harga:2500000, kat:"Pakaian", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"},
 ];
-let kategoriAktif="Semua", cart={}, payMethod="Tunai", member=null;
-const rupiah = n => "Rp " + Number(n||0).toLocaleString("id-ID");
+let cart={}, payMethod="Tunai", member=null, html5Qr=null, lastScan="", lastScanTime=0;
+const rupiah = n => "Rp "+Number(n||0).toLocaleString("id-ID");
 
-function renderCat(){
-  const cats=["Semua",...new Set(produk.map(p=>p.kat))];
-  document.getElementById("cat").innerHTML=cats.map(c=>`<button class="${c==kategoriAktif?'active':''}" onclick="kategoriAktif='${c}';renderCat();renderProduk()">${c}</button>`).join("");
+// ===== SCANNER KAMERA =====
+async function bukaScanner(){
+  document.getElementById("scanModal").classList.add("show");
+  try{
+    html5Qr = new Html5Qrcode("reader");
+    await html5Qr.start(
+      { facingMode: "environment" }, // kamera belakang HP
+      { fps: 10, qrbox: { width: 280, height: 180 } },
+      (decodedText) => { onScan(decodedText); },
+      ()=>{}
+    );
+  }catch(e){ alert("Kamera gagal dibuka: "+e+". Coba pakai HTTPS / izinkan kamera di HP."); }
 }
-function renderProduk(){
-  const q=document.getElementById("search").value.toLowerCase();
-  const list=produk.filter(p=>(kategoriAktif=="Semua"||p.kat==kategoriAktif)&&p.nama.toLowerCase().includes(q));
-  document.getElementById("produkGrid").innerHTML=list.map(p=>`
-    <div class="card"><img src="${p.img}"><div class="card-body">
-    <h3>${p.nama}</h3><p>${p.kat} • Stok: ${p.stok}</p>
-    <div class="price">${rupiah(p.harga)}</div>
-    <button class="add" onclick="tambah(${p.id})">+ Tambah</button>
-    </div></div>`).join("") || "<p style='color:#777'>Produk tidak ditemukan</p>";
+async function tutupScanner(){
+  try{ if(html5Qr) await html5Qr.stop(); }catch(e){}
+  try{ if(html5Qr) await html5Qr.clear(); }catch(e){}
+  document.getElementById("scanModal").classList.remove("show");
 }
-function tambah(id){ cart[id]=(cart[id]||0)+1; renderCart(); }
-function ubahQty(id,delta){ cart[id]+=delta; if(cart[id]<=0) delete cart[id]; renderCart(); }
+function onScan(code){
+  // Cegah scan ganda dalam 2 detik
+  const now=Date.now();
+  if(code==lastScan && now-lastScanTime<2000) return;
+  lastScan=code; lastScanTime=now;
+  document.getElementById("scanInfo").innerText="✅ Terbaca: "+code;
+  // Getar HP biar kerasa ke-scan
+  if(navigator.vibrate) navigator.vibrate(120);
+  cariByBarcode(code, true);
+}
+function tambahManual(){
+  const kode=prompt("Masukkan kode barcode / kode produk:");
+  if(kode) cariByBarcode(kode.trim(), false);
+}
+async function cariByBarcode(code, dariScan){
+  // 1. Cari dulu di produkDB lokal (nanti ganti ke Supabase tabel produk)
+  let p = produkDB.find(x=>x.barcode==code);
+  // 2. Kalo di Supabase lu udah ada tabel produk, uncomment ini:
+  // let { data } = await supabaseClient.from('produk').select('*').eq('barcode', code).single();
+  // if(data) p = { barcode: data.barcode, nama: data.nama, harga: data.harga, kat: data.kategori, img: data.foto_url };
 
-// ===== CARI MEMBER KE SUPABASE - TABEL members =====
-async function cekMember(){
-  const v=document.getElementById("memberInput").value.trim();
-  if(!v) return alert("Isi WA / Nama member dulu ko");
-  document.getElementById("memberInfo").innerHTML="Mencari di database...";
-  // Cari by WA dulu, kalo gak ketemu cari by nama
-  let { data } = await supabaseClient.from('members').select('*').eq('whatsapp', v).maybeSingle();
-  if(!data){
-    let r = await supabaseClient.from('members').select('*').ilike('full_name', '%'+v+'%').limit(5);
-    if(r.data && r.data.length==1) data=r.data[0];
-    else if(r.data && r.data.length>1){
-      document.getElementById("memberHasil").innerHTML = r.data.map(m=>`<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer" onclick="pilihMember('${m.id}')"><b>${m.full_name}</b><br><span style="color:#999;font-size:12px">${m.whatsapp} • Saldo: ${rupiah(m.saldo)}</span></div>`).join("");
-      document.getElementById("memberInfo").innerHTML="Ketemu "+r.data.length+" member, klik salah satu:";
-      return;
-    }
+  if(!p){
+    if(dariScan){ /* jangan alert berulang kalo dari kamera */ document.getElementById("scanInfo").innerText="❌ Barcode "+code+" tidak ditemukan di database produk"; }
+    else alert("Barcode "+code+" tidak ditemukan. Cek lagi atau tambahkan produk ini dulu.");
+    return;
   }
-  if(!data){ document.getElementById("memberInfo").innerHTML="❌ Member tidak ditemukan di database"; member=null; renderCart(); return; }
-  pilihMemberObj(data);
+  tambahKeCart(p);
+  if(dariScan){
+    // Tetep buka kamera biar bisa scan produk berikutnya, gak usah tutup
+    document.getElementById("scanInfo").innerText="✅ "+p.nama+" masuk keranjang!";
+  }
 }
-function pilihMember(id){ supabaseClient.from('members').select('*').eq('id', id).single().then(({data})=>{ if(data) pilihMemberObj(data); }); }
-function pilihMemberObj(data){
-  member=data;
-  document.getElementById("memberHasil").innerHTML="";
-  document.getElementById("memberInfo").innerHTML=`⭐ Member: <b>${data.full_name}</b> • Saldo: ${rupiah(data.saldo)} • Diskon: ${data.discount||5}% • Tier: ${data.tier||'Gold'}`;
+function cariProduk(){
+  const q=document.getElementById("search").value.toLowerCase().trim();
+  if(!q){ document.getElementById("hasilCari").innerHTML="<p style='color:#777;font-size:13px;text-align:center;padding:20px'>Belum ada produk yang di-scan.<br>Scan barcode atau cari produk di atas 👆</p>"; return; }
+  const list=produkDB.filter(p=>p.nama.toLowerCase().includes(q) || p.barcode.includes(q) || p.kat.toLowerCase().includes(q));
+  if(!list.length){ document.getElementById("hasilCari").innerHTML="<p style='color:#777;text-align:center;padding:20px'>Produk tidak ditemukan</p>"; return; }
+  document.getElementById("hasilCari").innerHTML=list.map(p=>`
+    <div class="card"><img src="${p.img}"><div><b>${p.nama}</b><br><span>${p.kat} • Barcode: ${p.barcode}</span><br><span class="price">${rupiah(p.harga)}</span></div>
+    <button class="add" onclick="tambahKeCartByBarcode('${p.barcode}')">+ Tambah</button></div>`).join("");
+}
+function tambahKeCartByBarcode(barcode){ const p=produkDB.find(x=>x.barcode==barcode); if(p) tambahKeCart(p); }
+function tambahKeCart(p){
+  cart[p.barcode]=(cart[p.barcode]||{produk:p, qty:0});
+  cart[p.barcode].qty++;
   renderCart();
 }
-function setPay(el,m){ document.querySelectorAll(".pay button").forEach(b=>b.classList.remove("active")); el.classList.add("active"); payMethod=m; renderCart(); }
+function ubahQty(barcode,delta){ if(!cart[barcode]) return; cart[barcode].qty+=delta; if(cart[barcode].qty<=0) delete cart[barcode]; renderCart(); }
 
-function hitung(){
-  let sub=Object.keys(cart).reduce((s,id)=>s+produk.find(x=>x.id==id).harga*cart[id],0);
-  let disc=member? sub * ((member.discount||5)/100) : 0;
-  return {sub,disc,total:sub-disc};
+// ===== MEMBER & BAYAR - SAMA KAYAK SEBELUMNYA, NYAMBUNG SUPABASE =====
+async function cekMember(){
+  const v=document.getElementById("memberInput").value.trim();
+  if(!v) return alert("Isi WA / Nama member dulu");
+  let { data } = await supabaseClient.from('members').select('*').eq('whatsapp', v).maybeSingle();
+  if(!data){ let r=await supabaseClient.from('members').select('*').ilike('full_name','%'+v+'%').single(); data=r.data; }
+  if(!data){ document.getElementById("memberInfo").innerHTML="❌ Member tidak ditemukan"; member=null; renderCart(); return; }
+  member=data;
+  document.getElementById("memberInfo").innerHTML=`⭐ ${data.full_name} • Saldo: ${rupiah(data.saldo)} • Diskon: ${data.discount||5}%`;
+  renderCart();
 }
+function setPay(el,m){ document.querySelectorAll(".pay button").forEach(b=>b.classList.remove("active")); el.classList.add("active"); payMethod=m; }
+function hitung(){ let sub=Object.values(cart).reduce((s,i)=>s+i.produk.harga*i.qty,0); let disc=member?sub*((member.discount||5)/100):0; return {sub,disc,total:sub-disc}; }
 function renderCart(){
-  const ids=Object.keys(cart);
+  const keys=Object.keys(cart);
   const list=document.getElementById("cartList");
-  if(!ids.length){ list.innerHTML=`<div class="empty">Keranjang masih kosong<br>Klik + di produk untuk mulai jualan</div>`; }
-  else{
-    list.innerHTML=ids.map(id=>{ const p=produk.find(x=>x.id==id);
-      return `<div class="item"><div><b>${p.nama}</b><br><span>${rupiah(p.harga)} x ${cart[id]}</span></div>
-      <div class="qty"><button onclick="ubahQty(${id},-1)">-</button><b>${cart[id]}</b><button onclick="ubahQty(${id},1)">+</button></div>
-      <b>${rupiah(p.harga*cart[id])}</b></div>`; }).join("");
-  }
+  if(!keys.length) list.innerHTML=`<div class="empty">Keranjang masih kosong<br>Scan barcode produk dulu</div>`;
+  else list.innerHTML=keys.map(k=>{ const it=cart[k]; return `<div class="item"><div><b>${it.produk.nama}</b><br><span>${rupiah(it.produk.harga)} x ${it.qty} • ${it.produk.barcode}</span></div><div class="qty"><button onclick="ubahQty('${k}',-1)">-</button><b>${it.qty}</b><button onclick="ubahQty('${k}',1)">+</button></div><b>${rupiah(it.produk.harga*it.qty)}</b></div>`; }).join("");
   const {sub,disc,total}=hitung();
   document.getElementById("subtotal").innerText=rupiah(sub);
   document.getElementById("diskon").innerText="- "+rupiah(disc);
+  document.getElementById("diskonPersen").innerText=member?(member.discount||5):0;
   document.getElementById("total").innerText=rupiah(total);
-  document.getElementById("cartInfo").innerText=`${ids.reduce((s,id)=>s+cart[id],0)} item • Kasir: Admin`;
-  const btn=document.getElementById("btnBayar");
-  btn.innerText=`BAYAR • ${rupiah(total)}`; btn.disabled=total<=0;
+  document.getElementById("cartInfo").innerText=Object.values(cart).reduce((s,i)=>s+i.qty,0)+" item";
+  const btn=document.getElementById("btnBayar"); btn.innerText=`BAYAR • ${rupiah(total)}`; btn.disabled=total<=0;
 }
-
-// ===== BAYAR - MASUK KE DATABASE =====
-// Tunai/QRIS/Transfer: cuma catat riwayat BELI, saldo gak kepotong
-// Saldo Member: saldo kepotong + catat riwayat BELI
 async function bayar(){
-  const {sub,disc,total}=hitung();
-  if(total<=0) return;
+  const {sub,disc,total}=hitung(); if(total<=0) return;
   document.getElementById("statusBayar").innerText="⏳ Memproses ke database...";
   try{
-    const namaProduk = Object.keys(cart).map(id=>{ const p=produk.find(x=>x.id==id); return p.nama+" x"+cart[id]; }).join(", ");
+    const namaProduk=Object.values(cart).map(i=>i.produk.nama+" x"+i.qty).join(", ");
     const noInv="INV-"+Date.now().toString().slice(-6);
-
     if(payMethod=="Saldo Member"){
-      if(!member) return alert("Pilih member dulu untuk bayar pakai Saldo Member!");
-      // Ambil saldo terbaru
+      if(!member) throw new Error("Pilih member dulu!");
       let { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
-      if(!m) throw new Error("Member tidak ditemukan");
-      if((m.saldo||0) < total) throw new Error("Saldo tidak cukup! Saldo: "+rupiah(m.saldo));
-      let saldoBaru = m.saldo - total;
-      let totalBelanjaBaru = (m.total_belanja||0) + total;
-      // 1. Potong saldo di tabel members
-      await supabaseClient.from('members').update({ saldo: saldoBaru, total_belanja: totalBelanjaBaru }).eq('id', m.id);
-      // 2. Catat ke riwayat_saldo
-      await supabaseClient.from('riwayat_saldo').insert([{
-        member_id: m.id, full_name: m.full_name, whatsapp: m.whatsapp, email: m.email, tier: m.tier,
-        tipe: 'BELI', amount: -total, saldo_sebelum: m.saldo, saldo_sesudah: saldoBaru,
-        keterangan: 'BELI di Kasir - '+namaProduk+' - '+noInv+' - '+payMethod,
-        diubah_oleh: 'ADMIN', sumber: 'KASIR'
-      }]);
-    } else {
-      // Bayar Tunai / QRIS / Transfer - kalo ada member, catat juga biar ada historinya
-      if(member){
-        let { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
-        if(m){
-          await supabaseClient.from('riwayat_saldo').insert([{
-            member_id: m.id, full_name: m.full_name, whatsapp: m.whatsapp, email: m.email, tier: m.tier,
-            tipe: 'BELI', amount: 0, saldo_sebelum: m.saldo, saldo_sesudah: m.saldo,
-            keterangan: 'BELI di Kasir - '+namaProduk+' - '+noInv+' - '+payMethod,
-            diubah_oleh: 'ADMIN', sumber: 'KASIR'
-          }]);
-          await supabaseClient.from('members').update({ total_belanja: (m.total_belanja||0)+total }).eq('id', m.id);
-        }
-      }
+      if((m.saldo||0)<total) throw new Error("Saldo tidak cukup! Saldo: "+rupiah(m.saldo));
+      let saldoBaru=m.saldo-total;
+      await supabaseClient.from('members').update({ saldo: saldoBaru, total_belanja:(m.total_belanja||0)+total }).eq('id', m.id);
+      await supabaseClient.from('riwayat_saldo').insert([{ member_id:m.id, full_name:m.full_name, whatsapp:m.whatsapp, email:m.email, tier:m.tier, tipe:'BELI', amount:-total, saldo_sebelum:m.saldo, saldo_sesudah:saldoBaru, keterangan:'BELI di Kasir - '+namaProduk+' - '+noInv+' - '+payMethod, diubah_oleh:'ADMIN', sumber:'KASIR' }]);
+    } else if(member){
+      let { data: m } = await supabaseClient.from('members').select('*').eq('id', member.id).single();
+      if(m){ await supabaseClient.from('riwayat_saldo').insert([{ member_id:m.id, full_name:m.full_name, whatsapp:m.whatsapp, email:m.email, tier:m.tier, tipe:'BELI', amount:0, saldo_sebelum:m.saldo, saldo_sesudah:m.saldo, keterangan:'BELI di Kasir - '+namaProduk+' - '+noInv+' - '+payMethod, diubah_oleh:'ADMIN', sumber:'KASIR' }]); await supabaseClient.from('members').update({ total_belanja:(m.total_belanja||0)+total }).eq('id', m.id); }
     }
-
-    // Struk
-    const isi=Object.keys(cart).map(id=>{const p=produk.find(x=>x.id==id); return `<div class="row"><span>${p.nama} x${cart[id]}</span><b>${rupiah(p.harga*cart[id])}</b></div>`}).join("");
-    document.getElementById("strukIsi").innerHTML=`<div class="row"><span>No. Invoice</span><b>${noInv}</b></div><div class="row"><span>Member</span><b>${member?member.full_name:"- (Non Member)"}</b></div><div class="row"><span>Metode</span><b>${payMethod}</b></div><hr>${isi}<div class="row"><span>Subtotal</span><span>${rupiah(sub)}</span></div><div class="row"><span>Diskon</span><span>- ${rupiah(disc)}</span></div><div class="row total"><span>TOTAL</span><span>${rupiah(total)}</span></div>`;
+    const isi=Object.values(cart).map(i=>`<div class="row"><span>${i.produk.nama} x${i.qty}</span><b>${rupiah(i.produk.harga*i.qty)}</b></div>`).join("");
+    document.getElementById("strukIsi").innerHTML=`<div class="row"><span>Invoice</span><b>${noInv}</b></div><div class="row"><span>Member</span><b>${member?member.full_name:"Non Member"}</b></div><div class="row"><span>Metode</span><b>${payMethod}</b></div><hr>${isi}<div class="row"><span>Subtotal</span><span>${rupiah(sub)}</span></div><div class="row"><span>Diskon</span><span>- ${rupiah(disc)}</span></div><div class="row total"><span>TOTAL</span><span>${rupiah(total)}</span></div>`;
     document.getElementById("modal").classList.add("show");
     document.getElementById("statusBayar").innerText="✅ Berhasil tersimpan ke database!";
-    Object.keys(cart).forEach(id=>{ produk.find(x=>x.id==id).stok-=cart[id]; });
     loadRiwayat();
-  }catch(e){
-    alert("Gagal: "+e.message);
-    document.getElementById("statusBayar").innerText="❌ "+e.message;
-  }
+  }catch(e){ alert("Gagal: "+e.message); document.getElementById("statusBayar").innerText="❌ "+e.message; }
 }
-function tutup(){ document.getElementById("modal").classList.remove("show"); cart={}; member=null; document.getElementById("memberInput").value=""; document.getElementById("memberInfo").innerHTML=""; document.getElementById("memberHasil").innerHTML=""; document.getElementById("statusBayar").innerText=""; renderProduk(); renderCart(); }
-
-// ===== RIWAYAT DARI SUPABASE =====
+function tutup(){ document.getElementById("modal").classList.remove("show"); cart={}; member=null; document.getElementById("memberInput").value=""; document.getElementById("memberInfo").innerHTML=""; document.getElementById("statusBayar").innerText=""; renderCart(); }
 async function loadRiwayat(){
-  try{
-    let { data, error } = await supabaseClient.from('riwayat_saldo').select('*').eq('tipe','BELI').order('created_at',{ascending:false}).limit(10);
-    if(error) throw error;
-    if(!data || !data.length){ document.getElementById("historyList").innerHTML="<p style='color:#777;font-size:13px'>Belum ada transaksi BELI hari ini</p>"; return; }
-    document.getElementById("historyList").innerHTML=data.map(r=>{
-      let d=new Date(r.created_at); let jam=d.toLocaleTimeString("id-ID",{hour:'2-digit',minute:'2-digit'});
-      let nominal = r.amount!=0 ? rupiah(Math.abs(r.amount)) : r.keterangan;
-      return `<div class="h-item"><div><b>${r.full_name||'Member'}</b><br><span>${jam} • ${r.sumber||'KASIR'} • ${r.keterangan||''}</span></div><b>${r.amount!=0?nominal:''}</b></div>`;
-    }).join("");
-  }catch(e){ document.getElementById("historyList").innerHTML="<p style='color:#777;font-size:13px'>Gagal load riwayat: "+e.message+"</p>"; }
+  try{ let { data } = await supabaseClient.from('riwayat_saldo').select('*').eq('tipe','BELI').order('created_at',{ascending:false}).limit(10);
+  if(!data||!data.length){ document.getElementById("historyList").innerHTML="<p style='color:#777;font-size:13px'>Belum ada transaksi</p>"; return; }
+  document.getElementById("historyList").innerHTML=data.map(r=>{ let d=new Date(r.created_at); return `<div class="h-item"><div><b>${r.full_name||'Member'}</b><br><span style="color:#999;font-size:11px">${d.toLocaleTimeString("id-ID",{hour:'2-digit',minute:'2-digit'})} • ${r.keterangan||''}</span></div><b>${r.amount!=0?rupiah(Math.abs(r.amount)):''}</b></div>`; }).join("");
+  }catch(e){ document.getElementById("historyList").innerHTML="Gagal load riwayat"; }
 }
 function updateJam(){ const d=new Date(); document.getElementById("jam").innerText=d.toLocaleTimeString("id-ID"); document.getElementById("tgl").innerText=d.toLocaleDateString("id-ID",{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
-setInterval(updateJam,1000); updateJam(); renderCat(); renderProduk(); renderCart(); loadRiwayat();
+setInterval(updateJam,1000); updateJam(); renderCart(); loadRiwayat();
 </script>
 </body>
 </html>
