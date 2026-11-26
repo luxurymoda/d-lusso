@@ -16,7 +16,7 @@ body{background:#0a0a0a;color:#fff}
 .hero-overlay h1{font-size:52px;letter-spacing:3px;color:#F5D98A;line-height:1}
 .hero-overlay h2{font-size:17px;letter-spacing:4px;margin:8px 0}
 .hero-overlay p{font-size:12px;color:#ddd;letter-spacing:.5px}
-.btn-gold{margin-top:16px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.45);padding:12px 20px;letter-spacing:1px;font-size:13px}
+.btn-gold{margin-top:16px;border:1px solid #E8C97A;color:#fff;background:rgba(0,0,0,.45);padding:12px 20px;letter-spacing:1px;font-size:13px;cursor:pointer}
 .boutique{padding:20px;text-align:center;border-bottom:1px solid #222}
 .boutique h3{color:#E8C97A;letter-spacing:2px;font-size:17px}
 .boutique p{font-size:13px;color:#ccc;margin-top:6px}
@@ -35,7 +35,7 @@ body{background:#0a0a0a;color:#fff}
 .card-body h3{font-size:15px;margin:5px 0}
 .price{color:#E8C97A;font-weight:bold}
 .add{width:100%;background:#E8C97A;border:none;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px}
-.vip{background:#111;padding:24px 20px 30px;text-align:center}
+.vip{background:#111;padding:24px 20px 30px;text-align:center;min-height:80vh}
 .vip .crown{font-size:36px}
 .vip h2{font-size:30px;color:#E8C97A;margin:8px 0 4px}
 .vip h3{font-size:18px;font-weight:normal;color:#E8C97A}
@@ -47,75 +47,96 @@ body{background:#0a0a0a;color:#fff}
 .check{display:flex;gap:8px;font-size:12px;color:#ddd;margin-top:14px;line-height:1.4}
 .btn-vip{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:16px;border-radius:12px;font-weight:bold;font-size:19px;margin-top:16px}
 .small{font-size:12px;color:#C9A86A;margin-top:10px;text-align:center}
-.bottom{position:sticky;bottom:0;background:#111;display:flex;border-top:1px solid #333}
-.bottom div{flex:1;text-align:center;padding:13px 0;font-size:12px;letter-spacing:1px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#111;display:flex;border-top:1px solid #333;z-index:30}
+.bottom div{flex:1;text-align:center;padding:14px 0;font-size:12px;letter-spacing:1px;cursor:pointer}
 .bottom .active{color:#E8C97A;border-bottom:2px solid #E8C97A}
 .bottom .gold{background:#C9A86A;color:#000;font-weight:bold}
-.footer{text-align:center;padding:24px;color:#888;font-size:12px;padding-bottom:80px}
+.footer{text-align:center;padding:24px;color:#888;font-size:12px;padding-bottom:90px}
+.page{display:none}
+.page.active{display:block}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="top">
-    <div class="logo">D' LUSSO</div>
-    <div class="top-icons">☰</div>
+<!-- HALAMAN HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="top">
+      <div class="logo">D' LUSSO</div>
+      <div class="top-icons">☰</div>
+    </div>
+    <img src="hero.png">
+    <div class="hero-overlay">
+      <h1>D' LUSSO</h1>
+      <h2>IL LUSSO DI BANDUNG</h2>
+      <p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p>
+      <button class="btn-gold" onclick="showPage('vip')">DAFTAR VIP →</button>
+    </div>
   </div>
-  <img src="hero.png">
-  <div class="hero-overlay">
-    <h1>D' LUSSO</h1>
-    <h2>IL LUSSO DI BANDUNG</h2>
-    <p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p>
-    <button class="btn-gold">SCOPRI LA COLLEZIONE →</button>
+
+  <div class="boutique">
+    <h3>— BOUTIQUE BANDUNG —</h3>
+    <p>APERTO ORA • Jl. Braga No.88, Bandung</p>
   </div>
+
+  <div class="cats">
+    <div class="cat"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><span>BORSE</span></div>
+    <div class="cat"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400"><span>OUTERWEAR</span></div>
+    <div class="cat"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400"><span>ACCESSORI</span></div>
+  </div>
+
+  <div class="section" id="collezione">
+    <h2>Featured <i>Collection</i></h2>
+    <div class="grid">
+      <div class="card"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500"><div class="card-body"><small>SUIT • PREMIUM</small><h3>Midnight Blazer</h3><div class="price">Rp 2.499.000</div><button class="add">+ Add to Cart</button></div></div>
+      <div class="card"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"><div class="card-body"><small>DRESS • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div></div>
+    </div>
+  </div>
+  <div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung<br>Jl. Braga No.88, Bandung • Instagram @d.lusso</div>
 </div>
 
-<div class="boutique">
-  <h3>— BOUTIQUE BANDUNG —</h3>
-  <p>APERTO ORA • Jl. Braga No.88, Bandung</p>
-</div>
-
-<div class="cats">
-  <div class="cat"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"><span>BORSE</span></div>
-  <div class="cat"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400"><span>OUTERWEAR</span></div>
-  <div class="cat"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400"><span>ACCESSORI</span></div>
-</div>
-
-<div class="section">
-  <h2>Featured <i>Collection</i></h2>
-  <div class="grid">
-    <div class="card"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500"><div class="card-body"><small>SUIT • PREMIUM</small><h3>Midnight Blazer</h3><div class="price">Rp 2.499.000</div><button class="add">+ Add to Cart</button></div></div>
-    <div class="card"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500"><div class="card-body"><small>DRESS • LUXURY</small><h3>Golden Satin Gown</h3><div class="price">Rp 3.899.000</div><button class="add">+ Add to Cart</button></div></div>
+<!-- HALAMAN DAFTAR VIP - TERPISAH -->
+<div id="page-vip" class="page">
+  <div class="vip">
+    <div class="crown">👑</div>
+    <h2>Club D' Lusso VIP</h2>
+    <h3>Il Lusso di Bandung</h3>
+    <h4>Daftar VIP Membership</h4>
+    <p>Gabung sekarang dan nikmati layanan fashion eksklusif</p>
+    <div class="form">
+      <label>Nama Lengkap</label>
+      <input placeholder="👤  Masukkan nama lengkap">
+      <label>No WA</label>
+      <input placeholder="📞  +62 8xx xxxx xxxx">
+      <label>Password</label>
+      <input type="password" placeholder="🔒  Masukkan password">
+      <div class="check"><input type="checkbox" checked style="width:18px"> <span>Saya setuju dengan Syarat & Ketentuan & Kebijakan Privasi</span></div>
+      <button class="btn-vip">DAFTAR VIP GRATIS</button>
+      <div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div>
+    </div>
   </div>
-</div>
-
-<div class="vip">
-  <div class="crown">👑</div>
-  <h2>Club D' Lusso VIP</h2>
-  <h3>Il Lusso di Bandung</h3>
-  <h4>Daftar VIP Membership</h4>
-  <p>Gabung sekarang dan nikmati layanan fashion eksklusif</p>
-  <div class="form">
-    <label>Nama Lengkap</label>
-    <input placeholder="👤  Masukkan nama lengkap">
-    <label>No WA</label>
-    <input placeholder="📞  +62 8xx xxxx xxxx">
-    <label>Password</label>
-    <input type="password" placeholder="🔒  Masukkan password">
-    <div class="check"><input type="checkbox" checked style="width:18px"> <span>Saya setuju dengan Syarat & Ketentuan & Kebijakan Privasi</span></div>
-    <button class="btn-vip">DAFTAR VIP GRATIS</button>
-    <div class="small">Gratis • Tidak ada biaya pendaftaran<br><br>Sudah punya akun? <b><u>Masuk</u></b></div>
-  </div>
+  <div class="footer">© 2026 D' LUSSO • Jl. Braga No.88, Bandung</div>
 </div>
 
 <div class="bottom">
-  <div class="active">🏠 HOME</div>
-  <div>COLLEZIONE</div>
-  <div class="gold">BOUTIQUE</div>
-  <div>CONTATTI</div>
+  <div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div>
+  <div onclick="showPage('home');document.getElementById('collezione').scrollIntoView({behavior:'smooth'})">COLLEZIONE</div>
+  <div id="nav-vip" class="gold" onclick="showPage('vip')">👑 VIP</div>
+  <div onclick="showPage('home');window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">CONTATTI</div>
 </div>
 
-<div class="footer">© 2026 D' LUSSO • Il Lusso di Bandung<br>Jl. Braga No.88, Bandung • Instagram @d.lusso</div>
+<script>
+function showPage(p){
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-vip').classList.remove('active');
+  document.getElementById('nav-home').classList.remove('active');
+  document.getElementById('nav-vip').classList.remove('active');
+  document.getElementById('page-'+p).classList.add('active');
+  if(p==='home') document.getElementById('nav-home').classList.add('active');
+  if(p==='vip') document.getElementById('nav-vip').classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
 
 </body>
 </html>
