@@ -304,7 +304,7 @@ function updateDots(val){var dots=''; for(var i=0;i<6;i++){dots+=(i<(val?val.len
 document.addEventListener('input',e=>{if(e.target.id==='pinInput')updateDots(e.target.value);});
 function tutupPin(){document.getElementById('pinModal').style.display='none'; rahasiaData=null;}
 function cekPinRahasia(){var inputPin=document.getElementById('pinInput').value.trim(); if(!rahasiaData)return; var pinBener=String(rahasiaData.pin||''); if(inputPin!==''&&inputPin===pinBener){var karcis='DL-'+Date.now().toString().slice(-6)+'-'+Math.floor(Math.random()*90+10); var exp=Date.now()+12*60*60*1000; localStorage.setItem('dlusso_karcis',karcis); localStorage.setItem('dlusso_karcis_exp',String(exp)); localStorage.setItem('dlusso_staff',JSON.stringify({...rahasiaData,karcis:karcis,login_at:Date.now(),exp:exp,role:rahasiaTujuan==='wes.html'?'admin':'pegawai'})); alert('Selamat datang! 🎟️ Karcis berlaku 12 jam!'); window.location.href=rahasiaTujuan;}else{document.getElementById('pinError').style.display='block'; document.getElementById('pinInput').value=''; updateDots('');}}
-// === SOFIA MASTER v7 - NGERTI JENIS SEPATU ===
+// === SOFIA MASTER v8 - TOBAT BENERAN, NGGAK KASIH HELL LAGI ===
 function sofiaRekomendasi(p, low){
   var isKerja = low.includes('kerja')||low.includes('kantor')||low.includes('daily')||low.includes('sehari');
   if(p.name.toLowerCase().includes('tuxedo') && isKerja) return 'Ini buat acara super formal kak, bukan buat kerja harian ya 🙏';
@@ -327,14 +327,24 @@ function ambilNamaBarang(text){
   if(nama.length<2) nama = t.replace(/[?!.]/g,'').trim();
   return nama.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
+// FUNGSI BARU: Cek apakah sepatu itu Heels / Cewek?
+function isHeels(p){
+  var n=(p.name||'').toLowerCase();
+  return n.includes('heels')||n.includes('heel')||n.includes('stiletto')||n.includes('satin')||n.includes('pump');
+}
 function cariAlternatif(low, prods){
+  // SNEAKERS / SANDAL / KETS = MAU YANG DATAR & SANTAI, JANGAN KASIH HEELS!
+  if(low.includes('sneaker')||low.includes('kets')||low.includes('sneakers')||low.includes('sandal')||low.includes('sendal')||low.includes('slipper')||low.includes('jepit')){
+    var sepatuDatar = prods.filter(p=>p.category==='SEPATU' && p.stock>0 && !isHeels(p));
+    // Utamakan Loafer & Oxford dulu
+    var loaferOxford = sepatuDatar.filter(p=>p.name.toLowerCase().includes('loafer')||p.name.toLowerCase().includes('oxford'));
+    var sisanya = sepatuDatar.filter(p=>!p.name.toLowerCase().includes('loafer')&&!p.name.toLowerCase().includes('oxford'));
+    var gabung = [...loaferOxford, ...sisanya];
+    return {label:'Sepatu Mewah yang Nyaman & Datar', list: gabung.slice(0,3)};
+  }
   if(low.includes('topi')||low.includes('kacamata')||low.includes('jam')||low.includes('parfum')||low.includes('dompet')||low.includes('ikat')||low.includes('aksesor')||low.includes('accessor')){
     var alt = prods.filter(p=>p.category==='TAS');
     return {label:'Accessories', list: alt.slice(0,3)};
-  }
-  if(low.includes('sandal')||low.includes('sendal')||low.includes('slipper')||low.includes('jepit')||low.includes('sneaker')||low.includes('kets')||low.includes('sneakers')){
-    var alt2 = prods.filter(p=>p.category==='SEPATU' && p.stock>0);
-    return {label:'Sepatu Mewah', list: alt2.slice(0,3)};
   }
   if(low.includes('jas')||low.includes('blazer')||low.includes('suit')||low.includes('tuxedo')){
     var alt3 = prods.filter(p=>p.category==='PAKAIAN' && p.stock>0);
@@ -372,7 +382,6 @@ async function sendChatMsg(text){
   if(!jawaban && low.includes('sofia') && (low.includes('cewek')||low.includes('cowok')||low.includes('cewe')||low.includes('cowo')||low.includes('laki')||low.includes('perempuan')||low.includes('pria')||low.includes('wanita'))){jawaban='Sofia cewek kak ✨👩<br><br>Sofia itu yang siap bantuin kakak di D\'Lusso. Ada yang bisa dibantu kak?';}
   if(!jawaban && (low.includes('kamu siapa')||low.includes('siapa kamu')||low.includes('nama kamu')||low.includes('siapa namamu'))){jawaban='Kenalin kak, saya Sofia ✨ Siap bantu kakak di D\'Lusso. Ada yang bisa dibantu kak? 🙏';}
   if(!jawaban && (low.includes('makasih')||low.includes('terima kasih')||low.includes('thank'))){jawaban='Sama-sama kak! 🙏 Seneng banget bisa bantuin kakak. Kalo ada yang mau ditanya lagi, chat Sofia aja ya!';}
-  // --- KHUSUS SNEAKERS & JENIS SEPATU SPESIFIK - HARUS CEK DULU! ---
   if(!jawaban && (low.includes('sneaker')||low.includes('kets')||low.includes('sneakers'))){
     try{
       var prodsSneak=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
@@ -382,7 +391,7 @@ async function sendChatMsg(text){
       } else {
         var altSneak = cariAlternatif(low, prodsSneak);
         var altTextSneak = altSneak.list.length?'<br><br>Ini yang Sofia pilihkan yang seputar tujuan kakak, yang cocok buat kakak 🙏✨<br><br>'+sofiaFormatProduk(altSneak.list, low):'';
-        jawaban='Maaf kak untuk Sepatu Sneakers saat ini belum tersedia di D\'Lusso 🙏<br><br>Bagaimana kalau Sofia pilihkan Sepatu Mewah yang cocok untuk kakak?'+altTextSneak+'<br><br>Yang ini tetep nyaman buat jalan seharian kok kak, tapi keliatan jauh lebih mewah! Mau yang mana kak?';
+        jawaban='Maaf kak untuk Sepatu Sneakers saat ini belum tersedia di D\'Lusso 🙏<br><br>Bagaimana kalau Sofia pilihkan Sepatu Mewah yang Nyaman & Datar yang cocok untuk kakak?'+altTextSneak+'<br><br>Yang ini tetep nyaman buat jalan seharian kok kak, tapi keliatan jauh lebih mewah & rapi! Mau yang mana kak?';
       }
     }catch(e){console.log(e);}
   }
@@ -417,14 +426,12 @@ async function sendChatMsg(text){
   if(!jawaban && (low.includes('rekomendasi')||low.includes('rekomend')||low.includes('buat kondangan')||low.includes('buat nikah')||low.includes('buat gala')||low.includes('buat pesta')||low.includes('buat acara')||low.includes('paling laris')||low.includes('best seller')||low.includes('bagus'))){
     try{var prodsRec=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[]; var top=prodsRec.filter(p=>p.stock>0).sort((a,b)=>Number(b.price)-Number(a.price)).slice(0,3); if(top.length) jawaban='Ini rekomendasi terbaik dari Sofia buat kakak! 😍✨<br><br>'+sofiaFormatProduk(top, low)+'<br><br>Ini yang paling sering bikin customer kita suka kak! Mau yang mana? Sofia bantu checkout via WA ya 💚';}catch(e){}
   }
-  // --- CARI PRODUK UMUM - TAPI JANGAN ASAL KASIH SEMUA SEPATU ---
   if(!jawaban && (low.includes('harga')||low.includes('berapa')||low.includes('dress')||low.includes('gaun')||low.includes('jas')||low.includes('sepatu')||low.includes('tas')||low.includes('heels')||low.includes('blazer')||low.includes('kemeja')||low.includes('stok')||low.includes('ready')||low.includes('koleksi')||low.includes('produk')||low.includes('ukuran')||low.includes('size')||low.includes('cowok')||low.includes('cewek')||low.includes('pria')||low.includes('wanita')||low.includes('ada')||low.includes('jual')||low.includes('sandal')||low.includes('sendal')||low.includes('topi')||low.includes('kaos')||low.includes('celana')||low.includes('rok')||low.includes('dompet')||low.includes('kacamata')||low.includes('jam')||low.includes('parfum')||low.includes('baju')||low.includes('kosong')||low.includes('habis')||low.includes('loafer')||low.includes('oxford')||low.includes('stiletto'))){
     try{
       var prods=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
       if(prods.length){
         var ketemu=[];
         var cariNama=prods.filter(p=>{var words=p.name.toLowerCase().split(' '); var match=words.filter(w=>w.length>3 && low.includes(w)).length; return match>=2;});
-        // FIX SNEAKERS: Kalau user minta jenis spesifik, jangan kasih semua kategori!
         var jenisSpesifik = null;
         if(low.includes('heels')||low.includes('stiletto')) jenisSpesifik='heels';
         else if(low.includes('loafer')) jenisSpesifik='loafer';
@@ -432,7 +439,6 @@ async function sendChatMsg(text){
         else if(low.includes('sneaker')||low.includes('kets')) jenisSpesifik='sneaker';
         if(jenisSpesifik){
           ketemu = prods.filter(p=>p.name.toLowerCase().includes(jenisSpesifik) && p.stock>0);
-          // Kalau jenis spesifik nggak ada, jangan fallback ke semua sepatu! Langsung ke alternatif!
           if(!ketemu.length){
             var namaBarangSpes = ambilNamaBarang(text);
             var altSpes = cariAlternatif(low, prods);
