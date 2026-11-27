@@ -304,10 +304,9 @@ function updateDots(val){var dots=''; for(var i=0;i<6;i++){dots+=(i<(val?val.len
 document.addEventListener('input',e=>{if(e.target.id==='pinInput')updateDots(e.target.value);});
 function tutupPin(){document.getElementById('pinModal').style.display='none'; rahasiaData=null;}
 function cekPinRahasia(){var inputPin=document.getElementById('pinInput').value.trim(); if(!rahasiaData)return; var pinBener=String(rahasiaData.pin||''); if(inputPin!==''&&inputPin===pinBener){var karcis='DL-'+Date.now().toString().slice(-6)+'-'+Math.floor(Math.random()*90+10); var exp=Date.now()+12*60*60*1000; localStorage.setItem('dlusso_karcis',karcis); localStorage.setItem('dlusso_karcis_exp',String(exp)); localStorage.setItem('dlusso_staff',JSON.stringify({...rahasiaData,karcis:karcis,login_at:Date.now(),exp:exp,role:rahasiaTujuan==='wes.html'?'admin':'pegawai'})); alert('Selamat datang! 🎟️ Karcis berlaku 12 jam!'); window.location.href=rahasiaTujuan;}else{document.getElementById('pinError').style.display='block'; document.getElementById('pinInput').value=''; updateDots('');}}
-// === SOFIA MASTER v4 - PAHAM COWOK/CEWEK + PAHAM ACARA ===
+// === SOFIA MASTER v6 - JUJUR + NAWARIN ALTERNATIF ===
 function sofiaRekomendasi(p, low){
   var isKerja = low.includes('kerja')||low.includes('kantor')||low.includes('daily')||low.includes('sehari');
-  var isCowok = low.includes('cowok')||low.includes('pria')||low.includes('laki')||low.includes('bapak')||low.includes('mas');
   if(p.name.toLowerCase().includes('tuxedo') && isKerja) return 'Ini buat acara super formal kak, bukan buat kerja harian ya 🙏';
   if(isKerja && p.name.toLowerCase().includes('blazer')) return 'Paling pas buat kerja kak, rapi tapi tetep nyaman dipakai seharian 🤵';
   if(isKerja && p.name.toLowerCase().includes('suit')) return 'Cocok buat meeting penting & presentasi kak 🤵';
@@ -318,18 +317,52 @@ function sofiaRekomendasi(p, low){
   return 'Best seller di D\' LUSSO kak ✨';
 }
 function sofiaFormatProduk(list, low){ return list.slice(0,6).map(p=>'• <b>'+p.name+'</b><br>💰 Rp '+Number(p.price).toLocaleString('id-ID')+' • Stok: '+p.stock+' • Ukuran: '+(p.ukuran||'-')+(p.stock<=0?' ❌ HABIS':' ✅ Ready')+'<br><i>'+sofiaRekomendasi(p, low||'')+'</i>').join('<br><br>'); }
-function filterGender(list, low){
-  var isCowok = low.includes('cowok')||low.includes('pria')||low.includes('laki')||low.includes('bapak')||low.includes('mas ')||low.includes('untuk saya')===false && false;
-  var isCewek = low.includes('cewek')||low.includes('wanita')||low.includes('perempuan')||low.includes('mbak')||low.includes('ibu');
-  // Kata cewek di nama produk
-  var kataCewek = ['lady','women','woman','wanita','dress','gaun','heels','blouse'];
-  var kataCowok = ['tuxedo','suit','blazer'];
-  // Kalau user bilang cowok/pria, buang produk cewek yang jelas
-  if(low.includes('cowok')||low.includes('pria')||low.includes('laki')||low.includes('buat saya') && low.includes('cowok')){
-    return list.filter(p=>!kataCewek.some(k=>p.name.toLowerCase().includes(k) && k!=='blazer'));
+function ambilNamaBarang(text){
+  var t=text.toLowerCase().trim();
+  var buang=['ada gak','ada ga','ada nggak','ada tidak','ada','gak','ga','nggak','tidak','jual','jual ga','punya','punya gak','ready','ready ga','stok','mau tanya','mau nanya','kalau','kalo','apakah','apakah ada','tolong','cari','cariin','butuh','mau','beli','harga','berapa','kak','min','dong','ya','sih','ya?','?','.','!'];
+  var m=t.match(/(?:kalau|kalo|apakah)?\s*([a-z\s]+?)\s*(?:ada|jual|ready|punya|stok|nggak|gak|ga|tidak)?\s*\??$/);
+  var nama = m?m[1].trim():'';
+  buang.forEach(k=>{ if(nama.startsWith(k+' ')) nama=nama.slice(k.length+1); if(nama.endsWith(' '+k)) nama=nama.slice(0, nama.length-k.length-1); });
+  nama = nama.replace(/^(kalau|kalo|apakah|mau tanya|mau nanya)\s+/,'').trim();
+  if(nama.length<2) nama = t.replace(/[?!.]/g,'').trim();
+  return nama.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+}
+// PETA ALTERNATIF - INI OTAK SALESNYA SOFIA
+function cariAlternatif(low, prods){
+  // Return {label, list} - produk pengganti yang seputar tujuan
+  if(low.includes('topi')||low.includes('kacamata')||low.includes('jam')||low.includes('parfum')||low.includes('dompet')||low.includes('ikat')||low.includes('aksesor')||low.includes('accessor')){
+    var alt = prods.filter(p=>p.category==='TAS');
+    return {label:'Accessories', list: alt.slice(0,3)};
   }
-  // Deteksi umum: kalau tanya jas untuk kerja dan user belum bilang gender, tetap tampilkan tapi tandai yang cewek
-  return list;
+  if(low.includes('sandal')||low.includes('sendal')||low.includes('slipper')||low.includes('jepit')){
+    var alt2 = prods.filter(p=>p.category==='SEPATU' && p.stock>0);
+    return {label:'Sepatu Mewah', list: alt2.slice(0,3)};
+  }
+  if(low.includes('jas')||low.includes('blazer')||low.includes('suit')||low.includes('tuxedo')){
+    var alt3 = prods.filter(p=>p.category==='PAKAIAN' && p.stock>0);
+    return {label:'Kemeja / Pakaian', list: alt3.slice(0,3)};
+  }
+  if(low.includes('dress')||low.includes('gaun')||low.includes('gamis')||low.includes('kebaya')){
+    var alt4 = prods.filter(p=>p.category==='PAKAIAN' && p.stock>0);
+    // Kalau PAKAIAN kosong, kasih DRESS yang ada
+    if(!alt4.length) alt4 = prods.filter(p=>p.category==='DRESS' && p.stock>0);
+    return {label:'Baju Elegan', list: alt4.slice(0,3)};
+  }
+  if(low.includes('celana')||low.includes('rok')||low.includes('kaos')||low.includes('kemeja')||low.includes('baju')||low.includes('pakaian')){
+    var alt5 = prods.filter(p=>(p.category==='PAKAIAN'||p.category==='DRESS') && p.stock>0);
+    return {label:'Pakaian', list: alt5.slice(0,3)};
+  }
+  if(low.includes('sepatu')||low.includes('heels')||low.includes('sneaker')){
+    var alt6 = prods.filter(p=>p.category==='SEPATU' && p.stock>0);
+    return {label:'Sepatu Mewah', list: alt6.slice(0,3)};
+  }
+  if(low.includes('tas')||low.includes('handbag')||low.includes('tote')){
+    var alt7 = prods.filter(p=>p.category==='TAS' && p.stock>0);
+    return {label:'Tas', list: alt7.slice(0,3)};
+  }
+  // Default: kasih best seller
+  var altDef = prods.filter(p=>p.stock>0).sort((a,b)=>Number(b.price)-Number(a.price)).slice(0,3);
+  return {label:'Koleksi Terbaik', list: altDef};
 }
 async function sendChatMsg(text){
   var isRahasia=await cekKodeRahasia(text);
@@ -343,18 +376,14 @@ async function sendChatMsg(text){
   if(!jawaban && low.includes('sofia') && (low.includes('cewek')||low.includes('cowok')||low.includes('cewe')||low.includes('cowo')||low.includes('laki')||low.includes('perempuan')||low.includes('pria')||low.includes('wanita'))){jawaban='Sofia cewek kak ✨👩<br><br>Sofia itu yang siap bantuin kakak di D\'Lusso. Ada yang bisa dibantu kak?';}
   if(!jawaban && (low.includes('kamu siapa')||low.includes('siapa kamu')||low.includes('nama kamu')||low.includes('siapa namamu'))){jawaban='Kenalin kak, saya Sofia ✨ Siap bantu kakak di D\'Lusso. Ada yang bisa dibantu kak? 🙏';}
   if(!jawaban && (low.includes('makasih')||low.includes('terima kasih')||low.includes('thank'))){jawaban='Sama-sama kak! 🙏 Seneng banget bisa bantuin kakak. Kalo ada yang mau ditanya lagi, chat Sofia aja ya!';}
-  // --- JAS UNTUK KERJA - KHUSUS ---
   if(!jawaban && low.includes('jas') && (low.includes('kerja')||low.includes('kantor')||low.includes('daily'))){
     try{
       var prodsKerja=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
       var isCowokKerja = low.includes('cowok')||low.includes('pria')||low.includes('laki')||low.includes('saya cowok')||low.includes('buat cowok')||low.includes('untuk cowok');
       var isCewekKerja = low.includes('cewek')||low.includes('wanita')||low.includes('perempuan')||low.includes('buat cewek');
       var listKerja = prodsKerja.filter(p=>p.category==='JAS');
-      // Kalau cowok, buang White Lady Blazer & produk cewek
       if(isCowokKerja){ listKerja = listKerja.filter(p=>!p.name.toLowerCase().includes('lady') && !p.name.toLowerCase().includes('women') && !p.name.toLowerCase().includes('wanita')); }
-      // Kalau cewek, tampilkan yang Lady aja
       if(isCewekKerja){ listKerja = listKerja.filter(p=>p.name.toLowerCase().includes('lady') || p.name.toLowerCase().includes('women') || p.name.toLowerCase().includes('blazer')); }
-      // Kalau belum jelas gender, tanya dulu tapi kasih yang paling aman buat kerja
       if(!isCowokKerja && !isCewekKerja){
         var amanKerja = listKerja.filter(p=>!p.name.toLowerCase().includes('tuxedo') && !p.name.toLowerCase().includes('lady'));
         jawaban='Boleh kak! 🙏 Buat kerja, yang paling pas itu Blazer & Suit, bukan Tuxedo ya kak, soalnya Tuxedo itu buat acara super formal.<br><br>Ini yang paling cocok buat kerja kak:<br><br>'+sofiaFormatProduk(amanKerja, low)+'<br><br>Maaf kak, boleh info kakak cari buat cowok atau cewek? Biar Sofia pilihin yang paling pas, nggak ketuker kayak tadi 🙏';
@@ -378,7 +407,8 @@ async function sendChatMsg(text){
   if(!jawaban && (low.includes('rekomendasi')||low.includes('rekomend')||low.includes('buat kondangan')||low.includes('buat nikah')||low.includes('buat gala')||low.includes('buat pesta')||low.includes('buat acara')||low.includes('paling laris')||low.includes('best seller')||low.includes('bagus'))){
     try{var prodsRec=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[]; var top=prodsRec.filter(p=>p.stock>0).sort((a,b)=>Number(b.price)-Number(a.price)).slice(0,3); if(top.length) jawaban='Ini rekomendasi terbaik dari Sofia buat kakak! 😍✨<br><br>'+sofiaFormatProduk(top, low)+'<br><br>Ini yang paling sering bikin customer kita suka kak! Mau yang mana? Sofia bantu checkout via WA ya 💚';}catch(e){}
   }
-  if(!jawaban && (low.includes('harga')||low.includes('berapa')||low.includes('dress')||low.includes('gaun')||low.includes('jas')||low.includes('sepatu')||low.includes('tas')||low.includes('heels')||low.includes('blazer')||low.includes('kemeja')||low.includes('stok')||low.includes('ready')||low.includes('koleksi')||low.includes('produk')||low.includes('ukuran')||low.includes('size')||low.includes('cowok')||low.includes('cewek')||low.includes('pria')||low.includes('wanita'))){
+  // --- CARI PRODUK + JUJUR + NAWARIN ALTERNATIF ---
+  if(!jawaban && (low.includes('harga')||low.includes('berapa')||low.includes('dress')||low.includes('gaun')||low.includes('jas')||low.includes('sepatu')||low.includes('tas')||low.includes('heels')||low.includes('blazer')||low.includes('kemeja')||low.includes('stok')||low.includes('ready')||low.includes('koleksi')||low.includes('produk')||low.includes('ukuran')||low.includes('size')||low.includes('cowok')||low.includes('cewek')||low.includes('pria')||low.includes('wanita')||low.includes('ada')||low.includes('jual')||low.includes('sandal')||low.includes('sendal')||low.includes('topi')||low.includes('kaos')||low.includes('celana')||low.includes('rok')||low.includes('dompet')||low.includes('kacamata')||low.includes('jam')||low.includes('parfum')||low.includes('baju')||low.includes('kosong')||low.includes('habis'))){
     try{
       var prods=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
       if(prods.length){
@@ -390,19 +420,34 @@ async function sendChatMsg(text){
         else if(low.includes('sepatu')||low.includes('heels')||low.includes('loafer')||low.includes('oxford')) ketemu=prods.filter(p=>p.category==='SEPATU');
         else if(low.includes('tas')||low.includes('handbag')||low.includes('tote')) ketemu=prods.filter(p=>p.category==='TAS');
         else if(low.includes('kemeja')||low.includes('blouse')||low.includes('sweater')||low.includes('outer')) ketemu=prods.filter(p=>p.category==='PAKAIAN');
+        else if(low.includes('dompet')) ketemu=prods.filter(p=>p.name.toLowerCase().includes('dompet')||p.category==='TAS');
         else if(low.includes('koleksi')||low.includes('produk')||low.includes('harga')||low.includes('berapa')||low.includes('ukuran')||low.includes('stok')) ketemu=prods;
-        // FILTER GENDER - INI YANG BARU
         if((low.includes('cowok')||low.includes('pria')||low.includes('laki')) && ketemu.length){
           ketemu = ketemu.filter(p=>!p.name.toLowerCase().includes('lady') && !p.name.toLowerCase().includes('women') && p.category!=='DRESS');
         }
         if((low.includes('cewek')||low.includes('wanita')||low.includes('perempuan')) && ketemu.length){
           ketemu = ketemu.filter(p=>!p.name.toLowerCase().includes('tuxedo') || low.includes('tuxedo'));
         }
-        if(ketemu.length){
+        // Cek stok habis: kalau ketemu tapi semua stok 0, anggap kosong juga
+        var ketemuReady = ketemu.filter(p=>p.stock>0);
+        if(ketemu.length && ketemuReady.length){
           var judul='Ini yang Sofia temuin kak 🙏<br><br>';
           if(low.includes('ukuran')||low.includes('size')) judul='Untuk ukuran kak, ini detailnya ya 🙏<br><br>';
           if(low.includes('stok')||low.includes('ready')) judul='Cek stok buat kakak ya 🙏<br><br>';
-          jawaban=judul+sofiaFormatProduk(ketemu, low)+'<br><br>Mau yang mana kak? Sebutin aja namanya, Sofia bantu checkout via WA ya 💚<br><br>Atau kakak mau Sofia rekomendasiin yang paling cocok buat acara kakak?';
+          jawaban=judul+sofiaFormatProduk(ketemuReady, low)+'<br><br>Mau yang mana kak? Sebutin aja namanya, Sofia bantu checkout via WA ya 💚<br><br>Atau kakak mau Sofia rekomendasiin yang paling cocok buat acara kakak?';
+        } else {
+          // === BARANG NGGAK ADA / KOSONG -> JUJUR + NAWARIN ALTERNATIF ===
+          var namaBarang = ambilNamaBarang(text);
+          // Kalau user bilang "Jas kosong" tapi sebenarnya Jas ada, jangan bilang nggak ada. Cek dulu.
+          var isBarangSpesifikTidakAda = low.includes('sandal')||low.includes('sendal')||low.includes('topi')||low.includes('kaos')||low.includes('celana')||low.includes('rok')||low.includes('dompet')||low.includes('kacamata')||low.includes('parfum')||low.includes('baju')||low.includes('kosong')||low.includes('habis')||low.includes('ada')||low.includes('jual');
+          if(isBarangSpesifikTidakAda){
+            var alt = cariAlternatif(low, prods);
+            var altText = '';
+            if(alt.list.length){
+              altText = '<br><br>Ini yang Sofia pilihkan yang seputar tujuan kakak, yang cocok buat kakak 🙏✨<br><br>'+sofiaFormatProduk(alt.list, low);
+            }
+            jawaban='Maaf kak untuk '+namaBarang+' saat ini belum tersedia di D\'Lusso 🙏<br><br>Bagaimana kalau Sofia pilihkan '+alt.label+' yang cocok untuk kakak?'+altText+'<br><br>Mau yang mana kak? Sofia bantu checkout via WA ya 💚';
+          }
         }
       }
     }catch(e){console.log('cari produk gagal',e);}
@@ -419,8 +464,13 @@ async function sendChatMsg(text){
     }catch(e){console.log('bot gagal',e);}
   }
   if(!jawaban){
-    jawaban='Hallo, Selamat datang di D\'Lusso. Ada yang bisa dibantu kak 🙏<br><br>Maaf ya kak, untuk "'+text+'" Sofia teruskan ke Admin ya, biar dijawab langsung 🙏<br><br>Sambil nunggu, kakak mau Sofia tunjukin koleksi terbaru atau rekomendasi yang paling laris?';
-    try{var m=JSON.parse(localStorage.getItem('dlusso_member')||'{}'); await supabaseClient.from('bot_antrian').insert([{pertanyaan:text,member_name:m.full_name||'Tamu',whatsapp:m.whatsapp||'',status:'MENUNGGU'}]);}catch(e){}
+    if(low.includes('ada')||low.includes('sandal')||low.includes('sendal')||low.includes('topi')){
+      var namaBarang2 = ambilNamaBarang(text);
+      try{var prods2=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[]; var alt2=cariAlternatif(low, prods2); var altText2=alt2.list.length?'<br><br>Ini yang Sofia pilihkan yang seputar tujuan kakak 🙏✨<br><br>'+sofiaFormatProduk(alt2.list, low):''; jawaban='Maaf kak untuk '+namaBarang2+' saat ini belum tersedia di D\'Lusso 🙏<br><br>Bagaimana kalau Sofia pilihkan '+alt2.label+' yang cocok untuk kakak?'+altText2+'<br><br>Mau yang mana kak?';}catch(e){jawaban='Maaf kak untuk '+namaBarang2+' saat ini belum tersedia di D\'Lusso 🙏';}
+    } else {
+      jawaban='Hallo, Selamat datang di D\'Lusso. Ada yang bisa dibantu kak 🙏<br><br>Maaf ya kak, untuk "'+text+'" Sofia teruskan ke Admin ya, biar dijawab langsung 🙏<br><br>Sambil nunggu, kakak mau Sofia tunjukin koleksi terbaru atau rekomendasi yang paling laris?';
+      try{var m=JSON.parse(localStorage.getItem('dlusso_member')||'{}'); await supabaseClient.from('bot_antrian').insert([{pertanyaan:text,member_name:m.full_name||'Tamu',whatsapp:m.whatsapp||'',status:'MENUNGGU'}]);}catch(e){}
+    }
   }
   setTimeout(function(){bot.innerHTML=jawaban; body.scrollTop=body.scrollHeight;},600);
 }
