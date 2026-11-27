@@ -65,9 +65,11 @@ small{color:#888;font-size:11px;line-height:1.5}
 <label>SUPABASE KEY (Toko Tujuan)</label><input id="sbKey" placeholder="sb_publishable_...">
 <label>NAMA TABEL</label><input id="sbTable" value="products" placeholder="products / orders">
 <button onclick="kirimBackupKeSupabase()">🗄️ KIRIM BACKUP KE SUPABASE</button>
-<button class="sec" onclick="backupDatabase()">⬇️ BACKUP DATABASE DARI SUPABASE - DOWNLOAD JSON</button>
+<button class="sec" onclick="backupDatabase()">⬇️ BACKUP DATABASE DARI SUPABASE - DOWNLOAD JSON (1 TABEL)</button>
+<button onclick="backupSemuaTabel()">⬇️ BACKUP SEMUA TABEL SEKALIGUS - 1 FILE JSON</button>
+<button class="sec" onclick="kirimBackupSemuaKeSupabase()">🗄️ KIRIM BACKUP SEMUA TABEL KE SUPABASE (RESTORE)</button>
 <div id="sbStatus"></div>
-<small>⚠️ Di Supabase tujuan, matikan RLS / buat Policy Allow All dulu biar bisa masuk!</small></div>
+<small>⚠️ Di Supabase tujuan, pastikan RLS + Policy Allow All udah nyala biar bisa masuk!</small></div>
 
 <script>
 var sha="",isiFileHP="",isiBackup=null;
@@ -90,8 +92,62 @@ function loadLocal(){try{var d=JSON.parse(localStorage.getItem('master_github')|
 document.getElementById('content').addEventListener('input',e=>{document.getElementById('info').textContent="Karakter: "+e.target.value.length});
 document.getElementById('fileHP').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){isiFileHP=ev.target.result;document.getElementById('fileHPInfo').textContent="✅ "+f.name+" ("+f.size+" byte) siap! File di GitHub jadi: "+f.name;document.getElementById('fileName').value=f.name};rd.readAsText(f)});
 async function kirimFileHPKeGithub(){var a=auth();if(!isiFileHP){alert("Pilih file dari HP dulu!");return}if(!a.token){alert("Isi Token dulu!");return}if(!confirm("Kirim "+document.getElementById('fileName').value+" ke "+a.owner+"/"+a.repo+" ?"))return;document.getElementById('status').textContent="⏳ Uploading file HP ke GitHub...";try{var cek=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file+"?ref="+a.branch,{headers:{Authorization:"Bearer "+a.token}});var cekJ=await cek.json();var body={message:"Upload dari HP via MASTER - "+new Date().toLocaleString('id-ID'),content:btoa(unescape(encodeURIComponent(isiFileHP))),branch:a.branch};if(cekJ.sha)body.sha=cekJ.sha;var r=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file,{method:"PUT",headers:{Authorization:"Bearer "+a.token,"Content-Type":"application/json"},body:JSON.stringify(body)});var j=await r.json();if(j.message&&!j.content){alert(j.message);return}document.getElementById('status').textContent="✅ BERHASIL! File HP udah masuk GitHub!";alert("BERHASIL! ✅ File HP udah jadi di GitHub!")}catch(e){alert(e.message)}}
-document.getElementById('backupHP').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){try{isiBackup=JSON.parse(ev.target.result);var jml=Array.isArray(isiBackup)?isiBackup.length:1;document.getElementById('backupHPInfo').textContent="✅ "+f.name+" terbaca! Isi: "+jml+" data. Siap kirim!"}catch(err){alert("File JSON rusak!")}};rd.readAsText(f)});
-async function kirimBackupKeSupabase(){var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim(),tabel=document.getElementById('sbTable').value.trim()||"products";if(!isiBackup){alert("Pilih backup.json dari HP dulu!");return}if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}var dataKirim=Array.isArray(isiBackup)?isiBackup:[isiBackup];if(!confirm("Kirim "+dataKirim.length+" data ke tabel "+tabel+" ?"))return;document.getElementById('sbStatus').textContent="⏳ Mengirim "+dataKirim.length+" data...";try{var sukses=0,gagal=0;for(var i=0;i<dataKirim.length;i+=100){var potong=dataKirim.slice(i,i+100);var r=await fetch(url+"/rest/v1/"+tabel,{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates"},body:JSON.stringify(potong)});if(r.ok)sukses+=potong.length;else gagal+=potong.length}document.getElementById('sbStatus').textContent="✅ Selesai! Sukses: "+sukses+", Gagal: "+gagal;alert("BERHASIL! ✅ Sukses: "+sukses+" Gagal: "+gagal)}catch(e){document.getElementById('sbStatus').textContent="❌ "+e.message;alert(e.message)}}
+document.getElementById('backupHP').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){try{isiBackup=JSON.parse(ev.target.result);var jml=Array.isArray(isiBackup)?isiBackup.length:Object.keys(isiBackup).length;document.getElementById('backupHPInfo').textContent="✅ "+f.name+" terbaca! Isi: "+jml+" data/tabel. Siap kirim!"}catch(err){alert("File JSON rusak!")}};rd.readAsText(f)});
+async function kirimBackupKeSupabase(){var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim(),tabel=document.getElementById('sbTable').value.trim()||"products";if(!isiBackup){alert("Pilih backup.json dari HP dulu!");return}if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}var dataKirim=Array.isArray(isiBackup)?isiBackup:(isiBackup[tabel]||[isiBackup]);if(!confirm("Kirim "+dataKirim.length+" data ke tabel "+tabel+" ?"))return;document.getElementById('sbStatus').textContent="⏳ Mengirim "+dataKirim.length+" data...";try{var sukses=0,gagal=0;for(var i=0;i<dataKirim.length;i+=100){var potong=dataKirim.slice(i,i+100);var r=await fetch(url+"/rest/v1/"+tabel,{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates"},body:JSON.stringify(potong)});if(r.ok)sukses+=potong.length;else gagal+=potong.length}document.getElementById('sbStatus').textContent="✅ Selesai! Sukses: "+sukses+", Gagal: "+gagal;alert("BERHASIL! ✅ Sukses: "+sukses+" Gagal: "+gagal)}catch(e){document.getElementById('sbStatus').textContent="❌ "+e.message;alert(e.message)}}
 async function backupDatabase(){var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim(),tabel=document.getElementById('sbTable').value.trim()||"products";if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}document.getElementById('sbStatus').textContent="⏳ Backup tabel "+tabel+"...";try{var r=await fetch(url+"/rest/v1/"+tabel+"?select=*",{headers:{apikey:key,Authorization:"Bearer "+key}});var j=await r.json();var blob=new Blob([JSON.stringify(j,null,2)],{type:"application/json"});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download="backup-"+tabel+"-"+new Date().toISOString().slice(0,10)+".json";a.click();document.getElementById('sbStatus').textContent="✅ Berhasil backup! Isi: "+j.length+" data. File ke-download!";alert("Berhasil backup! ✅\nTabel: "+tabel+"\nIsi: "+j.length+" data\nFile udah ke-download di HP lu!")}catch(e){alert(e.message)}}
+
+// === BARU: BACKUP SEMUA TABEL SEKALIGUS ===
+async function backupSemuaTabel(){
+  var url=document.getElementById('sbUrl').value.trim();
+  var key=document.getElementById('sbKey').value.trim();
+  if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}
+  var daftarTabel=["products","members","admins","pegawai","orders","riwayat_saldo","bot_faq","bot_antrian","order_items","member_notifications"];
+  var hasilSemua={};
+  document.getElementById('sbStatus').textContent="⏳ Backup semua tabel... 0/"+daftarTabel.length;
+  try{
+    for(var i=0;i<daftarTabel.length;i++){
+      var tabel=daftarTabel[i];
+      document.getElementById('sbStatus').textContent="⏳ Backup "+tabel+"... "+(i+1)+"/"+daftarTabel.length;
+      var r=await fetch(url+"/rest/v1/"+tabel+"?select=*",{headers:{apikey:key,Authorization:"Bearer "+key}});
+      var j=await r.json();
+      hasilSemua[tabel]=Array.isArray(j)?j:[];
+    }
+    var blob=new Blob([JSON.stringify(hasilSemua,null,2)],{type:"application/json"});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download="backup-SEMUA-"+new Date().toISOString().slice(0,10)+".json";
+    a.click();
+    var total=0; Object.keys(hasilSemua).forEach(k=>{total+=hasilSemua[k].length});
+    document.getElementById('sbStatus').textContent="✅ Berhasil backup SEMUA! Total: "+total+" data dari "+daftarTabel.length+" tabel.";
+    alert("BERHASIL! ✅\nTotal: "+total+" data\nTabel: "+daftarTabel.length+"\nFile backup-SEMUA udah ke-download!");
+  }catch(e){document.getElementById('sbStatus').textContent="❌ "+e.message;alert(e.message)}
+}
+
+// === BARU: RESTORE SEMUA TABEL DARI 1 FILE ===
+async function kirimBackupSemuaKeSupabase(){
+  var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim();
+  if(!isiBackup){alert("Pilih backup-SEMUA.json dari HP dulu!");return}
+  if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}
+  if(Array.isArray(isiBackup)){alert("File ini cuma 1 tabel! Pake tombol KIRIM BACKUP (1 tabel) di atas, atau pake file backup-SEMUA.json!");return}
+  var daftarTabel=Object.keys(isiBackup);
+  if(!confirm("Kirim RESTORE "+daftarTabel.length+" tabel ke Supabase? ("+daftarTabel.join(", ")+")"))return;
+  document.getElementById('sbStatus').textContent="⏳ Restore semua tabel...";
+  try{
+    var totalSukses=0,totalGagal=0;
+    for(var t=0;t<daftarTabel.length;t++){
+      var tabel=daftarTabel[t];
+      var dataKirim=isiBackup[tabel]||[];
+      if(!dataKirim.length){continue}
+      document.getElementById('sbStatus').textContent="⏳ Kirim "+tabel+"... "+(t+1)+"/"+daftarTabel.length+" ("+dataKirim.length+" data)";
+      for(var i=0;i<dataKirim.length;i+=100){
+        var potong=dataKirim.slice(i,i+100);
+        var r=await fetch(url+"/rest/v1/"+tabel,{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates"},body:JSON.stringify(potong)});
+        if(r.ok)totalSukses+=potong.length;else totalGagal+=potong.length;
+      }
+    }
+    document.getElementById('sbStatus').textContent="✅ Restore selesai! Sukses: "+totalSukses+", Gagal: "+totalGagal;
+    alert("RESTORE BERHASIL! ✅\nSukses: "+totalSukses+" Gagal: "+totalGagal);
+  }catch(e){document.getElementById('sbStatus').textContent="❌ "+e.message;alert(e.message)}
+}
 loadLocal();render();
 </script></body></html>
