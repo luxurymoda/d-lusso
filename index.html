@@ -8,16 +8,16 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
-body{background:#0a0a0a;color:#fff}
-.top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,0))}
-.logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold}
+body{background:#0a0a0a;color:#fff;padding-top:56px}
+.top{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:rgba(10,10,10,.92);border-bottom:1px solid #222;backdrop-filter:blur(8px)}
+.logo{font-size:22px;letter-spacing:2px;color:#E8C97A;font-weight:bold;cursor:pointer}
 .top-install{background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;font-size:11px;font-weight:bold;padding:7px 12px;border-radius:20px;cursor:pointer;border:none}
 .top-icons{font-size:26px;cursor:pointer;padding:4px 8px}
-.menu-drop{display:none;position:absolute;top:58px;right:12px;z-index:50;background:#151515;border:1px solid #C9A86A;border-radius:14px;width:230px;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden}
+.menu-drop{display:none;position:fixed;top:58px;right:12px;z-index:200;background:#151515;border:1px solid #C9A86A;border-radius:14px;width:230px;box-shadow:0 10px 30px rgba(0,0,0,.6);overflow:hidden}
 .menu-drop.show{display:block}
 .menu-drop div{padding:14px 16px;font-size:14px;border-bottom:1px solid #2a2a2a;cursor:pointer}
 .menu-drop div:last-child{border:none}
-.hero{position:relative;height:600px;overflow:hidden}
+.hero{position:relative;height:600px;overflow:hidden;margin-top:-56px;padding-top:56px}
 .hero img{width:100%;height:100%;object-fit:cover;object-position:center top;margin-top:-35px}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.85) 92%);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:20px;padding-bottom:18px}
 .hero-overlay h1{font-size:52px;letter-spacing:3px;color:#F5D98A;line-height:1}
@@ -44,7 +44,7 @@ body{background:#0a0a0a;color:#fff}
 .price{color:#E8C97A;font-weight:bold}
 .add{width:100%;background:#222;border:1px solid #C9A86A;color:#E8C97A;padding:10px;border-radius:10px;font-weight:bold;margin-top:8px;cursor:pointer}
 .buy{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);color:#000;border:none;padding:11px;border-radius:10px;font-weight:bold;margin-top:8px;cursor:pointer;font-size:13px}
-.cart-badge{position:fixed;top:14px;right:52px;z-index:40;background:#C9A86A;color:#000;font-size:11px;font-weight:bold;padding:4px 8px;border-radius:20px;display:none}
+.cart-badge{position:fixed;top:70px;right:12px;z-index:40;background:#C9A86A;color:#000;font-size:11px;font-weight:bold;padding:4px 8px;border-radius:20px;display:none}
 .vip{background:#111;padding:24px 20px 30px;text-align:center;min-height:80vh}
 .vip .crown{font-size:36px}
 .vip h2{font-size:30px;color:#E8C97A;margin:8px 0 4px}
@@ -131,22 +131,22 @@ body{background:#0a0a0a;color:#fff}
 </style>
 </head>
 <body>
+<!-- MENU ATAS GLOBAL - ADA DI SEMUA HALAMAN -->
+<div class="top"><div class="logo" onclick="showPage('home')">D' LUSSO</div><button class="top-install" onclick="installApp()">📱 INSTALL</button><div class="top-icons" onclick="toggleMenu(event)">☰</div></div>
+<div id="menuDrop" class="menu-drop">
+  <div onclick="showPage('home')">🏠 HOME</div>
+  <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
+  <div onclick="showPage('scarpe')">👠 SCARPE COL TACCO</div>
+  <div onclick="showPage('accessorio')">👜 ACCESSORIO</div>
+  <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
+  <div onclick="showPage('member')">👤 PROFIL MEMBER</div>
+  <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
+  <div onclick="showPage('lokasi')">📍 LOKASI BOUTIQUE</div>
+  <div onclick="installApp()">📱 INSTALL APLIKASI</div>
+</div>
 <div id="cartBadge" class="cart-badge" onclick="checkoutCart()">🛒 0 • Checkout</div>
 <div id="page-home" class="page active">
   <div class="hero">
-    <div class="top"><div class="logo">D' LUSSO</div><button class="top-install" onclick="installApp()">📱 INSTALL</button><div class="top-icons" onclick="toggleMenu(event)">☰</div>
-      <div id="menuDrop" class="menu-drop">
-        <div onclick="showPage('home')">🏠 HOME</div>
-        <div onclick="showPage('collezione')">✨ COLLEZIONE</div>
-        <div onclick="showPage('scarpe')">👠 SCARPE COL TACCO</div>
-        <div onclick="showPage('accessorio')">👜 ACCESSORIO</div>
-        <div onclick="showPage('vip')">👑 VIP MEMBERSHIP</div>
-        <div onclick="showPage('member')">👤 PROFIL MEMBER</div>
-        <div onclick="openWA()">💚 WHATSAPP BOUTIQUE</div>
-        <div onclick="showPage('lokasi')">📍 LOKASI BOUTIQUE</div>
-        <div onclick="installApp()">📱 INSTALL APLIKASI</div>
-      </div>
-    </div>
     <img src="hero.png" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'">
     <div class="hero-overlay"><h1>D' LUSSO</h1><h2>IL LUSSO DI BANDUNG</h2><p>Eleganza Italiana • Collezione Autunno/Inverno 2025</p><button class="btn-gold" onclick="showPage('collezione')">SCOPRI LA COLLEZIONE →</button></div>
   </div>
@@ -237,7 +237,7 @@ var cart=[]; var deferredPrompt=null; var ALL_PRODUCTS=[];
 function installApp(){alert("Di HP Android: titik 3 di Chrome > Tambah ke Layar Utama\nDi iPhone: Share di Safari > Tambah ke Layar Utama");}
 function showPage(p){var diminta=p; if(p==='vip'&&localStorage.getItem('dlusso_member')){p='member';} document.querySelectorAll('.page').forEach(e=>e.classList.remove('active')); document.getElementById('page-'+p).classList.add('active'); ['home','accessorio','vip','contatti'].forEach(n=>document.getElementById('nav-'+n)?.classList.remove('active')); var navId=diminta; if(p==='member')navId='vip'; if(document.getElementById('nav-'+navId))document.getElementById('nav-'+navId).classList.add('active'); document.getElementById('menuDrop').classList.remove('show'); window.scrollTo(0,0); if(p==='member')renderMember();}
 function toggleMenu(e){e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('show');}
-document.addEventListener('click',e=>{if(!e.target.closest('.menu-drop'))document.getElementById('menuDrop').classList.remove('show')});
+document.addEventListener('click',e=>{if(!e.target.closest('.menu-drop') && !e.target.closest('.top-icons'))document.getElementById('menuDrop').classList.remove('show')});
 function openWA(msg){var m=msg||"Ciao D' LUSSO! Saya mau tanya tentang koleksi di Boutique Bandung."; window.open("https://wa.me/6281234567890?text="+encodeURIComponent(m),"_blank");}
 function buyNow(name,price){openWA("Ciao D' LUSSO! Saya mau BELI SEKARANG:\n\n• "+name+"\n• Harga: "+price+"\n\nApakah masih ready?");}
 function checkoutCart(){if(cart.length==0){alert("Keranjang masih kosong");return;} var txt="Ciao D' LUSSO! Saya mau CHECKOUT:\n\n"+cart.map((c,i)=>(i+1)+". "+c.name+" - Rp "+Number(c.price).toLocaleString('id-ID')).join("\n")+"\n\nTotal "+cart.length+" produk."; openWA(txt);}
@@ -305,7 +305,6 @@ function updateDots(val){var dots=''; for(var i=0;i<6;i++){dots+=(i<(val?val.len
 document.addEventListener('input',e=>{if(e.target.id==='pinInput')updateDots(e.target.value);});
 function tutupPin(){document.getElementById('pinModal').style.display='none'; rahasiaData=null;}
 function cekPinRahasia(){var inputPin=document.getElementById('pinInput').value.trim(); if(!rahasiaData)return; var pinBener=String(rahasiaData.pin||''); if(inputPin!==''&&inputPin===pinBener){var karcis='DL-'+Date.now().toString().slice(-6)+'-'+Math.floor(Math.random()*90+10); var exp=Date.now()+12*60*60*1000; localStorage.setItem('dlusso_karcis',karcis); localStorage.setItem('dlusso_karcis_exp',String(exp)); localStorage.setItem('dlusso_staff',JSON.stringify({...rahasiaData,karcis:karcis,login_at:Date.now(),exp:exp,role:rahasiaTujuan==='wes.html'?'admin':'pegawai'})); alert('Selamat datang! 🎟️ Karcis berlaku 12 jam!'); window.location.href=rahasiaTujuan;}else{document.getElementById('pinError').style.display='block'; document.getElementById('pinInput').value=''; updateDots('');}}
-// === SOFIA BARU - CEK PRODUCTS DULU - FIX DRESS 4 ITEM ===
 async function sendChatMsg(text){
   var isRahasia=await cekKodeRahasia(text);
   if(isRahasia){var b0=document.getElementById('chatBody'); var me0=document.createElement('div'); me0.className='msg-row me'; me0.innerHTML='<div class="msg me"></div>'+userImg(); me0.querySelector('.msg').textContent=text; b0.appendChild(me0); b0.scrollTop=b0.scrollHeight; return;}
@@ -321,7 +320,6 @@ async function sendChatMsg(text){
   var lastKota=getLastKota();
   if(!jawaban && isOngkir){var kotaOngkir=kotaBaru||lastKota; if(kotaOngkir){jawaban='Untuk ongkir ke '+kotaOngkir+' itu tergantung ekspedisi kak ✨<br><br>Boleh info kecamatan di '+kotaOngkir+' kak? Nanti Sofia teruskan ke Admin biar dicek langsung ke ekspedisi ya!';}else{jawaban='Untuk ongkir itu tergantung ekspedisi kak ✨ Kakak mau kirim ke kota mana?';}}
   if(!jawaban && kotaBaru && isKirim){jawaban='Bisa banget kirim ke '+kotaBaru+'! ✨ Kita kirim ke seluruh Indonesia kok.<br><br>Boleh info kecamatan di '+kotaBaru+' kak?';}
-  // --- CEK PRODUCTS ---
   if(!jawaban && (low.includes('harga')||low.includes('berapa')||low.includes('dress')||low.includes('gaun')||low.includes('jas')||low.includes('sepatu')||low.includes('tas')||low.includes('heels')||low.includes('blazer')||low.includes('kemeja')||low.includes('stok')||low.includes('ready')||low.includes('koleksi')||low.includes('produk'))){
     try{
       var prods=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
@@ -339,7 +337,6 @@ async function sendChatMsg(text){
       }
     }catch(e){console.log('cari produk gagal',e);}
   }
-  // --- CEK BOT_FAQ ---
   if(!jawaban){
     try{
       const {data}=await supabaseClient.from('bot_faq').select('keyword,answer,intent_name,prioritas,skor');
