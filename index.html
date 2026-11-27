@@ -304,7 +304,7 @@ function updateDots(val){var dots=''; for(var i=0;i<6;i++){dots+=(i<(val?val.len
 document.addEventListener('input',e=>{if(e.target.id==='pinInput')updateDots(e.target.value);});
 function tutupPin(){document.getElementById('pinModal').style.display='none'; rahasiaData=null;}
 function cekPinRahasia(){var inputPin=document.getElementById('pinInput').value.trim(); if(!rahasiaData)return; var pinBener=String(rahasiaData.pin||''); if(inputPin!==''&&inputPin===pinBener){var karcis='DL-'+Date.now().toString().slice(-6)+'-'+Math.floor(Math.random()*90+10); var exp=Date.now()+12*60*60*1000; localStorage.setItem('dlusso_karcis',karcis); localStorage.setItem('dlusso_karcis_exp',String(exp)); localStorage.setItem('dlusso_staff',JSON.stringify({...rahasiaData,karcis:karcis,login_at:Date.now(),exp:exp,role:rahasiaTujuan==='wes.html'?'admin':'pegawai'})); alert('Selamat datang! 🎟️ Karcis berlaku 12 jam!'); window.location.href=rahasiaTujuan;}else{document.getElementById('pinError').style.display='block'; document.getElementById('pinInput').value=''; updateDots('');}}
-// === SOFIA MASTER v8 - TOBAT BENERAN, NGGAK KASIH HELL LAGI ===
+// === SOFIA MASTER v9 - NGGAK JUAL MAHAL, KASIH NOMOR LANGSUNG ===
 function sofiaRekomendasi(p, low){
   var isKerja = low.includes('kerja')||low.includes('kantor')||low.includes('daily')||low.includes('sehari');
   if(p.name.toLowerCase().includes('tuxedo') && isKerja) return 'Ini buat acara super formal kak, bukan buat kerja harian ya 🙏';
@@ -327,16 +327,13 @@ function ambilNamaBarang(text){
   if(nama.length<2) nama = t.replace(/[?!.]/g,'').trim();
   return nama.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
 }
-// FUNGSI BARU: Cek apakah sepatu itu Heels / Cewek?
 function isHeels(p){
   var n=(p.name||'').toLowerCase();
   return n.includes('heels')||n.includes('heel')||n.includes('stiletto')||n.includes('satin')||n.includes('pump');
 }
 function cariAlternatif(low, prods){
-  // SNEAKERS / SANDAL / KETS = MAU YANG DATAR & SANTAI, JANGAN KASIH HEELS!
   if(low.includes('sneaker')||low.includes('kets')||low.includes('sneakers')||low.includes('sandal')||low.includes('sendal')||low.includes('slipper')||low.includes('jepit')){
     var sepatuDatar = prods.filter(p=>p.category==='SEPATU' && p.stock>0 && !isHeels(p));
-    // Utamakan Loafer & Oxford dulu
     var loaferOxford = sepatuDatar.filter(p=>p.name.toLowerCase().includes('loafer')||p.name.toLowerCase().includes('oxford'));
     var sisanya = sepatuDatar.filter(p=>!p.name.toLowerCase().includes('loafer')&&!p.name.toLowerCase().includes('oxford'));
     var gabung = [...loaferOxford, ...sisanya];
@@ -379,6 +376,11 @@ async function sendChatMsg(text){
   var bot=rowBot.querySelector('.msg.bot');
   var low=text.toLowerCase(); var jawaban=null;
   if(!jawaban && (low.includes('halo')||low.includes('hai')||low.includes('hi')||low.includes('selamat pagi')||low.includes('selamat siang')||low.includes('selamat malam')||low.trim()==='hallo')){jawaban='Hallo, Selamat datang di D\'Lusso. Ada yang bisa dibantu kak 🙏<br><br>Saya Sofia, siap bantu kakak cari Gaun, Jas, Tas, atau Sepatu. Mau cari apa dulu kak?';}
+  // === BARU: MINTA NOMOR - LANGSUNG KASIH, JANGAN LEMPAR KE ADMIN ===
+  if(!jawaban && (low.includes('nomer')||low.includes('nomor')||low.includes('no wa')||low.includes('nowa')||low.includes('no hp')||low.includes('kontak')||low.includes('contact')||low.includes('telepon')||low.includes('telpon')||low.includes('whatsapp')||low.includes(' wa ')||low.trim()==='wa')){
+    jawaban='Boleh banget kak! Ini nomor WA Boutique D\'Lusso ya 🙏💚<br><br>📱 <b>+62 812-3456-7890</b><br>📍 Jl. Braga No.88, Bandung<br>🕙 Setiap Hari 10.00 - 21.00 WIB<br>📸 IG: @d.lusso<br><br>Chat aja kak, Admin standby kok! Mau Sofia bantu order via WA sekarang?';
+  }
+  if(!jawaban && (low.includes('instagram')||low.includes(' ig ')||low.includes('ig nya')||low.includes('ig-nya')||low.includes('sosmed'))){jawaban='IG kita @d.lusso kak! ✨ Follow ya, banyak koleksi terbaru di sana!<br><br>WA kita juga ada kak: +62 812-3456-7890 💚';}
   if(!jawaban && low.includes('sofia') && (low.includes('cewek')||low.includes('cowok')||low.includes('cewe')||low.includes('cowo')||low.includes('laki')||low.includes('perempuan')||low.includes('pria')||low.includes('wanita'))){jawaban='Sofia cewek kak ✨👩<br><br>Sofia itu yang siap bantuin kakak di D\'Lusso. Ada yang bisa dibantu kak?';}
   if(!jawaban && (low.includes('kamu siapa')||low.includes('siapa kamu')||low.includes('nama kamu')||low.includes('siapa namamu'))){jawaban='Kenalin kak, saya Sofia ✨ Siap bantu kakak di D\'Lusso. Ada yang bisa dibantu kak? 🙏';}
   if(!jawaban && (low.includes('makasih')||low.includes('terima kasih')||low.includes('thank'))){jawaban='Sama-sama kak! 🙏 Seneng banget bisa bantuin kakak. Kalo ada yang mau ditanya lagi, chat Sofia aja ya!';}
