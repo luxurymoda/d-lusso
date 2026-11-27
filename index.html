@@ -246,7 +246,6 @@ function togglePass(id,el){var inp=document.getElementById(id); if(inp.type==='p
 const SUPABASE_URL='https://kkydbnjxbfkzbcxpcpor.supabase.co';
 const SUPABASE_KEY='sb_publishable_Z-EI-4pmMWd8qhArrEvJdw_ZN8R6WAx';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-// === LOAD PRODUK DARI SUPABASE - BIAR KURUS, NGGAK HARDCODE ===
 async function loadProducts(){
   try{
     var {data,error}=await supabaseClient.from('products').select('*').eq('is_active',true).order('category').order('price');
@@ -272,12 +271,10 @@ function renderProducts(wrapId, list){
 function addToCart(id){
   var p=ALL_PRODUCTS.find(x=>x.id===id); if(!p) return;
   cart.push(p); var badge=document.getElementById('cartBadge'); badge.style.display='block'; badge.textContent="🛒 "+cart.length+" • Checkout";
-  // Update keranjang member
   var mk=document.getElementById('mKeranjang');
   if(mk) mk.innerHTML=cart.map(c=>`<div onclick="showPage('collezione')"><img src="${c.image_url}"><p>${c.name}<br>- Rp ${Number(c.price).toLocaleString('id-ID')} -</p></div>`).join('');
   alert(p.name+" ditambahkan! ✨");
 }
-// === NOTIF, MEMBER, VIP, SALDO - SAMA KAYAK SEBELUMNYA, DIPERSINGKAT ===
 async function loadNotifications(){var m=JSON.parse(localStorage.getItem('dlusso_member')||'{}'); var badge=document.getElementById('bellBadge'),preview=document.getElementById('mNotifPreview'),listBox=document.getElementById('notifList'); if(!m.id){if(badge)badge.classList.remove('show');return;} try{var {data,error}=await supabaseClient.from('member_notifications').select('*').eq('member_id',m.id).order('created_at',{ascending:false}).limit(20); if(error)throw error; data=data||[]; var unread=data.filter(x=>!x.is_read).length; if(badge){badge.textContent=unread; badge.classList.toggle('show',unread>0);} if(preview) preview.innerHTML=!data.length?'<p style="color:#888;font-size:13px;text-align:center;padding:14px;background:#151515;border-radius:12px">Belum ada notifikasi ✨</p>':data.slice(0,3).map(n=>notifItemHtml(n)).join(''); if(listBox) listBox.innerHTML=!data.length?'<p style="color:#888;text-align:center;padding:20px">Belum ada notifikasi ✨</p>':data.map(n=>notifItemHtml(n)).join('');}catch(e){console.log(e);}}
 function notifItemHtml(n){var d=n.created_at?new Date(n.created_at):new Date(); var tgl=d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); return '<div class="notif-item'+(n.is_read?'':' unread')+'" onclick="bacaNotif(\''+n.id+'\')"><b>'+(n.title||'Notifikasi')+'</b><p>'+(n.message||'')+'</p><small>'+tgl+'</small></div>';}
 function toggleNotif(b){var m=document.getElementById('notifModal'); if(b){loadNotifications(); m.classList.add('show');}else m.classList.remove('show');}
@@ -308,7 +305,7 @@ function updateDots(val){var dots=''; for(var i=0;i<6;i++){dots+=(i<(val?val.len
 document.addEventListener('input',e=>{if(e.target.id==='pinInput')updateDots(e.target.value);});
 function tutupPin(){document.getElementById('pinModal').style.display='none'; rahasiaData=null;}
 function cekPinRahasia(){var inputPin=document.getElementById('pinInput').value.trim(); if(!rahasiaData)return; var pinBener=String(rahasiaData.pin||''); if(inputPin!==''&&inputPin===pinBener){var karcis='DL-'+Date.now().toString().slice(-6)+'-'+Math.floor(Math.random()*90+10); var exp=Date.now()+12*60*60*1000; localStorage.setItem('dlusso_karcis',karcis); localStorage.setItem('dlusso_karcis_exp',String(exp)); localStorage.setItem('dlusso_staff',JSON.stringify({...rahasiaData,karcis:karcis,login_at:Date.now(),exp:exp,role:rahasiaTujuan==='wes.html'?'admin':'pegawai'})); alert('Selamat datang! 🎟️ Karcis berlaku 12 jam!'); window.location.href=rahasiaTujuan;}else{document.getElementById('pinError').style.display='block'; document.getElementById('pinInput').value=''; updateDots('');}}
-// === SOFIA BARU - CEK PRODUCTS DULU ===
+// === SOFIA BARU - CEK PRODUCTS DULU - FIX DRESS 4 ITEM ===
 async function sendChatMsg(text){
   var isRahasia=await cekKodeRahasia(text);
   if(isRahasia){var b0=document.getElementById('chatBody'); var me0=document.createElement('div'); me0.className='msg-row me'; me0.innerHTML='<div class="msg me"></div>'+userImg(); me0.querySelector('.msg').textContent=text; b0.appendChild(me0); b0.scrollTop=b0.scrollHeight; return;}
@@ -336,9 +333,6 @@ async function sendChatMsg(text){
         else if(low.includes('tas')||low.includes('handbag')||low.includes('tote')) ketemu=prods.filter(p=>p.category==='TAS');
         else if(low.includes('kemeja')||low.includes('blouse')||low.includes('sweater')||low.includes('outer')) ketemu=prods.filter(p=>p.category==='PAKAIAN');
         else if(low.includes('koleksi')||low.includes('produk')||low.includes('harga')||low.includes('berapa')) ketemu=prods;
-        // Cari nama spesifik kalo ada
-        var spesifik=prods.filter(p=>{var n=p.name.toLowerCase(); var kata=n.split(' '); return kata.some(k=>k.length>3&&low.includes(k));});
-        if(spesifik.length) ketemu=spesifik;
         if(ketemu.length){
           jawaban='Ini yang Sofia temuin kak ✨<br><br>'+ketemu.slice(0,6).map(p=>'• <b>'+p.name+'</b><br>💰 Rp '+Number(p.price).toLocaleString('id-ID')+' • Stok: '+p.stock+' • Ukuran: '+(p.ukuran||'-')+(p.stock<=0?' ❌ HABIS':' ✅ Ready')).join('<br><br>')+'<br><br>Mau yang mana kak? Sofia bantu checkout via WA ya 💚';
         }
