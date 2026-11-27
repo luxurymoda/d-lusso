@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>👑 MASTER D' LUSSO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0a0a0a;color:#fff;padding:14px 14px 40px;background:radial-gradient(circle at 50% 0%,#2a2100 0%,#0a0a0a 55%)}
+h1{text-align:center;font-family:Georgia;font-size:28px;letter-spacing:4px;color:#E8C97A;margin-top:14px}
+.sub{text-align:center;color:#aaa;font-size:11px;letter-spacing:1.5px;margin:6px 0 14px}
+.line{height:1px;background:linear-gradient(90deg,transparent,#C9A86A,transparent);margin:10px 0}
+.card{background:#151207;border:1px solid #C9A86A;border-radius:20px;padding:16px;margin-top:14px}
+label{display:block;font-size:10px;letter-spacing:1.5px;color:#E8C97A;margin:14px 0 6px;font-weight:800}
+input{width:100%;background:#0a0a0a;border:1px solid #3a2f14;color:#fff;padding:14px;border-radius:12px;outline:none;font-size:14px}
+input:focus{border-color:#E8C97A}
+textarea{width:100%;height:360px;background:#000;border:1px solid #3a2f14;color:#7CFC00;padding:12px;border-radius:12px;font-family:monospace;font-size:11px;outline:none}
+button{width:100%;background:linear-gradient(180deg,#F5D98A,#C9A86A);border:none;padding:15px;border-radius:13px;font-weight:900;font-size:14px;margin-top:12px;cursor:pointer;color:#000}
+.sec{background:#1a170e;color:#E8C97A;border:1px solid #C9A86A}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.badge{display:inline-block;background:#221f10;border:1px solid #C9A86A;color:#E8C97A;padding:6px 11px;border-radius:20px;font-size:11px;margin-top:8px}
+.proj{display:flex;justify-content:space-between;align-items:center;background:#0a0a0a;border:1px solid #333;border-radius:14px;padding:12px;margin-top:10px;cursor:pointer}
+.proj.active{border-color:#E8C97A;background:#221f10}
+.proj small{color:#888;font-size:11px;display:block;margin-top:3px}
+.del{background:#333;color:#ff6b6b;border:none;padding:8px 12px;border-radius:8px;width:auto;margin:0;font-size:12px}
+#status,#sbStatus{font-size:12px;margin-top:10px;text-align:center;color:#8aff8a;line-height:1.5}
+small{color:#888;font-size:11px;line-height:1.5}
+</style></head><body>
+<h1>👑 MASTER</h1><div class="sub">D' LUSSO • 1 HALAMAN UNTUK SEMUA TOKO</div><div class="line"></div>
+
+<div class="card"><b style="color:#E8C97A">📂 DAFTAR PROJECT - TINGGAL PENCET!</b><br><small>Pencet nama project, langsung keisi semua!</small>
+<button class="sec" onclick="loadDaftar()">🔄 LOAD DAFTAR PROJECT DARI GITHUB</button>
+<div id="list"><p style="color:#888;font-size:12px;padding:10px 0">Belum ada project. Isi Token dulu, pencet LOAD.</p></div>
+<div class="row"><input id="newProj" placeholder="Nama project baru: toko-tas"><button class="sec" style="width:100px" onclick="tambahManual()">+ TAMBAH</button></div></div>
+
+<div class="card"><b style="color:#E8C97A">⚙️ SETTING GITHUB</b>
+<label>1️⃣ LINK GITHUB</label><input id="repoUrl" placeholder="https://github.com/username/nama-repo">
+<span class="badge" id="parsed">Belum di-parse</span>
+<label>2️⃣ USERNAME / EMAIL GITHUB</label><input id="ghUser" placeholder="username github">
+<label>3️⃣ TOKEN GITHUB</label><input id="ghToken" type="password" placeholder="ghp_xxxx...">
+<small>Bikin di github.com/settings/tokens, centang repo</small>
+<div class="row"><div><label>4️⃣ NAMA PROJECT</label><input id="project" placeholder="nama-repo"></div><div><label>BRANCH</label><input id="branch" value="main"></div></div>
+<label>5️⃣ NAMA FILE</label><input id="fileName" value="index.html">
+<button class="sec" onclick="loadFile()">📥 LOAD FILE DARI GITHUB</button>
+<button class="sec" onclick="isiTemplate()">✨ ISI OTOMATIS DARI TEMPLATE (Repo Kosong!)</button>
+<div id="status">Belum load...</div></div>
+
+<div class="card"><b style="color:#E8C97A">6️⃣ ISI FILE - EDIT DISINI</b>
+<textarea id="content" placeholder="Klik LOAD FILE dulu..."></textarea>
+<div id="info" style="font-size:11px;color:#888;margin-top:8px">Karakter: 0</div>
+<button onclick="saveFile()">💾 SAVE KE GITHUB - LANGSUNG UPDATE!</button>
+<button class="sec" onclick="saveLocal()">💾 SIMPAN SETTING DI HP</button></div>
+
+<div class="card"><b style="color:#E8C97A">⚡ GANTI CEPAT - Buat Kloning!</b>
+<label>CARI (LAMA)</label><input id="findTxt" placeholder="6285899611111">
+<label>GANTI JADI (BARU)</label><input id="replaceTxt" placeholder="62812xxxx">
+<button class="sec" onclick="doReplace()">🔄 GANTI SEMUA</button></div>
+
+<div class="card"><b style="color:#E8C97A">📱 AMBIL DATA DARI HP - KIRIM LANGSUNG!</b><br><small>Buat project offline lu yang udah ada di HP!</small>
+<label>📂 1. FILE TOKO DARI HP → KE GITHUB</label>
+<input type="file" id="fileHP" accept=".html,.css,.js,.txt,.json" style="padding:10px">
+<div id="fileHPInfo" style="font-size:11px;color:#888;margin-top:6px">Belum ada file dipilih</div>
+<button class="sec" onclick="kirimFileHPKeGithub()">📤 KIRIM FILE HP KE GITHUB</button>
+<label>🗄️ 2. BACKUP / KIRIM DATABASE</label>
+<input type="file" id="backupHP" accept=".json" style="padding:10px">
+<div id="backupHPInfo" style="font-size:11px;color:#888;margin-top:6px">Belum ada backup dipilih. Format: backup.json</div>
+<label>SUPABASE URL (Toko Tujuan)</label><input id="sbUrl" placeholder="https://xxx.supabase.co">
+<label>SUPABASE KEY (Toko Tujuan)</label><input id="sbKey" placeholder="sb_publishable_...">
+<label>NAMA TABEL</label><input id="sbTable" value="products" placeholder="products / orders">
+<button onclick="kirimBackupKeSupabase()">🗄️ KIRIM BACKUP KE SUPABASE</button>
+<button class="sec" onclick="backupDatabase()">⬇️ BACKUP DATABASE DARI SUPABASE - DOWNLOAD JSON</button>
+<div id="sbStatus"></div>
+<small>⚠️ Di Supabase tujuan, matikan RLS / buat Policy Allow All dulu biar bisa masuk!</small></div>
+
+<script>
+var sha="",isiFileHP="",isiBackup=null;
+function getP(){try{return JSON.parse(localStorage.getItem('master_projects')||'[]')}catch(e){return[]}}
+function setP(a){localStorage.setItem('master_projects',JSON.stringify(a));render()}
+function render(){var arr=getP(),box=document.getElementById('list'),cur=document.getElementById('project').value;if(!arr.length){box.innerHTML='<p style="color:#888;font-size:12px;padding:10px 0">Belum ada project.</p>';return}box.innerHTML=arr.map((p,i)=>'<div class="proj '+(p.repo===cur?'active':'')+'" onclick="pilih('+i+')"><div><b>📁 '+p.repo+'</b><small>'+p.owner+' / '+p.repo+' • '+p.branch+' • '+p.file+'</small></div><button class="del" onclick="event.stopPropagation();hapus('+i+')">✕</button></div>').join('')}
+function pilih(i){var p=getP()[i];document.getElementById('repoUrl').value="https://github.com/"+p.owner+"/"+p.repo;document.getElementById('ghUser').value=p.owner;document.getElementById('project').value=p.repo;document.getElementById('branch').value=p.branch;document.getElementById('fileName').value=p.file;parseRepo();render();document.getElementById('status').textContent="✅ "+p.repo+" dipilih! Tinggal LOAD FILE!"}
+function hapus(i){if(!confirm("Hapus?"))return;var a=getP();a.splice(i,1);setP(a)}
+function tambahManual(){var n=document.getElementById('newProj').value.trim(),o=document.getElementById('ghUser').value.trim();if(!n||!o){alert("Isi Username + Nama Project!");return}var a=getP();if(a.find(x=>x.repo===n)){alert("Udah ada!");return}a.push({owner:o,repo:n,branch:'main',file:'index.html'});setP(a);document.getElementById('newProj').value=''}
+async function loadDaftar(){var t=document.getElementById('ghToken').value.trim();if(!t){alert("Isi Token dulu!");return}document.getElementById('list').innerHTML='<p style="padding:10px 0">⏳ Loading...</p>';try{var r=await fetch("https://api.github.com/user/repos?per_page=100&sort=updated",{headers:{Authorization:"Bearer "+t}});var j=await r.json();if(j.message){alert(j.message);render();return}var a=getP();j.forEach(x=>{if(!a.find(y=>y.repo===x.name))a.push({owner:x.owner.login,repo:x.name,branch:x.default_branch||'main',file:'index.html'})});setP(a);alert("Ketemu "+j.length+" project!")}catch(e){alert(e.message);render()}}
+function parseRepo(){var u=document.getElementById('repoUrl').value.trim();var m=u.match(/github\.com\/([^\/]+)\/([^\/\s]+)/)||u.match(/^([^\/\s]+)\/([^\/\s]+)$/);if(m){document.getElementById('ghUser').value=m[1];document.getElementById('project').value=m[2].replace('.git','');document.getElementById('parsed').textContent="✅ "+m[1]+" / "+m[2];return{owner:m[1],repo:m[2].replace('.git','')}}return{owner:document.getElementById('ghUser').value.trim(),repo:document.getElementById('project').value.trim()}}
+document.getElementById('repoUrl').addEventListener('input',parseRepo);
+function auth(){var r=parseRepo();return{owner:r.owner,repo:r.repo,token:document.getElementById('ghToken').value.trim(),file:document.getElementById('fileName').value.trim()||'index.html',branch:document.getElementById('branch').value.trim()||'main'}}
+async function loadFile(){var a=auth();if(!a.owner||!a.repo||!a.token){alert("Isi Link + Token + File!");return}document.getElementById('status').textContent="⏳ Loading "+a.file+"...";try{var r=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file+"?ref="+a.branch,{headers:{Authorization:"Bearer "+a.token}});var j=await r.json();if(j.message==="Not Found"){sha="";document.getElementById('content').value="";document.getElementById('status').textContent="⚠️ Repo masih KOSONG! Pencet ISI OTOMATIS!";alert("Repo masih KOSONG! Pencet ✨ ISI OTOMATIS!");return}if(j.message){alert(j.message);return}sha=j.sha;var d=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));document.getElementById('content').value=d;document.getElementById('info').textContent="Karakter: "+d.length;document.getElementById('status').textContent="✅ Berhasil load!";var arr=getP();if(!arr.find(x=>x.repo===a.repo)){arr.push({owner:a.owner,repo:a.repo,branch:a.branch,file:a.file});setP(arr)}}catch(e){document.getElementById('status').textContent="❌ "+e.message}}
+async function saveFile(){var a=auth(),c=document.getElementById('content').value;if(!c){alert("Isi file kosong! Pencet ISI OTOMATIS dulu!");return}if(!confirm("SAVE "+a.file+" ke "+a.owner+"/"+a.repo+" ?"))return;document.getElementById('status').textContent="⏳ Saving...";try{var body={message:"Update via MASTER - "+new Date().toLocaleString('id-ID'),content:btoa(unescape(encodeURIComponent(c))),branch:a.branch};if(sha)body.sha=sha;var r=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file,{method:"PUT",headers:{Authorization:"Bearer "+a.token,"Content-Type":"application/json"},body:JSON.stringify(body)});var j=await r.json();if(j.message&&!j.content){alert(j.message);return}sha=j.content.sha;document.getElementById('status').textContent="✅ BERHASIL! Repo udah jadi TOKO!";alert("BERHASIL! ✅")}catch(e){alert(e.message)}}
+function isiTemplate(){if(!confirm("Isi dengan TEMPLATE MASTER?"))return;var t='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOKO BARU</title></head><body style="background:#0a0a0a;color:#fff;text-align:center;padding:40px;font-family:Georgia"><h1 style="color:#E8C97A">TOKO BARU</h1><p>Template dari MASTER. Ganti WA: 6285899611111</p></body></html>';document.getElementById('content').value=t;document.getElementById('info').textContent="Karakter: "+t.length+" | TEMPLATE";document.getElementById('status').textContent="✨ Template terisi! Ganti WA, terus SAVE!";alert("Template terisi! Tinggal GANTI CEPAT WA-nya, terus SAVE!")}
+function doReplace(){var f=document.getElementById('findTxt').value,r=document.getElementById('replaceTxt').value;if(!f){alert("Isi Cari-nya!");return}var tx=document.getElementById('content');var cnt=(tx.value.match(new RegExp(f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;if(!cnt){alert("Gak ketemu!");return}if(!confirm("Ganti "+cnt+" tempat?"))return;tx.value=tx.value.split(f).join(r);alert("Berhasil ganti "+cnt+" tempat! Tinggal SAVE!")}
+function saveLocal(){var d={repoUrl:document.getElementById('repoUrl').value,ghUser:document.getElementById('ghUser').value,ghToken:document.getElementById('ghToken').value,project:document.getElementById('project').value,branch:document.getElementById('branch').value,fileName:document.getElementById('fileName').value};localStorage.setItem('master_github',JSON.stringify(d));alert("Tersimpan di HP!")}
+function loadLocal(){try{var d=JSON.parse(localStorage.getItem('master_github')||'{}');if(!d.repoUrl)return;document.getElementById('repoUrl').value=d.repoUrl||'';document.getElementById('ghUser').value=d.ghUser||'';document.getElementById('ghToken').value=d.ghToken||'';document.getElementById('project').value=d.project||'';document.getElementById('branch').value=d.branch||'main';document.getElementById('fileName').value=d.fileName||'index.html';parseRepo()}catch(e){}}
+document.getElementById('content').addEventListener('input',e=>{document.getElementById('info').textContent="Karakter: "+e.target.value.length});
+document.getElementById('fileHP').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){isiFileHP=ev.target.result;document.getElementById('fileHPInfo').textContent="✅ "+f.name+" ("+f.size+" byte) siap! File di GitHub jadi: "+f.name;document.getElementById('fileName').value=f.name};rd.readAsText(f)});
+async function kirimFileHPKeGithub(){var a=auth();if(!isiFileHP){alert("Pilih file dari HP dulu!");return}if(!a.token){alert("Isi Token dulu!");return}if(!confirm("Kirim "+document.getElementById('fileName').value+" ke "+a.owner+"/"+a.repo+" ?"))return;document.getElementById('status').textContent="⏳ Uploading file HP ke GitHub...";try{var cek=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file+"?ref="+a.branch,{headers:{Authorization:"Bearer "+a.token}});var cekJ=await cek.json();var body={message:"Upload dari HP via MASTER - "+new Date().toLocaleString('id-ID'),content:btoa(unescape(encodeURIComponent(isiFileHP))),branch:a.branch};if(cekJ.sha)body.sha=cekJ.sha;var r=await fetch("https://api.github.com/repos/"+a.owner+"/"+a.repo+"/contents/"+a.file,{method:"PUT",headers:{Authorization:"Bearer "+a.token,"Content-Type":"application/json"},body:JSON.stringify(body)});var j=await r.json();if(j.message&&!j.content){alert(j.message);return}document.getElementById('status').textContent="✅ BERHASIL! File HP udah masuk GitHub!";alert("BERHASIL! ✅ File HP udah jadi di GitHub!")}catch(e){alert(e.message)}}
+document.getElementById('backupHP').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){try{isiBackup=JSON.parse(ev.target.result);var jml=Array.isArray(isiBackup)?isiBackup.length:1;document.getElementById('backupHPInfo').textContent="✅ "+f.name+" terbaca! Isi: "+jml+" data. Siap kirim!"}catch(err){alert("File JSON rusak!")}};rd.readAsText(f)});
+async function kirimBackupKeSupabase(){var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim(),tabel=document.getElementById('sbTable').value.trim()||"products";if(!isiBackup){alert("Pilih backup.json dari HP dulu!");return}if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}var dataKirim=Array.isArray(isiBackup)?isiBackup:[isiBackup];if(!confirm("Kirim "+dataKirim.length+" data ke tabel "+tabel+" ?"))return;document.getElementById('sbStatus').textContent="⏳ Mengirim "+dataKirim.length+" data...";try{var sukses=0,gagal=0;for(var i=0;i<dataKirim.length;i+=100){var potong=dataKirim.slice(i,i+100);var r=await fetch(url+"/rest/v1/"+tabel,{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates"},body:JSON.stringify(potong)});if(r.ok)sukses+=potong.length;else gagal+=potong.length}document.getElementById('sbStatus').textContent="✅ Selesai! Sukses: "+sukses+", Gagal: "+gagal;alert("BERHASIL! ✅ Sukses: "+sukses+" Gagal: "+gagal)}catch(e){document.getElementById('sbStatus').textContent="❌ "+e.message;alert(e.message)}}
+async function backupDatabase(){var url=document.getElementById('sbUrl').value.trim(),key=document.getElementById('sbKey').value.trim(),tabel=document.getElementById('sbTable').value.trim()||"products";if(!url||!key){alert("Isi Supabase URL + Key dulu!");return}document.getElementById('sbStatus').textContent="⏳ Backup tabel "+tabel+"...";try{var r=await fetch(url+"/rest/v1/"+tabel+"?select=*",{headers:{apikey:key,Authorization:"Bearer "+key}});var j=await r.json();var blob=new Blob([JSON.stringify(j,null,2)],{type:"application/json"});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download="backup-"+tabel+"-"+new Date().toISOString().slice(0,10)+".json";a.click();document.getElementById('sbStatus').textContent="✅ Berhasil backup! Isi: "+j.length+" data. File ke-download!";alert("Berhasil backup! ✅\nTabel: "+tabel+"\nIsi: "+j.length+" data\nFile udah ke-download di HP lu!")}catch(e){alert(e.message)}}
+loadLocal();render();
+</script></body></html>
