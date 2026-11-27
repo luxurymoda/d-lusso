@@ -220,7 +220,7 @@ body{background:#0a0a0a;color:#fff;padding-top:56px}
     <div style="text-align:center;margin-top:18px;font-size:12px;color:#aaa">📧 <span id="mEmail">-</span> • 📱 <span id="mWa">-</span> • 🏷️ <span id="mDiscount">5%</span> • 📍 <span id="mAlamat">-</span><br><span style="color:#C9A86A;text-decoration:underline;cursor:pointer" onclick="logoutMember()">Logout</span></div>
   </div>
 </div>
-<div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">ACCESSORIO</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">CONTATTI</div></div>
+<div class="bottom"><div id="nav-home" class="active" onclick="showPage('home')">🏠 HOME</div><div id="nav-accessorio" onclick="showPage('accessorio')">👜 TAS</div><div id="nav-vip" onclick="showPage('vip')">👑 VIP</div><div id="nav-contatti" onclick="openChat()">💬 CHAT SOFIA</div></div>
 <div id="chatBox" class="chat-box"><div class="chat-head"><div class="chat-head-left"><img src="sofia.png" class="sofia-avatar" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'"><div><b>Sofia • D' LUSSO</b><br><span>● Online • Balas dalam 1 menit</span></div></div><div class="chat-close" onclick="closeChat()">×</div></div><div id="chatBody" class="chat-body"><div class="msg-row"><img src="sofia.png" class="bot-avatar" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'"><div class="msg bot">Hallo, Selamat datang di D'Lusso. Ada yang bisa dibantu kak 🙏<br>Saya Sofia, siap bantu kakak cari Kemeja, Gaun, Tas atau Accessories.</div></div></div><div class="quick"><button onclick="quickChat('Mau tanya koleksi terbaru')">✨ Koleksi Terbaru</button><button onclick="quickChat('Mau tanya harga & ukuran')">💰 Harga & Ukuran</button><button onclick="quickChat('Mau daftar VIP')">👑 Daftar VIP</button><button onclick="quickChat('Lokasi boutique dimana?')">📍 Lokasi</button></div><div class="chat-input"><input id="chatInput" placeholder="Tulis pesan..." onkeypress="if(event.key==='Enter') sendChat()"><button onclick="sendChat()">Kirim →</button></div></div>
 <div id="notifModal" class="notif-modal" onclick="if(event.target===this) toggleNotif(false)"><div class="notif-box"><div class="notif-head"><b>🔔 Notifikasi</b><span onclick="toggleNotif(false)">×</span></div><div id="notifList" class="notif-list"></div><div style="padding:0 14px 14px"><button onclick="tandaiSemuaDibaca()" style="width:100%;background:#1a1a1a;border:1px solid #C9A86A;color:#E8C97A;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer">Tandai Semua Dibaca</button></div></div></div>
 <div id="pinModal" style="display:none;position:fixed;inset:0;background:radial-gradient(circle at top,#2a2110 0%,#000 70%);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
@@ -308,7 +308,6 @@ function sofiaRekomendasi(p, low){
 function sofiaFormatProduk(list, low){ return list.slice(0,6).map(p=>'• <b>'+p.name+'</b><br>💰 Rp '+Number(p.price).toLocaleString('id-ID')+' • Stok: '+p.stock+' • Ukuran: '+(p.ukuran||'-')+(p.stock<=0?' ❌ HABIS':' ✅ Ready')+'<br><i>'+sofiaRekomendasi(p, low||'')+'</i>').join('<br><br>'); }
 function isHeels(p){var n=(p.name||'').toLowerCase(); return n.includes('heels')||n.includes('heel')||n.includes('stiletto')||n.includes('pump');}
 function cariAlternatif(low, prods){
-  // Sneakers / sandal -> JANGAN kasih Heels! Kasih yang datar: Loafer / Oxford dulu
   if(low.includes('sneaker')||low.includes('kets')||low.includes('sandal')||low.includes('sendal')){
     var datar = prods.filter(p=>p.category==='SEPATU' && p.stock>0 && !isHeels(p));
     datar.sort((a,b)=>{var sa=(a.name.toLowerCase().includes('loafer')||a.name.toLowerCase().includes('oxford'))?0:1; var sb=(b.name.toLowerCase().includes('loafer')||b.name.toLowerCase().includes('oxford'))?0:1; return sa-sb;});
@@ -356,16 +355,13 @@ async function sendChatMsg(text){
   var faq=await getFAQ();
   var prods=ALL_PRODUCTS.length?ALL_PRODUCTS:(await supabaseClient.from('products').select('*').eq('is_active',true)).data||[];
 
-  // 1. CHECKOUT / BELI - dari keranjang
   if(!jawaban && (low.includes('mau beli')||low.includes('checkout')||low.includes('pesan')||low.includes('order'))){
     if(cart.length>0){jawaban='Wah, pilihan kakak bagus banget! 😍 Kakak udah punya '+cart.length+' produk di keranjang. Sofia bantu checkout via WA ya, biar Admin langsung proses & cek stoknya. Tinggal bilang "OK" aja kak, Sofia teruskan ke WA 💚';}
     else {jawaban='Boleh banget kak! 🙏 Kakak mau beli yang mana? Coba sebutin namanya ya, contoh "Mau beli Black Evening Dress".';}
   }
   if(!jawaban && low==='ok' && cart.length>0){checkoutCart(); jawaban='Siap kak! Sofia udah bukain WA checkout-nya ya 💚 Tinggal kirim aja, Admin langsung proses!';}
 
-  // 2. PRODUK - cari di products (bukan di FAQ)
   if(!jawaban && (low.includes('harga')||low.includes('berapa')||low.includes('dress')||low.includes('gaun')||low.includes('jas')||low.includes('sepatu')||low.includes('tas')||low.includes('heels')||low.includes('blazer')||low.includes('kemeja')||low.includes('stok')||low.includes('ready')||low.includes('koleksi')||low.includes('ukuran')||low.includes('size')||low.includes('ada')||low.includes('jual')||low.includes('sneaker')||low.includes('kets')||low.includes('loafer')||low.includes('oxford')||low.includes('sandal')||low.includes('rekomendasi')||low.includes('best seller')||low.includes('paling laris'))){
-    // SNEAKERS KHUSUS: Cek dulu ada beneran atau tidak
     if(low.includes('sneaker')||low.includes('kets')){
       var ketemuSneak=prods.filter(p=>(p.name.toLowerCase().includes('sneaker')||p.name.toLowerCase().includes('kets'))&&p.stock>0);
       if(ketemuSneak.length){jawaban='Ini yang Sofia temuin kak 🙏<br><br>'+sofiaFormatProduk(ketemuSneak,low)+'<br><br>Mau yang mana kak?';}
@@ -385,10 +381,8 @@ async function sendChatMsg(text){
       else if(low.includes('kemeja')||low.includes('baju')||low.includes('pakaian')) ketemu=prods.filter(p=>p.category==='PAKAIAN');
       else if(low.includes('koleksi')||low.includes('harga')||low.includes('berapa')||low.includes('ukuran')||low.includes('stok')) ketemu=prods;
       else{
-        // Cari by nama: minimal 2 kata produk cocok
         ketemu=prods.filter(p=>{var words=p.name.toLowerCase().split(' '); return words.filter(w=>w.length>3&&low.includes(w)).length>=2;});
       }
-      // Filter cowok / cewek
       if((low.includes('cowok')||low.includes('pria'))&&ketemu.length) ketemu=ketemu.filter(p=>!p.name.toLowerCase().includes('lady')&&p.category!=='DRESS');
       var ready=ketemu.filter(p=>p.stock>0);
       if(ready.length){
@@ -400,13 +394,11 @@ async function sendChatMsg(text){
     }
   }
 
-  // 3. FAQ - SEMUA jawaban SAPA / NOMOR / LOKASI / JAM / NEGO / DLL dari Supabase, bukan hardcode!
   if(!jawaban){
     var f=cariFaq(text, faq);
     if(f) jawaban=f.answer;
   }
 
-  // 4. FALLBACK - Jangan langsung lempar Admin, kasih pilihan + simpan antrian
   if(!jawaban){
     jawaban='Hallo, Selamat datang di D\'Lusso. Ada yang bisa dibantu kak 🙏<br><br>Maaf ya kak, untuk "'+text+'" Sofia belum paham. Sofia bisa bantu:<br>• Boleh minta nomernya<br>• Lokasi dimana?<br>• Ada sneakers?<br>• Ongkir ke Jakarta<br><br>Atau langsung WA Admin ya kak: +62 812-3456-7890 💚';
     try{var m=JSON.parse(localStorage.getItem('dlusso_member')||'{}'); await supabaseClient.from('bot_antrian').insert([{pertanyaan:text,member_name:m.full_name||'Tamu',whatsapp:m.whatsapp||'',status:'MENUNGGU'}]);}catch(e){}
@@ -418,4 +410,4 @@ renderMember();
 showPage('home');
 </script>
 </body>
-  </html>
+</html>
